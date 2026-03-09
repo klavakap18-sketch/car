@@ -7,24 +7,24 @@
   <style>
     :root{
       --sky1:#72d8f5;
-      --sky2:#aee8f7;
+      --sky2:#b7eef9;
       --panel:#dfe4e8;
+      --panel2:#d5dbe0;
       --text:#162a45;
       --blue:#25a7ff;
       --blue2:#245dff;
-      --gold:#f0d27d;
-      --gold2:#d7a145;
-      --road:#e7b352;
-      --road2:#cf953d;
-      --grass:#74d227;
-      --grass2:#59bf1a;
+      --gold:#efc56b;
+      --gold2:#cb9336;
+      --roadLine:#ffe7a0;
+      --grass:#72d325;
+      --grass2:#58bc1a;
       --danger:#ef4444;
       --shadow:0 16px 34px rgba(0,0,0,.18);
     }
 
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;padding:0}
     body{
-      margin:0;
       font-family:Arial,Helvetica,sans-serif;
       color:var(--text);
       background:linear-gradient(180deg,var(--sky1),var(--sky2));
@@ -32,7 +32,7 @@
     }
 
     .app{
-      max-width:1440px;
+      max-width:1460px;
       margin:0 auto;
       padding:18px;
       display:grid;
@@ -42,7 +42,7 @@
     }
 
     .panel{
-      background:#d7dde1;
+      background:linear-gradient(180deg,var(--panel),var(--panel2));
       border-radius:32px;
       padding:22px;
       box-shadow:var(--shadow);
@@ -82,8 +82,8 @@
       border-radius:24px;
       padding:18px 18px 20px;
     }
-    .stat.blue{background:linear-gradient(180deg,#c1d9ea,#b2cfe1)}
-    .stat.yellow{background:linear-gradient(180deg,#eddca8,#f1cf6f)}
+    .stat.blue{background:linear-gradient(180deg,#bfd9ea,#aecde1)}
+    .stat.yellow{background:linear-gradient(180deg,#eddca8,#f0cf73)}
     .stat-label{
       font-size:18px;
       color:rgba(22,42,69,.65);
@@ -120,7 +120,7 @@
     }
 
     .box{
-      background:#d7dde1;
+      background:rgba(255,255,255,.08);
       border-radius:28px;
       padding:20px;
       margin-bottom:18px;
@@ -154,11 +154,11 @@
     }
     .btn-secondary{
       color:var(--text);
-      background:linear-gradient(180deg,#e6e8eb,#d4dbe2);
+      background:linear-gradient(180deg,#e9edf0,#d7dde4);
     }
     .btn-outline{
       color:var(--text);
-      background:linear-gradient(180deg,#e8e8e8,#d8d8d8);
+      background:linear-gradient(180deg,#ededed,#dbdbdb);
     }
 
     .setting-item{margin-bottom:18px}
@@ -179,7 +179,7 @@
 
     .game-wrap{
       position:relative;
-      min-height:810px;
+      min-height:820px;
       border-radius:34px;
       overflow:hidden;
       box-shadow:0 20px 42px rgba(0,0,0,.22);
@@ -213,15 +213,15 @@
     .horizon{
       position:absolute;
       left:0; right:0;
-      top:54%;
-      height:2px;
+      top:49%;
+      height:3px;
       background:rgba(255,255,255,.18);
       z-index:2;
     }
 
     .hill{
       position:absolute;
-      bottom:45%;
+      bottom:46%;
       background:linear-gradient(180deg,var(--grass),var(--grass2));
       border-radius:50% 50% 0 0;
       z-index:2;
@@ -231,8 +231,37 @@
       position:absolute;
       left:0; right:0; bottom:0;
       height:46%;
-      background:#a7d1de;
+      background:#abd4e0;
       z-index:2;
+    }
+
+    .tree{
+      position:absolute;
+      bottom:33%;
+      width:44px;
+      height:100px;
+      z-index:3;
+    }
+    .tree .crown{
+      position:absolute;
+      top:0;
+      left:50%;
+      transform:translateX(-50%);
+      width:70px;
+      height:56px;
+      background:linear-gradient(180deg,#6bcc20,#54b518);
+      border-radius:50%;
+      box-shadow:inset 0 -6px 0 rgba(0,0,0,.08);
+    }
+    .tree .trunk{
+      position:absolute;
+      bottom:0;
+      left:50%;
+      transform:translateX(-50%);
+      width:12px;
+      height:42px;
+      background:#8b5a1f;
+      border-radius:8px;
     }
 
     .road-area{
@@ -246,10 +275,10 @@
       position:absolute;
       left:50%;
       top:13%;
-      width:54%;
-      height:71%;
+      width:55%;
+      height:76%;
       transform:translateX(-50%);
-      clip-path:polygon(47% 0%, 53% 0%, 94% 100%, 6% 100%);
+      clip-path:polygon(46.5% 0%, 53.5% 0%, 94% 100%, 6% 100%);
       background:
         linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.08)),
         linear-gradient(180deg, var(--gold), var(--gold2));
@@ -260,40 +289,40 @@
       position:absolute;
       left:50%;
       top:13%;
-      width:6%;
-      height:71%;
+      width:7%;
+      height:76%;
       transform:translateX(-50%);
-      clip-path:polygon(47% 0%, 53% 0%, 94% 100%, 6% 100%);
+      clip-path:polygon(46.5% 0%, 53.5% 0%, 94% 100%, 6% 100%);
       background:
         repeating-linear-gradient(
           180deg,
-          rgba(255,232,166,.92) 0px,
-          rgba(255,232,166,.92) 42px,
-          rgba(255,232,166,0) 42px,
-          rgba(255,232,166,0) 94px
+          rgba(255,232,166,.95) 0px,
+          rgba(255,232,166,.95) 44px,
+          rgba(255,232,166,0) 44px,
+          rgba(255,232,166,0) 98px
         );
       opacity:.95;
     }
 
     .guard{
       position:absolute;
-      top:25%;
-      width:12%;
-      height:75%;
+      top:21%;
+      width:13%;
+      height:79%;
       z-index:5;
       background:
         repeating-linear-gradient(
           90deg,
-          #ececec 0px,#ececec 28px,
-          #e12222 28px,#e12222 56px
+          #ededed 0px,#ededed 30px,
+          #e12222 30px,#e12222 60px
         );
     }
     .guard.left{
-      left:13.4%;
+      left:12.8%;
       clip-path:polygon(38% 0, 62% 0, 100% 100%, 0 100%);
     }
     .guard.right{
-      right:13.4%;
+      right:12.8%;
       clip-path:polygon(38% 0, 62% 0, 100% 100%, 0 100%);
     }
 
@@ -376,6 +405,7 @@
     }
 
     .diamond{
+      position:relative;
       width:100%;
       height:100%;
       clip-path:polygon(50% 0%, 88% 26%, 72% 100%, 28% 100%, 12% 26%);
@@ -472,6 +502,7 @@
       background:linear-gradient(180deg,#2fb7ff 0%, #2f5fff 50%, #25008f 100%);
       box-shadow:inset 0 8px 14px rgba(255,255,255,.2), inset 0 -12px 20px rgba(0,0,0,.25);
       border:4px solid rgba(255,255,255,.22);
+      border-radius:24px;
     }
     .car-window{
       position:absolute;
@@ -535,7 +566,7 @@
       pointer-events:none;
     }
 
-    .wheel-box,.map-box{
+    .wheel-box,.map-box,.drive-controls{
       pointer-events:auto;
     }
 
@@ -586,7 +617,6 @@
       gap:14px;
       align-items:center;
       justify-content:center;
-      pointer-events:auto;
     }
 
     .drive-btn{
@@ -749,12 +779,13 @@
     }
 
     @media (max-width:760px){
-      .stats,.controls,.answers.choice,.answer-input-row{grid-template-columns:1fr}
-      .answer-input-row{display:flex;flex-direction:column}
+      .stats,.controls,.answers.choice{grid-template-columns:1fr}
+      .answer-input-row{flex-direction:column}
       .drive-btn{width:92px;height:68px;font-size:24px}
       .wheel-box{width:120px;height:120px}
       .map-box{width:120px;height:96px}
       .player-car{width:190px;height:170px}
+      .top-left-preview{width:100px;height:100px}
     }
   </style>
 </head>
@@ -793,7 +824,7 @@
           <button class="btn-secondary" id="btnUp">⬆ Вверх</button>
           <button class="btn-secondary" id="btnDown">⬇ Вниз</button>
         </div>
-        <p class="note">Работают и клавиши ↑ / ↓</p>
+        <p class="note">Кнопки есть и здесь, и внизу под дорогой.</p>
       </div>
 
       <div class="box">
@@ -817,8 +848,7 @@
 
       <div class="box">
         <p class="note">
-          Алмазы и препятствия теперь создаются случайно по полосам и дистанции.
-          Наезд на препятствие отнимает алмазы. Управление внизу под дорогой.
+          Здесь уже реализованы: хаотичные алмазы, хаотичные препятствия, потеря алмазов при столкновении, нижние кнопки управления и дорога в линию горизонта.
         </p>
       </div>
     </aside>
@@ -826,8 +856,8 @@
     <main class="game-wrap">
       <div class="sky"></div>
 
-      <div class="cloud" style="width:132px;height:42px;left:120px;top:48px;"></div>
-      <div class="cloud" style="width:160px;height:48px;right:160px;top:62px;"></div>
+      <div class="cloud" style="width:132px;height:42px;left:160px;top:48px;"></div>
+      <div class="cloud" style="width:160px;height:48px;right:120px;top:62px;"></div>
 
       <div class="horizon"></div>
 
@@ -837,16 +867,24 @@
 
       <div class="ground"></div>
 
+      <div class="tree" style="left:10%;"><div class="crown"></div><div class="trunk"></div></div>
+      <div class="tree" style="left:18%;bottom:31%;"><div class="crown"></div><div class="trunk"></div></div>
+      <div class="tree" style="right:12%;bottom:32%;"><div class="crown"></div><div class="trunk"></div></div>
+      <div class="tree" style="right:4%;bottom:33%;"><div class="crown"></div><div class="trunk"></div></div>
+
       <div class="road-area">
         <div class="road-perspective"></div>
         <div class="center-line" id="centerLine"></div>
         <div class="guard left"></div>
         <div class="guard right"></div>
 
-        <div class="glow-pad" style="left:30%;top:50%;width:82px;height:28px;"></div>
-        <div class="glow-pad" style="left:26%;top:66%;width:82px;height:34px;"></div>
-        <div class="glow-pad" style="right:30%;top:50%;width:82px;height:28px;"></div>
-        <div class="glow-pad" style="right:26%;top:66%;width:82px;height:34px;"></div>
+        <div class="glow-pad" style="left:30%;top:48%;width:82px;height:28px;"></div>
+        <div class="glow-pad" style="left:26%;top:63%;width:82px;height:34px;"></div>
+        <div class="glow-pad" style="left:23%;top:76%;width:98px;height:38px;"></div>
+
+        <div class="glow-pad" style="right:30%;top:48%;width:82px;height:28px;"></div>
+        <div class="glow-pad" style="right:26%;top:63%;width:82px;height:34px;"></div>
+        <div class="glow-pad" style="right:23%;top:76%;width:98px;height:38px;"></div>
       </div>
 
       <div class="top-left-preview">
@@ -909,8 +947,8 @@
         loseDiamondsOnCrash: 1,
         gainDiamondsOnCorrect: 1,
         useKeyboard: true,
-        objectCount: 18,
-        diamondRatio: 0.5
+        objectCount: 16,
+        diamondRatio: 0.55
       },
       levels: [
         {
@@ -922,7 +960,7 @@
             { id: "l1q1", prompt: "3 + 2 = ?", answerType: "choice", correctAnswer: "5", options: ["4", "5", "6"] },
             { id: "l1q2", prompt: "8 - 3 = ?", answerType: "choice", correctAnswer: "5", options: ["5", "4", "6"] },
             { id: "l1q3", prompt: "6 + 1 = ?", answerType: "input", correctAnswer: "7" },
-            { id: "l1q4", prompt: "Сколько будет 4 + 4?", answerType: "choice", correctAnswer: "8", options: ["7", "8", "9"] },
+            { id: "l1q4", prompt: "4 + 4 = ?", answerType: "choice", correctAnswer: "8", options: ["7", "8", "9"] },
             { id: "l1q5", prompt: "10 - 6 = ?", answerType: "input", correctAnswer: "4" }
           ]
         },
@@ -944,10 +982,10 @@
 
     const GAME = {
       tickMs: 40,
-      lanesX: [0.37, 0.5, 0.63],
-      startY: 18,
+      lanePositions: [0.405, 0.5, 0.595],
+      startY: 19,
       endY: 73,
-      centerDashOffset: 0
+      dashOffset: 0
     };
 
     const state = {
@@ -1008,61 +1046,45 @@
       return String(value ?? "").trim().toLowerCase().replace(/\s+/g, " ");
     }
 
-    function shuffle(array) {
-      const a = [...array];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-
-    function buildRandomRuntime(level) {
-      const count = state.settings.objectCount;
-      const objects = [];
-      const used = new Set();
-
-      for (let i = 0; i < count; i++) {
-        let lane = Math.floor(Math.random() * level.laneCount);
-        let startStep = 8 + i * 4 + Math.floor(Math.random() * 3);
-
-        while (used.has(`${lane}-${startStep}`) || used.has(`${lane}-${startStep - 1}`) || used.has(`${lane}-${startStep + 1}`)) {
-          lane = Math.floor(Math.random() * level.laneCount);
-          startStep += 1;
-        }
-
-        used.add(`${lane}-${startStep}`);
-
-        const isDiamond = Math.random() < state.settings.diamondRatio;
-        const obstacleVariants = shuffle(["rock", "cone", "car"]);
-
-        objects.push({
-          id: uid(),
-          type: isDiamond ? "diamond" : "obstacle",
-          variant: isDiamond ? null : obstacleVariants[0],
-          lane,
-          progress: -(startStep * 0.11 + Math.random() * 0.08),
-          active: true
-        });
-      }
-
-      return objects.sort((a, b) => a.progress - b.progress);
-    }
-
     function laneX(lane) {
-      return GAME.lanesX[lane] || GAME.lanesX[1];
+      return GAME.lanePositions[lane] ?? GAME.lanePositions[1];
     }
 
     function progressToScreen(progress) {
       const y = GAME.startY + (GAME.endY - GAME.startY) * progress;
-      const scale = 0.32 + progress * 1.32;
+      const scale = 0.34 + progress * 1.28;
       return { y, scale };
     }
 
-    function getObstacleClass(variant) {
-      if (variant === "cone") return "obstacle-cone";
-      if (variant === "car") return "obstacle-car";
-      return "obstacle-rock";
+    function createRandomObject(i, level) {
+      const isDiamond = Math.random() < state.settings.diamondRatio;
+      const variants = ["rock", "cone", "car"];
+      return {
+        id: uid() + "_" + i,
+        type: isDiamond ? "diamond" : "obstacle",
+        variant: isDiamond ? null : variants[Math.floor(Math.random() * variants.length)],
+        lane: Math.floor(Math.random() * level.laneCount),
+        progress: -(i * 0.22 + Math.random() * 0.25 + 0.35),
+        active: true
+      };
+    }
+
+    function buildRandomRuntime(level) {
+      const objects = [];
+      for (let i = 0; i < state.settings.objectCount; i++) {
+        objects.push(createRandomObject(i, level));
+      }
+      return objects;
+    }
+
+    function respawnObject(obj, level) {
+      const isDiamond = Math.random() < state.settings.diamondRatio;
+      const variants = ["rock", "cone", "car"];
+      obj.type = isDiamond ? "diamond" : "obstacle";
+      obj.variant = isDiamond ? null : variants[Math.floor(Math.random() * variants.length)];
+      obj.lane = Math.floor(Math.random() * level.laneCount);
+      obj.progress = -(0.5 + Math.random() * 1.5);
+      obj.active = true;
     }
 
     function renderHUD() {
@@ -1078,8 +1100,6 @@
       ui.progressBar.style.width = progress + "%";
       ui.speedLabel.textContent = state.settings.speed;
       ui.timeLabel.textContent = state.settings.totalTimeSec;
-      ui.speedRange.value = state.settings.speed;
-      ui.timeRange.value = state.settings.totalTimeSec;
 
       const mapX = 18 + progress * 0.45;
       const mapY = 70 - progress * 0.55;
@@ -1088,36 +1108,45 @@
     }
 
     function updatePlayerVisual() {
-      const lane = state.playerLane;
-      const xShift = [-125, 0, 125][lane] || 0;
-      const tilt = [-10, 0, 10][lane] || 0;
+      const xShift = [-120, 0, 120][state.playerLane] || 0;
+      const tilt = [-10, 0, 10][state.playerLane] || 0;
       ui.playerCar.style.transform = "translateX(calc(-50% + " + xShift + "px))";
       ui.steeringWheel.style.transform = "rotate(" + (tilt * 3) + "deg)";
     }
 
+    function createObjectElement(obj) {
+      const pos = progressToScreen(obj.progress);
+      if (pos.y < 10 || pos.y > 82) return null;
+
+      const el = document.createElement("div");
+      el.className = "game-object";
+      el.style.left = (laneX(obj.lane) * 100) + "%";
+      el.style.top = pos.y + "%";
+      el.style.width = (50 * pos.scale) + "px";
+      el.style.height = (50 * pos.scale) + "px";
+
+      const inner = document.createElement("div");
+      if (obj.type === "diamond") {
+        inner.className = "diamond";
+      } else if (obj.variant === "cone") {
+        inner.className = "obstacle-cone";
+      } else if (obj.variant === "car") {
+        inner.className = "obstacle-car";
+      } else {
+        inner.className = "obstacle-rock";
+      }
+
+      el.appendChild(inner);
+      return el;
+    }
+
     function renderObjects() {
       ui.objectsLayer.innerHTML = "";
-
-      state.runtimeObjects
-        .filter(obj => obj.active)
-        .forEach(obj => {
-          const pos = progressToScreen(obj.progress);
-          if (pos.y < 8 || pos.y > 82) return;
-
-          const el = document.createElement("div");
-          el.className = "game-object";
-          el.style.left = (laneX(obj.lane) * 100) + "%";
-          el.style.top = pos.y + "%";
-          el.style.width = (48 * pos.scale) + "px";
-          el.style.height = (48 * pos.scale) + "px";
-          el.style.transform = "translate(-50%, -50%) scale(" + pos.scale + ")";
-
-          const inner = document.createElement("div");
-          inner.className = obj.type === "diamond" ? "diamond" : getObstacleClass(obj.variant);
-          el.appendChild(inner);
-
-          ui.objectsLayer.appendChild(el);
-        });
+      for (const obj of state.runtimeObjects) {
+        if (!obj.active) continue;
+        const el = createObjectElement(obj);
+        if (el) ui.objectsLayer.appendChild(el);
+      }
     }
 
     function renderOverlay() {
@@ -1214,15 +1243,10 @@
           </div>
         `;
 
-        document.getElementById("restartBtn").addEventListener("click", () => {
-          resetGame(state.currentLevelIndex);
-        });
-
+        document.getElementById("restartBtn").addEventListener("click", () => resetGame(state.currentLevelIndex));
         const nextLevelBtn = document.getElementById("nextLevelBtn");
         if (nextLevelBtn) {
-          nextLevelBtn.addEventListener("click", () => {
-            resetGame(state.currentLevelIndex + 1);
-          });
+          nextLevelBtn.addEventListener("click", () => resetGame(state.currentLevelIndex + 1));
         }
       }
     }
@@ -1258,7 +1282,7 @@
       state.finishStats = null;
       state.nextQuestionIndex = 0;
       state.timerAcc = 0;
-      GAME.centerDashOffset = 0;
+      GAME.dashOffset = 0;
       render();
     }
 
@@ -1273,7 +1297,7 @@
       state.finishStats = null;
       state.nextQuestionIndex = 0;
       state.timerAcc = 0;
-      GAME.centerDashOffset = 0;
+      GAME.dashOffset = 0;
       render();
       state.gameLoop = setInterval(gameTick, GAME.tickMs);
     }
@@ -1292,50 +1316,29 @@
         state.timeLeft = Math.max(0, state.timeLeft - 1);
       }
 
-      GAME.centerDashOffset += state.settings.speed * 5;
-      const offset = GAME.centerDashOffset % 94;
+      GAME.dashOffset += state.settings.speed * 5;
+      const offset = GAME.dashOffset % 98;
       ui.centerLine.style.background = `
         repeating-linear-gradient(
           180deg,
-          rgba(255,232,166,.92) ${offset}px,
-          rgba(255,232,166,.92) ${offset + 42}px,
-          rgba(255,232,166,0) ${offset + 42}px,
-          rgba(255,232,166,0) ${offset + 94}px
+          rgba(255,232,166,.95) ${offset}px,
+          rgba(255,232,166,.95) ${offset + 44}px,
+          rgba(255,232,166,0) ${offset + 44}px,
+          rgba(255,232,166,0) ${offset + 98}px
         )
       `;
 
-      state.runtimeObjects = state.runtimeObjects.map(obj => {
-        if (!obj.active) return obj;
-        return {
-          ...obj,
-          progress: obj.progress + 0.009 + state.settings.speed * 0.0019
-        };
-      });
+      for (const obj of state.runtimeObjects) {
+        if (!obj.active) continue;
+        obj.progress += 0.008 + state.settings.speed * 0.0019;
+        if (obj.progress > 1.15) {
+          respawnObject(obj, level);
+        }
+      }
 
-      respawnPassedObjects();
       checkCollisions();
       checkFinish();
       render();
-    }
-
-    function respawnPassedObjects() {
-      const level = currentLevel();
-      state.runtimeObjects = state.runtimeObjects.map(obj => {
-        if (obj.active && obj.progress <= 1.1) return obj;
-
-        const isDiamond = Math.random() < state.settings.diamondRatio;
-        const variants = ["rock", "cone", "car"];
-        const variant = variants[Math.floor(Math.random() * variants.length)];
-
-        return {
-          ...obj,
-          type: isDiamond ? "diamond" : "obstacle",
-          variant: isDiamond ? null : variant,
-          lane: Math.floor(Math.random() * level.laneCount),
-          progress: -(0.8 + Math.random() * 1.2),
-          active: true
-        };
-      });
     }
 
     function moveUp() {
@@ -1354,7 +1357,8 @@
       const collided = state.runtimeObjects.find(obj =>
         obj.active &&
         obj.lane === state.playerLane &&
-        Math.abs(obj.progress - 1) < 0.11
+        obj.progress > 0.88 &&
+        obj.progress < 1.02
       );
 
       if (!collided) return;
@@ -1363,6 +1367,9 @@
 
       if (collided.type === "obstacle") {
         state.diamonds = Math.max(0, state.diamonds - state.settings.loseDiamondsOnCrash);
+        setTimeout(() => {
+          respawnObject(collided, currentLevel());
+        }, 300);
         return;
       }
 
@@ -1436,6 +1443,7 @@
         success: finishedDistance,
         nextLevelAvailable: finishedDistance && !isLastLevel
       };
+      render();
     }
 
     ui.btnUp.addEventListener("click", moveUp);
@@ -1447,11 +1455,12 @@
 
     ui.speedRange.addEventListener("input", (e) => {
       state.settings.speed = Number(e.target.value);
-      renderHUD();
+      ui.speedLabel.textContent = state.settings.speed;
     });
 
     ui.timeRange.addEventListener("input", (e) => {
       state.settings.totalTimeSec = Number(e.target.value);
+      ui.timeLabel.textContent = state.settings.totalTimeSec;
       if (state.gameStatus === "ready") state.timeLeft = state.settings.totalTimeSec;
       renderHUD();
     });
@@ -1465,6 +1474,7 @@
     function init() {
       setupLevel(0);
       resetGame(0);
+      updatePlayerVisual();
     }
 
     init();
