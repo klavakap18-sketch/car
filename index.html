@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Гонка — образовательная игра</title>
+  <style>
+    :root {
+      --bg-top: #8fd3ff;
+      --bg-bottom: #dff6ff;
+      --road: #3b3b45;
+      --road-line: #ffffff;
+      --panel: rgba(255,255,255,0.92);
+      --text: #0f172a;
+      --accent: #2563eb;
+      --success: #059669;
+      --danger: #dc2626;
+      --warning: #d97706;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      padding: 20px;
+    }
+
+    h1, h2, h3, p {
+      margin-top: 0;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      background: #e2e8f0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stat-card {
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .stat-blue { background: #dbeafe; }
+    .stat-yellow { background: #fef3c7; }
+
+    .stat-label {
+      font-size: 13px;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .progress-wrap {
+      margin-bottom: 18px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    .progress {
+      width: 100%;
+      height: 16px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #60a5fa, #2563eb);
+      transition: width 0.15s linear;
+    }
+
+    .control-box, .settings-box, .info-box {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .control-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.08s ease, opacity 0.2s ease;
+    }
+
+    button:hover { opacity: 0.95; }
+    button:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .btn-outline {
+      background: white;
+      color: #0f172a;
+      border: 2px solid #cbd5e1;
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .setting-item {
+      margin-bottom: 14px;
+    }
+
+    .setting-item label {
+      display: block;
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .game-wrap {
+      position: relative;
+      width: 920px;
+      max-width: 100%;
+      height: 520px;
+      overflow: hidden;
+      border-radius: 28px;
+      box-shadow: 0 16px 34px rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.6);
+      background: linear-gradient(180deg, #c8ecff 0%, #e8f7ff 100%);
+    }
+
+    .sky-glow {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 90px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0));
+      z-index: 1;
+    }
+
+    .road {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 96px;
+      bottom: 56px;
+      background: var(--road);
+      overflow: hidden;
+    }
+
+    .grass {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 56px;
+      background: #22c55e;
+    }
+
+    .lane-divider {
+      position: absolute;
+      left: 0;
+      right: 0;
+      border-top: 2px dashed rgba(255,255,255,0.28);
+    }
+
+    .stripe {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 60px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--road-line);
+      opacity: 0.9;
+    }
+
+    .level-flag {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      z-index: 2;
+      background: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: bold;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .player {
+      position: absolute;
+      width: 72px;
+      height: 48px;
+      left: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      z-index: 5;
+      transition: top 0.18s ease;
+      filter: drop-shadow(0 8px 8px rgba(0,0,0,0.18));
+    }
+
+    .object {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      z-index: 4;
+      will-change: transform, left, top;
+    }
+
+    .diamond {
+      animation: pulse 0.8s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.36);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      background: rgba(255,255,255,0.96);
+      border-radius: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+      padding: 28px;
+      text-align: center;
+    }
+
+    .modal-icon {
+      font-size: 56px;
+      margin-bottom: 10px;
+    }
+
+    .question-box {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 18px;
+      font-size: 28px;
+      font-weight: bold;
+      margin: 18px 0;
+    }
+
+    .answers {
+      display: grid;
+      gap: 10px;
+    }
+
+    .answers.choice {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .answer-input-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .answer-input-row input {
+      flex: 1;
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 18px;
+    }
+
+    .feedback {
+      margin-top: 14px;
+      border-radius: 14px;
+      padding: 12px;
+      font-weight: bold;
+    }
+
+    .feedback.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .feedback.warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .finish-box {
+      margin: 18px auto 0;
+      max-width: 320px;
+      background: #dbeafe;
+      border-radius: 18px;
+      padding: 16px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .finish-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .small-note {
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    @media (max-width: 1180px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .game-wrap {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .answers.choice {
+        grid-template-columns: 1fr;
+      }
+
+      .action-row,
+      .control-buttons,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .answer-input-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="panel">
+      <div class="title-row">
+        <h1 id="gameTitle">Гонка</h1>
+        <div class="badge" id="levelBadge">Уровень 1</div>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card stat-blue">
+          <div class="stat-label">💎 Алмазы</div>
+          <div class="stat-value" id="diamondsValue">0</div>
+        </div>
+        <div class="stat-card stat-yellow">
+          <div class="stat-label">⏱ Время</div>
+          <div class="stat-value" id="timeValue">45</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Прогресс трассы</span>
+          <span id="progressText">0%</span>
+        </div>
+        <div class="progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+
+      <div class="control-box">
+        <h3>Управление</h3>
+        <div class="control-buttons">
+          <button class="btn-secondary" id="btnUp">⬆ Вверх</button>
+          <button class="btn-secondary" id="btnDown">⬇ Вниз</button>
+        </div>
+        <p class="small-note" style="margin-top:12px;">Также работают клавиши ↑ / ↓</p>
+      </div>
+
+      <div class="settings-box">
+        <h3>Параметры прототипа</h3>
+
+        <div class="setting-item">
+          <label for="speedRange">Скорость: <span id="speedLabel">7</span></label>
+          <input type="range" id="speedRange" min="4" max="12" step="1" value="7">
+        </div>
+
+        <div class="setting-item">
+          <label for="timeRange">Время: <span id="timeLabel">45</span> сек</label>
+          <input type="range" id="timeRange" min="20" max="90" step="5" value="45">
+        </div>
+
+        <div class="action-row">
+          <button class="btn-primary" id="btnStart">▶ Старт</button>
+          <button class="btn-outline" id="btnReset">↻ Сброс</button>
+        </div>
+      </div>
+
+      <div class="info-box">
+        Это версия в одном HTML-файле для GitHub Pages.  
+        Все основные параметры уже вынесены в конфиг, чтобы потом подключить редактор.
+      </div>
+    </aside>
+
+    <main class="game-wrap" id="gameWrap">
+      <div class="sky-glow"></div>
+      <div class="level-flag" id="levelFlag">🏁 Уровень 1</div>
+      <div class="road" id="road"></div>
+      <div class="grass"></div>
+      <div class="player" id="player">🚗</div>
+      <div id="objectsLayer"></div>
+      <div id="overlayLayer"></div>
+    </main>
+  </div>
+
+  <script>
+    const GAME_CONFIG = {
+      meta: {
+        title: "Гонка",
+        finishMessage: "Поздравляем! Ты финишировал!",
+        startButtonText: "Старт",
+        restartButtonText: "Играть снова"
+      },
+      teacherSettings: {
+        difficulty: "easy",
+        speed: 7,
+        diamondCount: 7,
+        obstacleCount: 8,
+        obstacleTypes: ["rock", "cone", "car"],
+        totalTimeSec: 45,
+        attemptsPerQuestion: 1,
+        loseDiamondsOnCrash: 1,
+        gainDiamondsOnCorrect: 1,
+        useKeyboard: true
+      },
+      appearance: {
+        backgroundTop: "#8fd3ff",
+        backgroundBottom: "#dff6ff",
+        roadColor: "#3b3b45",
+        roadLineColor: "#ffffff",
+        accent: "#2563eb",
+        success: "#059669",
+        danger: "#dc2626",
+        text: "#0f172a",
+        panel: "rgba(255,255,255,0.92)"
+      },
+      levels: [
+        {
+          id: 1,
+          name: "Уровень 1",
+          distance: 100,
+          laneCount: 3,
+          spawnPattern: [
+            { type: "diamond", lane: 0, at: 10 },
+            { type: "obstacle", lane: 1, at: 18, variant: "rock" },
+            { type: "diamond", lane: 2, at: 24 },
+            { type: "obstacle", lane: 0, at: 32, variant: "cone" },
+            { type: "diamond", lane: 1, at: 42 },
+            { type: "obstacle", lane: 2, at: 50, variant: "car" },
+            { type: "diamond", lane: 0, at: 60 },
+            { type: "obstacle", lane: 1, at: 68, variant: "rock" },
+            { type: "diamond", lane: 2, at: 78 },
+            { type: "obstacle", lane: 0, at: 88, variant: "cone" }
+          ],
+          questions: [
+            {
+              id: "l1q1",
+              prompt: "3 + 2 = ?",
+              answerType: "choice",
+              correctAnswer: "5",
+              options: ["4", "5", "6"]
+            },
+            {
+              id: "l1q2",
+              prompt: "8 - 3 = ?",
+              answerType: "choice",
+              correctAnswer: "5",
+              options: ["5", "4", "6"]
+            },
+            {
+              id: "l1q3",
+              prompt: "6 + 1 = ?",
+              answerType: "input",
+              correctAnswer: "7"
+            },
+            {
+              id: "l1q4",
+              prompt: "Сколько будет 4 + 4?",
+              answerType: "choice",
+              correctAnswer: "8",
+              options: ["7", "8", "9"]
+            },
+            {
+              id: "l1q5",
+              prompt: "10 - 6 = ?",
+              answerType: "input",
+              correctAnswer: "4"
+            }
+          ]
+        },
+        {
+          id: 2,
+          name: "Уровень 2",
+          distance: 120,
+          laneCount: 3,
+          spawnPattern: [
+            { type: "obstacle", lane: 1, at: 10, variant: "car" },
+            { type: "diamond", lane: 2, at: 16 },
+            { type: "obstacle", lane: 0, at: 22, variant: "rock" },
+            { type: "diamond", lane: 1, at: 28 },
+            { type: "obstacle", lane: 2, at: 36, variant: "cone" },
+            { type: "diamond", lane: 0, at: 46 },
+            { type: "obstacle", lane: 1, at: 58, variant: "rock" },
+            { type: "diamond", lane: 2, at: 67 },
+            { type: "obstacle", lane: 0, at: 80, variant: "car" },
+            { type: "diamond", lane: 1, at: 92 }
+          ],
+          questions: [
+            {
+              id: "l2q1",
+              prompt: "12 - 5 = ?",
+              answerType: "choice",
+              correctAnswer: "7",
+              options: ["6", "7", "8"]
+            },
+            {
+              id: "l2q2",
+              prompt: "9 + 6 = ?",
+              answerType: "input",
+              correctAnswer: "15"
+            },
+            {
+              id: "l2q3",
+              prompt: "14 - 4 = ?",
+              answerType: "choice",
+              correctAnswer: "10",
+              options: ["9", "10", "11"]
+            },
+            {
+              id: "l2q4",
+              prompt: "5 × 2 = ?",
+              answerType: "choice",
+              correctAnswer: "10",
+              options: ["8", "10", "12"]
+            },
+            {
+              id: "l2q5",
+              prompt: "18 - 9 = ?",
+              answerType: "input",
+              correctAnswer: "9"
+            }
+          ]
+        }
+      ]
+    };
+
+    const GAME = {
+      width: 920,
+      height: 520,
+      roadTop: 96,
+      roadBottom: 464,
+      roadRight: 860,
+      roadLeft: 110,
+      carX: 170,
+      collisionXThreshold: 48,
+      tickMs: 40
+    };
+
+    const state = {
+      settings: JSON.parse(JSON.stringify(GAME_CONFIG.teacherSettings)),
+      currentLevelIndex: 0,
+      gameStatus: "ready", // ready | running | pausedForQuiz | finished
+      playerLane: 1,
+      diamonds: 0,
+      timeLeft: GAME_CONFIG.teacherSettings.totalTimeSec,
+      distancePassed: 0,
+      runtimeObjects: [],
+      stripesOffset: 0,
+      quizState: null,
+      quizInput: "",
+      finishStats: null,
+      nextQuestionIndex: 0,
+      timerAcc: 0,
+      gameLoop: null
+    };
+
+    const ui = {
+      gameTitle: document.getElementById("gameTitle"),
+      levelBadge: document.getElementById("levelBadge"),
+      levelFlag: document.getElementById("levelFlag"),
+      diamondsValue: document.getElementById("diamondsValue"),
+      timeValue: document.getElementById("timeValue"),
+      progressText: document.getElementById("progressText"),
+      progressBar: document.getElementById("progressBar"),
+      player: document.getElementById("player"),
+      road: document.getElementById("road"),
+      objectsLayer: document.getElementById("objectsLayer"),
+      overlayLayer: document.getElementById("overlayLayer"),
+      btnUp: document.getElementById("btnUp"),
+      btnDown: document.getElementById("btnDown"),
+      btnStart: document.getElementById("btnStart"),
+      btnReset: document.getElementById("btnReset"),
+      speedRange: document.getElementById("speedRange"),
+      timeRange: document.getElementById("timeRange"),
+      speedLabel: document.getElementById("speedLabel"),
+      timeLabel: document.getElementById("timeLabel")
+    };
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function uid() {
+      return Math.random().toString(36).slice(2, 10);
+    }
+
+    function currentLevel() {
+      return GAME_CONFIG.levels[state.currentLevelIndex];
+    }
+
+    function laneToY(lane, laneCount) {
+      const top = 140;
+      const bottom = 400;
+      if (laneCount <= 1) return 270;
+      const step = (bottom - top) / (laneCount - 1);
+      return top + lane * step;
+    }
+
+    function normalizeAnswer(value) {
+      return String(value ?? "").trim().toLowerCase().replace(/\s+/g, " ");
+    }
+
+    function getObstacleLabel(variant) {
+      if (variant === "rock") return "🪨";
+      if (variant === "cone") return "🚧";
+      if (variant === "car") return "🚙";
+      return "⛔";
+    }
+
+    function buildLevelRuntime(level) {
+      return level.spawnPattern.map(item => ({
+        id: uid(),
+        ...item,
+        x: GAME.roadRight + item.at * 9,
+        active: true
+      }));
+    }
+
+    function drawRoad() {
+      const level = currentLevel();
+      ui.road.innerHTML = "";
+
+      for (let i = 1; i < level.laneCount; i++) {
+        const divider = document.createElement("div");
+        divider.className = "lane-divider";
+        divider.style.top = `${(i / level.laneCount) * 100}%`;
+        ui.road.appendChild(divider);
+      }
+
+      for (let i = 0; i < 12; i++) {
+        const stripe = document.createElement("div");
+        stripe.className = "stripe";
+        stripe.dataset.baseX = String(i * 80);
+        ui.road.appendChild(stripe);
+      }
+    }
+
+    function updateStripes() {
+      const stripes = ui.road.querySelectorAll(".stripe");
+      stripes.forEach((stripe) => {
+        const baseX = Number(stripe.dataset.baseX);
+        stripe.style.left = `${baseX - state.stripesOffset}px`;
+      });
+    }
+
+    function renderObjects() {
+      const level = currentLevel();
+      ui.objectsLayer.innerHTML = "";
+
+      state.runtimeObjects
+        .filter(obj => obj.active && obj.x > GAME.roadLeft - 100)
+        .forEach(obj => {
+          const el = document.createElement("div");
+          el.className = "object" + (obj.type === "diamond" ? " diamond" : "");
+          el.style.left = `${obj.x}px`;
+          el.style.top = `${laneToY(obj.lane, level.laneCount) - 22}px`;
+          el.textContent = obj.type === "diamond" ? "💎" : getObstacleLabel(obj.variant);
+          ui.objectsLayer.appendChild(el);
+        });
+    }
+
+    function renderPlayer() {
+      const level = currentLevel();
+      const y = laneToY(state.playerLane, level.laneCount) - 24;
+      ui.player.style.top = `${y}px`;
+    }
+
+    function renderHUD() {
+      const level = currentLevel();
+      const progress = clamp((state.distancePassed / level.distance) * 100, 0, 100);
+
+      ui.gameTitle.textContent = GAME_CONFIG.meta.title;
+      ui.levelBadge.textContent = level.name;
+      ui.levelFlag.textContent = `🏁 ${level.name}`;
+      ui.diamondsValue.textContent = state.diamonds;
+      ui.timeValue.textContent = state.timeLeft;
+      ui.progressText.textContent = `${Math.round(progress)}%`;
+      ui.progressBar.style.width = `${progress}%`;
+      ui.speedLabel.textContent = state.settings.speed;
+      ui.timeLabel.textContent = state.settings.totalTimeSec;
+      ui.speedRange.value = state.settings.speed;
+      ui.timeRange.value = state.settings.totalTimeSec;
+    }
+
+    function showStartOverlay() {
+      ui.overlayLayer.innerHTML = `
+        <div class="overlay">
+          <div class="modal">
+            <div class="modal-icon">🏁</div>
+            <h2>Готов к старту?</h2>
+            <p>Собирай алмазы, отвечай на вопросы и объезжай препятствия.</p>
+            <button class="btn-primary" id="overlayStartBtn" style="width:100%; margin-top: 10px;">
+              ▶ ${GAME_CONFIG.meta.startButtonText}
+            </button>
+          </div>
+        </div>
+      `;
+      document.getElementById("overlayStartBtn").addEventListener("click", startGame);
+    }
+
+    function showFinishOverlay() {
+      const stats = state.finishStats;
+      const nextLevelAvailable = stats.nextLevelAvailable;
+
+      ui.overlayLayer.innerHTML = `
+        <div class="overlay">
+          <div class="modal">
+            <div class="modal-icon">🏎️</div>
+            <h2>${stats.success ? GAME_CONFIG.meta.finishMessage : "Время вышло!"}</h2>
+            <p>Уровень: ${stats.levelName}</p>
+            <div class="finish-box">💎 Собрано алмазов: ${stats.diamonds}</div>
+            <div class="finish-actions">
+              <button class="btn-outline" id="restartBtn">${GAME_CONFIG.meta.restartButtonText}</button>
+              ${nextLevelAvailable ? `<button class="btn-primary" id="nextLevelBtn">Следующий уровень</button>` : ""}
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("restartBtn").addEventListener("click", () => {
+        resetGame(state.currentLevelIndex);
+      });
+
+      if (nextLevelAvailable) {
+        document.getElementById("nextLevelBtn").addEventListener("click", () => {
+          resetGame(state.currentLevelIndex + 1);
+        });
+      }
+    }
+
+    function showQuizOverlay() {
+      const q = state.quizState.question;
+      let content = `
+        <div class="overlay">
+          <div class="modal">
+            <h2>Задание за алмаз</h2>
+            <div class="question-box">${q.prompt}</div>
+      `;
+
+      if (q.answerType === "choice") {
+        content += `<div class="answers choice">`;
+        q.options.forEach(option => {
+          content += `<button class="btn-secondary quiz-choice" data-answer="${option}">${option}</button>`;
+        });
+        content += `</div>`;
+      } else {
+        content += `
+          <div class="answer-input-row">
+            <input id="quizInput" type="text" placeholder="Введи ответ" />
+            <button class="btn-primary" id="quizSubmitBtn">Ответить</button>
+          </div>
+        `;
+      }
+
+      if (state.quizState.feedback) {
+        content += `
+          <div class="feedback ${state.quizState.feedback.type}">
+            ${state.quizState.feedback.message}
+          </div>
+        `;
+      }
+
+      content += `
+            <p class="small-note" style="margin-top: 12px;">
+              Попытка: ${state.quizState.attemptsUsed + 1}
+              ${state.quizState.maxAttempts > 0 ? " / " + state.quizState.maxAttempts : ""}
+            </p>
+          </div>
+        </div>
+      `;
+
+      ui.overlayLayer.innerHTML = content;
+
+      if (q.answerType === "choice") {
+        document.querySelectorAll(".quiz-choice").forEach(btn => {
+          btn.addEventListener("click", () => submitAnswer(btn.dataset.answer));
+        });
+      } else {
+        const input = document.getElementById("quizInput");
+        const submitBtn = document.getElementById("quizSubmitBtn");
+        input.focus();
+        submitBtn.addEventListener("click", () => submitAnswer(input.value));
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") submitAnswer(input.value);
+        });
+      }
+    }
+
+    function renderOverlay() {
+      ui.overlayLayer.innerHTML = "";
+
+      if (state.gameStatus === "ready") {
+        showStartOverlay();
+      } else if (state.gameStatus === "pausedForQuiz" && state.quizState) {
+        showQuizOverlay();
+      } else if (state.gameStatus === "finished" && state.finishStats) {
+        showFinishOverlay();
+      }
+    }
+
+    function render() {
+      renderHUD();
+      renderPlayer();
+      renderObjects();
+      updateStripes();
+      renderOverlay();
+    }
+
+    function setupLevel(targetLevelIndex) {
+      state.currentLevelIndex = targetLevelIndex;
+      state.playerLane = 1;
+      state.runtimeObjects = buildLevelRuntime(currentLevel());
+      drawRoad();
+    }
+
+    function clearLoop() {
+      if (state.gameLoop) {
+        clearInterval(state.gameLoop);
+        state.gameLoop = null;
+      }
+    }
+
+    function resetGame(targetLevelIndex = state.currentLevelIndex) {
+      clearLoop();
+      setupLevel(targetLevelIndex);
+      state.gameStatus = "ready";
+      state.diamonds = 0;
+      state.timeLeft = state.settings.totalTimeSec;
+      state.distancePassed = 0;
+      state.stripesOffset = 0;
+      state.quizState = null;
+      state.finishStats = null;
+      state.nextQuestionIndex = 0;
+      state.timerAcc = 0;
+      render();
+    }
+
+    function startGame() {
+      clearLoop();
+      setupLevel(state.currentLevelIndex);
+      state.gameStatus = "running";
+      state.diamonds = 0;
+      state.timeLeft = state.settings.totalTimeSec;
+      state.distancePassed = 0;
+      state.stripesOffset = 0;
+      state.quizState = null;
+      state.finishStats = null;
+      state.nextQuestionIndex = 0;
+      state.timerAcc = 0;
+      render();
+
+      state.gameLoop = setInterval(() => {
+        if (state.gameStatus !== "running") return;
+
+        const level = currentLevel();
+
+        state.stripesOffset = (state.stripesOffset + state.settings.speed * 1.8) % 80;
+        state.distancePassed += state.settings.speed * 0.18;
+        if (state.distancePassed > level.distance) {
+          state.distancePassed = level.distance;
+        }
+
+        state.timerAcc += GAME.tickMs;
+        if (state.timerAcc >= 1000) {
+          state.timerAcc = 0;
+          state.timeLeft = Math.max(0, state.timeLeft - 1);
+        }
+
+        state.runtimeObjects = state.runtimeObjects.map(obj => {
+          if (!obj.active) return obj;
+          return { ...obj, x: obj.x - state.settings.speed * 2.2 };
+        });
+
+        checkCollisions();
+        checkFinish();
+        render();
+      }, GAME.tickMs);
+    }
+
+    function moveUp() {
+      const level = currentLevel();
+      state.playerLane = clamp(state.playerLane - 1, 0, level.laneCount - 1);
+      renderPlayer();
+    }
+
+    function moveDown() {
+      const level = currentLevel();
+      state.playerLane = clamp(state.playerLane + 1, 0, level.laneCount - 1);
+      renderPlayer();
+    }
+
+    function checkCollisions() {
+      if (state.gameStatus !== "running") return;
+
+      const level = currentLevel();
+      const playerY = laneToY(state.playerLane, level.laneCount);
+
+      const collided = state.runtimeObjects.find(obj =>
+        obj.active &&
+        Math.abs(obj.x - GAME.carX) < GAME.collisionXThreshold &&
+        Math.abs(laneToY(obj.lane, level.laneCount) - playerY) < 20
+      );
+
+      if (!collided) return;
+
+      if (collided.type === "obstacle") {
+        collided.active = false;
+        state.diamonds = Math.max(0, state.diamonds - state.settings.loseDiamondsOnCrash);
+      }
+
+      if (collided.type === "diamond") {
+        collided.active = false;
+        const question = level.questions[state.nextQuestionIndex % level.questions.length];
+        state.nextQuestionIndex += 1;
+        state.gameStatus = "pausedForQuiz";
+        state.quizState = {
+          question,
+          attemptsUsed: 0,
+          maxAttempts: state.settings.attemptsPerQuestion,
+          feedback: null
+        };
+      }
+    }
+
+    function continueAfterQuiz(feedback) {
+      state.quizState.feedback = feedback;
+      renderOverlay();
+
+      setTimeout(() => {
+        state.quizState = null;
+        state.gameStatus = "running";
+        render();
+      }, 700);
+    }
+
+    function submitAnswer(value) {
+      if (!state.quizState || !state.quizState.question) return;
+
+      const q = state.quizState.question;
+      const isCorrect = normalizeAnswer(value) === normalizeAnswer(q.correctAnswer);
+
+      if (isCorrect) {
+        state.diamonds += state.settings.gainDiamondsOnCorrect;
+        continueAfterQuiz({ type: "success", message: "+1 алмаз! Верно." });
+        return;
+      }
+
+      const nextAttemptsUsed = state.quizState.attemptsUsed + 1;
+      const maxAttempts = state.quizState.maxAttempts;
+      const canRetry = maxAttempts === 0 || nextAttemptsUsed < maxAttempts;
+
+      if (canRetry) {
+        state.quizState.attemptsUsed = nextAttemptsUsed;
+        state.quizState.feedback = {
+          type: "warning",
+          message: "Пока неверно. Попробуй ещё раз."
+        };
+        renderOverlay();
+        return;
+      }
+
+      continueAfterQuiz({ type: "warning", message: "Неверно. Едем дальше." });
+    }
+
+    function checkFinish() {
+      if (state.gameStatus !== "running") return;
+
+      const level = currentLevel();
+      const noTime = state.timeLeft <= 0;
+      const finishedDistance = state.distancePassed >= level.distance;
+
+      if (!noTime && !finishedDistance) return;
+
+      clearLoop();
+
+      const isLastLevel = state.currentLevelIndex >= GAME_CONFIG.levels.length - 1;
+      state.gameStatus = "finished";
+      state.finishStats = {
+        diamonds: state.diamonds,
+        levelName: level.name,
+        success: finishedDistance,
+        nextLevelAvailable: finishedDistance && !isLastLevel
+      };
+    }
+
+    ui.btnUp.addEventListener("click", moveUp);
+    ui.btnDown.addEventListener("click", moveDown);
+    ui.btnStart.addEventListener("click", startGame);
+    ui.btnReset.addEventListener("click", () => resetGame(state.currentLevelIndex));
+
+    ui.speedRange.addEventListener("input", (e) => {
+      state.settings.speed = Number(e.target.value);
+      renderHUD();
+    });
+
+    ui.timeRange.addEventListener("input", (e) => {
+      state.settings.totalTimeSec = Number(e.target.value);
+      if (state.gameStatus === "ready") {
+        state.timeLeft = state.settings.totalTimeSec;
+      }
+      renderHUD();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (!state.settings.useKeyboard) return;
+
+      if (["ArrowUp", "w", "W", "ц", "Ц"].includes(e.key)) {
+        moveUp();
+      }
+
+      if (["ArrowDown", "s", "S", "ы", "Ы"].includes(e.key)) {
+        moveDown();
+      }
+    });
+
+    function init() {
+      document.documentElement.style.setProperty("--bg-top", GAME_CONFIG.appearance.backgroundTop);
+      document.documentElement.style.setProperty("--bg-bottom", GAME_CONFIG.appearance.backgroundBottom);
+      document.documentElement.style.setProperty("--road", GAME_CONFIG.appearance.roadColor);
+      document.documentElement.style.setProperty("--road-line", GAME_CONFIG.appearance.roadLineColor);
+      document.documentElement.style.setProperty("--panel", GAME_CONFIG.appearance.panel);
+      document.documentElement.style.setProperty("--text", GAME_CONFIG.appearance.text);
+      document.documentElement.style.setProperty("--accent", GAME_CONFIG.appearance.accent);
+
+      setupLevel(0);
+      resetGame(0);
+    }
+
+    init();
+  </script>
+</body>
+</html>
