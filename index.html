@@ -3,170 +3,177 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Гонка — образовательная игра</title>
+  <title>Гонка — аркадная образовательная игра</title>
   <style>
     :root {
-      --bg-top: #8fd3ff;
-      --bg-bottom: #dff6ff;
-      --road: #3b3b45;
-      --road-line: #ffffff;
-      --panel: rgba(255,255,255,0.92);
-      --text: #0f172a;
-      --accent: #2563eb;
-      --success: #059669;
-      --danger: #dc2626;
-      --warning: #d97706;
+      --sky-top: #65dbff;
+      --sky-bottom: #d8f7ff;
+      --road-main: #f7bf56;
+      --road-shadow: #dfa13a;
+      --road-line: #ffe5a3;
+      --grass: #6fca37;
+      --grass-dark: #4ba321;
+      --danger: #ef4444;
+      --danger-dark: #b91c1c;
+      --hud-bg: rgba(255, 255, 255, 0.9);
+      --hud-border: rgba(0, 0, 0, 0.08);
+      --text: #10233a;
+      --accent: #1d4ed8;
+      --accent-2: #00b7ff;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+      --radius: 22px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       color: var(--text);
-      background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.5), transparent 40%),
+        linear-gradient(180deg, #7ce4ff 0%, #dff8ff 100%);
       min-height: 100vh;
     }
 
     .app {
-      max-width: 1280px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 18px;
       display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 20px;
+      grid-template-columns: 330px 1fr;
+      gap: 18px;
       align-items: start;
     }
 
     .panel {
-      background: var(--panel);
-      border-radius: 24px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-      padding: 20px;
+      background: var(--hud-bg);
+      border: 1px solid var(--hud-border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      backdrop-filter: blur(6px);
     }
 
-    h1, h2, h3, p {
+    .panel h1,
+    .panel h2,
+    .panel h3,
+    .panel p {
       margin-top: 0;
     }
 
     .title-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+    }
+
+    .title-row h1 {
+      font-size: 30px;
+      margin-bottom: 0;
     }
 
     .badge {
-      background: #e2e8f0;
+      padding: 8px 14px;
       border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 14px;
+      background: linear-gradient(180deg, #eef7ff, #d8ebff);
       font-weight: bold;
+      font-size: 14px;
       white-space: nowrap;
+      border: 1px solid rgba(29, 78, 216, 0.12);
     }
 
-    .stats {
+    .stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .stat-card {
       border-radius: 18px;
       padding: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
     }
 
-    .stat-blue { background: #dbeafe; }
-    .stat-yellow { background: #fef3c7; }
+    .stat-card.blue {
+      background: linear-gradient(180deg, #dff4ff, #bfe8ff);
+    }
+
+    .stat-card.gold {
+      background: linear-gradient(180deg, #fff2c8, #ffd979);
+    }
 
     .stat-label {
       font-size: 13px;
-      color: #475569;
+      color: rgba(16, 35, 58, 0.7);
       margin-bottom: 6px;
     }
 
     .stat-value {
-      font-size: 28px;
-      font-weight: bold;
+      font-size: 30px;
+      font-weight: 900;
     }
 
     .progress-wrap {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .progress-label {
       display: flex;
       justify-content: space-between;
       font-size: 14px;
-      color: #475569;
       margin-bottom: 8px;
+      color: rgba(16, 35, 58, 0.75);
     }
 
     .progress {
       width: 100%;
       height: 16px;
-      background: #e2e8f0;
       border-radius: 999px;
       overflow: hidden;
+      background: #d7e5ef;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
     }
 
     .progress-bar {
       height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #60a5fa, #2563eb);
+      width: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #00c3ff, #2055ff);
       transition: width 0.15s linear;
     }
 
-    .control-box, .settings-box, .info-box {
-      background: #f8fafc;
-      border-radius: 18px;
+    .box {
+      background: linear-gradient(180deg, #f9fcff, #edf6fb);
+      border-radius: 20px;
       padding: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(16, 35, 58, 0.06);
     }
 
-    .control-buttons {
+    .box h3 {
+      margin-bottom: 12px;
+    }
+
+    .controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 12px;
-    }
-
-    button {
-      border: none;
-      border-radius: 16px;
-      padding: 14px 16px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.08s ease, opacity 0.2s ease;
-    }
-
-    button:hover { opacity: 0.95; }
-    button:active { transform: scale(0.98); }
-
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-    }
-
-    .btn-secondary {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .btn-outline {
-      background: white;
-      color: #0f172a;
-      border: 2px solid #cbd5e1;
     }
 
     .action-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 12px;
     }
 
     .setting-item {
@@ -176,164 +183,728 @@
     .setting-item label {
       display: block;
       font-size: 14px;
-      color: #475569;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
+      color: rgba(16, 35, 58, 0.75);
     }
 
     input[type="range"] {
       width: 100%;
     }
 
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-weight: 800;
+      transition: transform 0.08s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
+
+    button:hover {
+      opacity: 0.96;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, #33c8ff, #2563eb);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(180deg, #ffffff, #ddeaf5);
+      color: var(--text);
+    }
+
+    .btn-outline {
+      background: linear-gradient(180deg, #ffffff, #f2f5f9);
+      color: var(--text);
+      border: 2px solid rgba(16, 35, 58, 0.12);
+    }
+
+    .note {
+      font-size: 14px;
+      color: rgba(16, 35, 58, 0.7);
+      line-height: 1.45;
+    }
+
     .game-wrap {
       position: relative;
-      width: 920px;
-      max-width: 100%;
-      height: 520px;
+      width: 100%;
+      min-height: 680px;
       overflow: hidden;
-      border-radius: 28px;
-      box-shadow: 0 16px 34px rgba(0,0,0,0.18);
-      border: 1px solid rgba(255,255,255,0.6);
-      background: linear-gradient(180deg, #c8ecff 0%, #e8f7ff 100%);
+      border-radius: 34px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.24);
+      background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 45%, #9ee7ff 100%);
+      border: 2px solid rgba(255,255,255,0.65);
     }
 
-    .sky-glow {
+    .world {
       position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 90px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0));
-      z-index: 1;
-    }
-
-    .road {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 96px;
-      bottom: 56px;
-      background: var(--road);
+      inset: 0;
       overflow: hidden;
     }
 
-    .grass {
+    .cloud {
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 56px;
-      background: #22c55e;
-    }
-
-    .lane-divider {
-      position: absolute;
-      left: 0;
-      right: 0;
-      border-top: 2px dashed rgba(255,255,255,0.28);
-    }
-
-    .stripe {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 60px;
-      height: 8px;
+      background: rgba(255,255,255,0.95);
       border-radius: 999px;
-      background: var(--road-line);
-      opacity: 0.9;
+      filter: drop-shadow(0 6px 8px rgba(255,255,255,0.25));
     }
 
-    .level-flag {
+    .cloud::before,
+    .cloud::after {
+      content: "";
       position: absolute;
-      left: 14px;
-      top: 14px;
+      background: inherit;
+      border-radius: inherit;
+    }
+
+    .cloud::before {
+      width: 55%;
+      height: 100%;
+      left: 10%;
+      top: -45%;
+    }
+
+    .cloud::after {
+      width: 45%;
+      height: 90%;
+      right: 12%;
+      top: -30%;
+    }
+
+    .hill {
+      position: absolute;
+      bottom: 325px;
+      background: linear-gradient(180deg, #79d635, #51b326);
+      border-radius: 50% 50% 0 0;
+      box-shadow: inset 0 -10px 0 rgba(0,0,0,0.05);
+    }
+
+    .tree {
+      position: absolute;
+      bottom: 250px;
+      width: 28px;
+      height: 70px;
       z-index: 2;
-      background: rgba(255,255,255,0.9);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 14px;
-      font-weight: bold;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     }
 
-    .player {
+    .tree .crown {
       position: absolute;
-      width: 72px;
-      height: 48px;
-      left: 150px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-      z-index: 5;
-      transition: top 0.18s ease;
-      filter: drop-shadow(0 8px 8px rgba(0,0,0,0.18));
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0;
+      width: 56px;
+      height: 46px;
+      background: linear-gradient(180deg, #79d635, #3fa81f);
+      border-radius: 50%;
+      box-shadow: inset 0 -6px 0 rgba(0,0,0,0.08);
     }
 
-    .object {
+    .tree .trunk {
       position: absolute;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+      width: 8px;
+      height: 28px;
+      background: #7c4a15;
+      border-radius: 6px;
+    }
+
+    .road-area {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .road-perspective {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 68%;
+      height: 88%;
+      transform: translateX(-50%);
+      clip-path: polygon(49% 0%, 51% 0%, 100% 100%, 0% 100%);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.14), rgba(0,0,0,0.12)),
+        linear-gradient(180deg, var(--road-main), var(--road-shadow));
+      box-shadow:
+        inset 0 8px 0 rgba(255,255,255,0.18),
+        0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .road-center-line {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 8%;
+      height: 88%;
+      transform: translateX(-50%);
+      clip-path: polygon(49% 0%, 51% 0%, 100% 100%, 0% 100%);
+      background:
+        repeating-linear-gradient(
+          180deg,
+          rgba(255, 236, 169, 0.95) 0px,
+          rgba(255, 236, 169, 0.95) 34px,
+          rgba(255, 236, 169, 0) 34px,
+          rgba(255, 236, 169, 0) 76px
+        );
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .guard {
+      position: absolute;
+      bottom: 0;
+      height: 76%;
+      width: 14%;
+      pointer-events: none;
       z-index: 4;
-      will-change: transform, left, top;
     }
 
-    .diamond {
-      animation: pulse 0.8s infinite ease-in-out;
+    .guard.left {
+      left: 10.7%;
+      clip-path: polygon(40% 0, 62% 0, 100% 100%, 0 100%);
+      background:
+        repeating-linear-gradient(
+          90deg,
+          #ffffff 0px,
+          #ffffff 24px,
+          #d62828 24px,
+          #d62828 48px
+        );
+      box-shadow: inset -8px 0 0 rgba(0,0,0,0.08);
     }
 
-    @keyframes pulse {
+    .guard.right {
+      right: 10.7%;
+      clip-path: polygon(38% 0, 60% 0, 100% 100%, 0 100%);
+      background:
+        repeating-linear-gradient(
+          90deg,
+          #ffffff 0px,
+          #ffffff 24px,
+          #d62828 24px,
+          #d62828 48px
+        );
+      box-shadow: inset 8px 0 0 rgba(0,0,0,0.08);
+    }
+
+    .lane-strip {
+      position: absolute;
+      background: rgba(81, 167, 255, 0.28);
+      border: 3px solid rgba(86, 201, 255, 0.8);
+      border-radius: 6px;
+      box-shadow:
+        0 0 10px rgba(86, 201, 255, 0.45),
+        inset 0 0 8px rgba(255,255,255,0.3);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .player-car {
+      position: absolute;
+      left: 50%;
+      bottom: 84px;
+      width: 250px;
+      height: 210px;
+      transform: translateX(-50%);
+      z-index: 12;
+      transition: transform 0.18s ease, bottom 0.18s ease;
+      filter: drop-shadow(0 16px 20px rgba(0,0,0,0.28));
+      pointer-events: none;
+    }
+
+    .car-body {
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(50% 4%, 74% 18%, 84% 39%, 88% 66%, 77% 86%, 50% 98%, 23% 86%, 12% 66%, 16% 39%, 26% 18%);
+      background:
+        linear-gradient(180deg, #38d9ff 0%, #1f7eff 42%, #4b00b6 100%);
+      border: 4px solid rgba(255,255,255,0.3);
+      box-shadow:
+        inset 0 8px 14px rgba(255,255,255,0.2),
+        inset 0 -12px 20px rgba(0,0,0,0.25);
+    }
+
+    .car-cabin {
+      position: absolute;
+      left: 29%;
+      top: 18%;
+      width: 42%;
+      height: 28%;
+      border-radius: 18px 18px 10px 10px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.9), rgba(16,44,88,0.8));
+      border: 3px solid rgba(255,255,255,0.16);
+      box-shadow: inset 0 2px 6px rgba(255,255,255,0.12);
+    }
+
+    .car-window-lines {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 45%, rgba(255,255,255,0.16) 45%, rgba(255,255,255,0.16) 55%, transparent 55%);
+      opacity: 0.8;
+    }
+
+    .car-detail-left,
+    .car-detail-right {
+      position: absolute;
+      top: 48%;
+      width: 22px;
+      height: 78px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #ff34ff, #6a00ff);
+      box-shadow: 0 0 14px rgba(215, 46, 255, 0.8);
+    }
+
+    .car-detail-left {
+      left: 16%;
+      transform: skewY(8deg);
+    }
+
+    .car-detail-right {
+      right: 16%;
+      transform: skewY(-8deg);
+    }
+
+    .car-tail {
+      position: absolute;
+      left: 50%;
+      bottom: 16%;
+      transform: translateX(-50%);
+      width: 56%;
+      height: 18%;
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.65));
+      box-shadow: inset 0 2px 6px rgba(255,255,255,0.08);
+    }
+
+    .car-neon-left,
+    .car-neon-right {
+      position: absolute;
+      bottom: 6%;
+      width: 18px;
+      height: 72px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(186, 68, 255, 0.95), rgba(255, 53, 242, 0.45));
+      box-shadow: 0 0 16px rgba(227, 58, 255, 0.85);
+    }
+
+    .car-neon-left {
+      left: 26%;
+      transform: skewY(10deg);
+    }
+
+    .car-neon-right {
+      right: 26%;
+      transform: skewY(-10deg);
+    }
+
+    .car-thruster-left,
+    .car-thruster-right {
+      position: absolute;
+      bottom: 2%;
+      width: 12px;
+      height: 46px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #8b00ff, rgba(0, 255, 255, 0.2));
+      box-shadow: 0 0 14px rgba(0, 224, 255, 0.7);
+    }
+
+    .car-thruster-left {
+      left: 33%;
+    }
+
+    .car-thruster-right {
+      right: 33%;
+    }
+
+    .object-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .game-object {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      transform-origin: center center;
+      filter: drop-shadow(0 12px 12px rgba(0,0,0,0.22));
+      pointer-events: none;
+    }
+
+    .diamond-shape {
+      width: 100%;
+      height: 100%;
+      clip-path: polygon(50% 0%, 88% 26%, 72% 100%, 28% 100%, 12% 26%);
+      background:
+        linear-gradient(180deg, #d8ffff, #56d8ff 50%, #0ea5e9 100%);
+      border: 3px solid rgba(255,255,255,0.85);
+      box-shadow:
+        0 0 16px rgba(65, 216, 255, 0.8),
+        inset 0 0 10px rgba(255,255,255,0.45);
+      animation: diamondPulse 0.8s infinite ease-in-out;
+    }
+
+    .diamond-shape::before {
+      content: "";
+      position: absolute;
+      inset: 12% 20% 40% 20%;
+      background: rgba(255,255,255,0.35);
+      clip-path: polygon(50% 0%, 100% 40%, 50% 100%, 0% 40%);
+    }
+
+    @keyframes diamondPulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.08); }
       100% { transform: scale(1); }
     }
 
-    .overlay {
+    .obstacle-cone,
+    .obstacle-rock,
+    .obstacle-car {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .obstacle-cone::before {
+      content: "";
       position: absolute;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.36);
-      z-index: 20;
+      left: 50%;
+      bottom: 10%;
+      transform: translateX(-50%);
+      width: 56%;
+      height: 70%;
+      background: linear-gradient(180deg, #ffb54a, #ff6a00);
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+      border-radius: 10px;
+      box-shadow: inset 0 4px 0 rgba(255,255,255,0.2);
+    }
+
+    .obstacle-cone::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 4%;
+      transform: translateX(-50%);
+      width: 84%;
+      height: 16%;
+      background: linear-gradient(180deg, #fff, #e5e7eb);
+      border-radius: 999px;
+    }
+
+    .obstacle-rock::before {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      background: linear-gradient(180deg, #9ca3af, #4b5563);
+      clip-path: polygon(24% 20%, 55% 6%, 84% 20%, 94% 54%, 74% 90%, 31% 95%, 10% 62%);
+      border-radius: 14px;
+      box-shadow: inset 0 4px 0 rgba(255,255,255,0.15);
+    }
+
+    .obstacle-car::before {
+      content: "";
+      position: absolute;
+      inset: 10%;
+      background: linear-gradient(180deg, #ff5252, #991b1b);
+      border-radius: 12px;
+      clip-path: polygon(50% 0%, 84% 18%, 94% 48%, 86% 84%, 50% 100%, 14% 84%, 6% 48%, 16% 18%);
+      box-shadow: inset 0 4px 0 rgba(255,255,255,0.18);
+    }
+
+    .obstacle-car::after {
+      content: "";
+      position: absolute;
+      left: 28%;
+      right: 28%;
+      top: 22%;
+      height: 18%;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.95), rgba(40,40,70,0.75));
+    }
+
+    .hud-corner {
+      position: absolute;
+      z-index: 18;
+      background: rgba(255,255,255,0.88);
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    .mini-preview {
+      left: 18px;
+      top: 18px;
+      width: 120px;
+      height: 120px;
+      overflow: hidden;
+      padding: 8px;
+    }
+
+    .mini-preview-scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #7ce4ff 0%, #dff8ff 40%, #8ddf58 100%);
+    }
+
+    .mini-road {
+      position: absolute;
+      left: 50%;
+      bottom: -2px;
+      width: 75%;
+      height: 90%;
+      transform: translateX(-50%);
+      clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%);
+      background: linear-gradient(180deg, #f7bf56, #dfa13a);
+    }
+
+    .mini-car {
+      position: absolute;
+      left: 50%;
+      bottom: 8px;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #34d6ff, #1749ff);
+      box-shadow: 0 0 10px rgba(0,0,0,0.16);
+    }
+
+    .mini-map {
+      right: 18px;
+      bottom: 22px;
+      width: 126px;
+      height: 106px;
+      padding: 8px;
+      overflow: hidden;
+    }
+
+    .mini-map-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, #cceea6, #9cd56a);
+      overflow: hidden;
+      border: 3px solid rgba(0,0,0,0.08);
+    }
+
+    .mini-road-line {
+      position: absolute;
+      background: #666;
+      border-radius: 12px;
+    }
+
+    .mini-route {
+      position: absolute;
+      left: 16%;
+      top: 12%;
+      width: 68%;
+      height: 74%;
+      border: 6px solid #6b7280;
+      border-radius: 18px;
+    }
+
+    .mini-route::before,
+    .mini-route::after {
+      content: "";
+      position: absolute;
+      background: #6b7280;
+      border-radius: 999px;
+    }
+
+    .mini-route::before {
+      width: 50%;
+      height: 6px;
+      left: -2px;
+      top: 28%;
+    }
+
+    .mini-route::after {
+      width: 6px;
+      height: 44%;
+      right: 16%;
+      bottom: -2px;
+    }
+
+    .mini-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ffd400;
+      box-shadow: 0 0 8px rgba(255, 212, 0, 0.7);
+      transition: left 0.2s linear, top 0.2s linear;
+    }
+
+    .steering {
+      left: 22px;
+      bottom: 18px;
+      width: 122px;
+      height: 122px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ffffff, #d7e0e8);
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .steering-wheel {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      border: 8px solid #8f6e46;
+      border-radius: 50%;
+      background: radial-gradient(circle, #c8cdd3 0%, #aab4bf 40%, transparent 42%);
+      transform: rotate(0deg);
+      transition: transform 0.12s ease;
+    }
+
+    .steering-wheel::before,
+    .steering-wheel::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      background: #8f6e46;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+    }
+
+    .steering-wheel::before {
+      width: 10px;
+      height: 82px;
+    }
+
+    .steering-wheel::after {
+      width: 82px;
+      height: 10px;
+    }
+
+    .wheel-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 24px;
+      height: 24px;
+      background: #b0b8c3;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: inset 0 2px 3px rgba(255,255,255,0.5);
+    }
+
+    .pedals {
+      right: 162px;
+      bottom: 28px;
+      width: 88px;
+      height: 92px;
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .pedal {
+      width: 28px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #f3f4f6, #9ca3af);
+      border: 2px solid rgba(0,0,0,0.2);
+      box-shadow: 0 8px 14px rgba(0,0,0,0.18);
+    }
+
+    .pedal.small {
+      height: 46px;
+    }
+
+    .pedal.big {
+      height: 62px;
+    }
+
+    .level-pill {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      z-index: 18;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.88);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+      font-size: 14px;
+      font-weight: 900;
+      color: #173455;
+      backdrop-filter: blur(4px);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(9, 19, 34, 0.38);
       padding: 20px;
     }
 
     .modal {
       width: 100%;
-      max-width: 520px;
-      background: rgba(255,255,255,0.96);
+      max-width: 560px;
+      background: rgba(255,255,255,0.97);
       border-radius: 28px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+      box-shadow: 0 24px 50px rgba(0,0,0,0.26);
       padding: 28px;
       text-align: center;
     }
 
-    .modal-icon {
-      font-size: 56px;
+    .modal h2 {
       margin-bottom: 10px;
+      font-size: 32px;
+    }
+
+    .modal-icon {
+      font-size: 62px;
+      margin-bottom: 8px;
     }
 
     .question-box {
-      background: #f8fafc;
-      border-radius: 18px;
+      background: linear-gradient(180deg, #f8fcff, #edf6fb);
+      border-radius: 20px;
       padding: 18px;
-      font-size: 28px;
-      font-weight: bold;
+      font-size: 30px;
+      font-weight: 900;
       margin: 18px 0;
-    }
-
-    .answers {
-      display: grid;
-      gap: 10px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
     }
 
     .answers.choice {
+      display: grid;
       grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
 
     .answer-input-row {
@@ -344,17 +915,23 @@
 
     .answer-input-row input {
       flex: 1;
-      border: 2px solid #cbd5e1;
-      border-radius: 14px;
-      padding: 14px;
+      padding: 14px 16px;
       font-size: 18px;
+      border-radius: 16px;
+      border: 2px solid #cbd5e1;
+      outline: none;
+    }
+
+    .answer-input-row input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.18);
     }
 
     .feedback {
-      margin-top: 14px;
-      border-radius: 14px;
-      padding: 12px;
-      font-weight: bold;
+      margin-top: 16px;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 800;
     }
 
     .feedback.success {
@@ -369,12 +946,13 @@
 
     .finish-box {
       margin: 18px auto 0;
-      max-width: 320px;
-      background: #dbeafe;
-      border-radius: 18px;
-      padding: 16px;
-      font-size: 22px;
-      font-weight: bold;
+      max-width: 340px;
+      background: linear-gradient(180deg, #dff4ff, #b7e7ff);
+      border-radius: 20px;
+      padding: 18px;
+      font-size: 24px;
+      font-weight: 900;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
     }
 
     .finish-actions {
@@ -385,9 +963,9 @@
       margin-top: 18px;
     }
 
-    .small-note {
+    .tiny {
       font-size: 14px;
-      color: #64748b;
+      color: rgba(16, 35, 58, 0.72);
     }
 
     @media (max-width: 1180px) {
@@ -396,23 +974,78 @@
       }
 
       .game-wrap {
-        width: 100%;
+        min-height: 620px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .game-wrap {
+        min-height: 560px;
+      }
+
+      .player-car {
+        width: 200px;
+        height: 170px;
+      }
+
+      .mini-preview,
+      .mini-map {
+        transform: scale(0.9);
+        transform-origin: top left;
+      }
+
+      .pedals {
+        right: 128px;
+        transform: scale(0.9);
+        transform-origin: bottom right;
+      }
+
+      .steering {
+        transform: scale(0.9);
+        transform-origin: bottom left;
       }
     }
 
     @media (max-width: 640px) {
-      .answers.choice {
-        grid-template-columns: 1fr;
-      }
-
+      .stats-grid,
+      .controls,
       .action-row,
-      .control-buttons,
-      .stats {
+      .answers.choice {
         grid-template-columns: 1fr;
       }
 
       .answer-input-row {
         flex-direction: column;
+      }
+
+      .game-wrap {
+        min-height: 520px;
+      }
+
+      .mini-preview,
+      .mini-map,
+      .pedals {
+        display: none;
+      }
+
+      .steering {
+        width: 96px;
+        height: 96px;
+      }
+
+      .steering-wheel {
+        width: 70px;
+        height: 70px;
+      }
+
+      .player-car {
+        width: 170px;
+        height: 145px;
+      }
+
+      .level-pill {
+        font-size: 12px;
+        padding: 8px 12px;
       }
     }
   </style>
@@ -425,12 +1058,12 @@
         <div class="badge" id="levelBadge">Уровень 1</div>
       </div>
 
-      <div class="stats">
-        <div class="stat-card stat-blue">
+      <div class="stats-grid">
+        <div class="stat-card blue">
           <div class="stat-label">💎 Алмазы</div>
           <div class="stat-value" id="diamondsValue">0</div>
         </div>
-        <div class="stat-card stat-yellow">
+        <div class="stat-card gold">
           <div class="stat-label">⏱ Время</div>
           <div class="stat-value" id="timeValue">45</div>
         </div>
@@ -446,26 +1079,26 @@
         </div>
       </div>
 
-      <div class="control-box">
+      <div class="box">
         <h3>Управление</h3>
-        <div class="control-buttons">
+        <div class="controls">
           <button class="btn-secondary" id="btnUp">⬆ Вверх</button>
           <button class="btn-secondary" id="btnDown">⬇ Вниз</button>
         </div>
-        <p class="small-note" style="margin-top:12px;">Также работают клавиши ↑ / ↓</p>
+        <p class="tiny" style="margin-top:12px;">Работают и клавиши ↑ / ↓</p>
       </div>
 
-      <div class="settings-box">
+      <div class="box">
         <h3>Параметры прототипа</h3>
 
         <div class="setting-item">
           <label for="speedRange">Скорость: <span id="speedLabel">7</span></label>
-          <input type="range" id="speedRange" min="4" max="12" step="1" value="7">
+          <input type="range" id="speedRange" min="4" max="12" step="1" value="7" />
         </div>
 
         <div class="setting-item">
           <label for="timeRange">Время: <span id="timeLabel">45</span> сек</label>
-          <input type="range" id="timeRange" min="20" max="90" step="5" value="45">
+          <input type="range" id="timeRange" min="20" max="90" step="5" value="45" />
         </div>
 
         <div class="action-row">
@@ -474,20 +1107,90 @@
         </div>
       </div>
 
-      <div class="info-box">
-        Это версия в одном HTML-файле для GitHub Pages.  
-        Все основные параметры уже вынесены в конфиг, чтобы потом подключить редактор.
+      <div class="box">
+        <div class="note">
+          Визуал уже приближен к аркадному стилю из примера.  
+          Следующим шагом можно добавить реальные PNG-спрайты машины, препятствий, фона и кнопок.
+        </div>
       </div>
     </aside>
 
     <main class="game-wrap" id="gameWrap">
-      <div class="sky-glow"></div>
-      <div class="level-flag" id="levelFlag">🏁 Уровень 1</div>
-      <div class="road" id="road"></div>
-      <div class="grass"></div>
-      <div class="player" id="player">🚗</div>
-      <div id="objectsLayer"></div>
-      <div id="overlayLayer"></div>
+      <div class="world" id="world">
+        <div class="cloud" style="width:110px;height:34px;left:13%;top:8%;"></div>
+        <div class="cloud" style="width:150px;height:40px;right:14%;top:10%;"></div>
+
+        <div class="hill" style="left:-2%; width:40%; height:180px;"></div>
+        <div class="hill" style="left:24%; width:28%; height:140px;"></div>
+        <div class="hill" style="right:10%; width:36%; height:220px;"></div>
+
+        <div class="tree" style="left:8%;"><div class="crown"></div><div class="trunk"></div></div>
+        <div class="tree" style="left:14%; bottom:245px;"><div class="crown"></div><div class="trunk"></div></div>
+        <div class="tree" style="left:20%; bottom:240px;"><div class="crown"></div><div class="trunk"></div></div>
+        <div class="tree" style="right:10%;"><div class="crown"></div><div class="trunk"></div></div>
+        <div class="tree" style="right:17%; bottom:248px;"><div class="crown"></div><div class="trunk"></div></div>
+        <div class="tree" style="right:24%; bottom:242px;"><div class="crown"></div><div class="trunk"></div></div>
+
+        <div class="road-area">
+          <div class="road-perspective"></div>
+          <div class="road-center-line" id="roadCenterLine"></div>
+          <div class="guard left"></div>
+          <div class="guard right"></div>
+
+          <div class="lane-strip" style="left:21%; bottom:21%; width:8%; height:4.5%;"></div>
+          <div class="lane-strip" style="left:27%; bottom:33%; width:6.5%; height:4%;"></div>
+          <div class="lane-strip" style="left:31%; bottom:49%; width:5%; height:3%;"></div>
+
+          <div class="lane-strip" style="right:21%; bottom:21%; width:8%; height:4.5%;"></div>
+          <div class="lane-strip" style="right:27%; bottom:33%; width:6.5%; height:4%;"></div>
+          <div class="lane-strip" style="right:31%; bottom:49%; width:5%; height:3%;"></div>
+        </div>
+
+        <div class="level-pill" id="levelFlag">🏁 Уровень 1</div>
+
+        <div class="hud-corner mini-preview">
+          <div class="mini-preview-scene">
+            <div class="mini-road"></div>
+            <div class="mini-car"></div>
+          </div>
+        </div>
+
+        <div class="hud-corner steering">
+          <div class="steering-wheel" id="steeringWheel">
+            <div class="wheel-center"></div>
+          </div>
+        </div>
+
+        <div class="hud-corner pedals">
+          <div class="pedal small"></div>
+          <div class="pedal big"></div>
+        </div>
+
+        <div class="hud-corner mini-map">
+          <div class="mini-map-screen">
+            <div class="mini-route"></div>
+            <div class="mini-dot" id="miniDot" style="left:18%; top:70%;"></div>
+          </div>
+        </div>
+
+        <div class="object-layer" id="objectsLayer"></div>
+
+        <div class="player-car" id="playerCar">
+          <div class="car-body"></div>
+          <div class="car-cabin">
+            <div class="car-window-lines"></div>
+          </div>
+          <div class="car-detail-left"></div>
+          <div class="car-detail-right"></div>
+          <div class="car-tail"></div>
+          <div class="car-neon-left"></div>
+          <div class="car-neon-right"></div>
+          <div class="car-thruster-left"></div>
+          <div class="car-thruster-right"></div>
+        </div>
+
+        <div id="overlayLayer"></div>
+      </div>
     </main>
   </div>
 
@@ -511,17 +1214,6 @@
         gainDiamondsOnCorrect: 1,
         useKeyboard: true
       },
-      appearance: {
-        backgroundTop: "#8fd3ff",
-        backgroundBottom: "#dff6ff",
-        roadColor: "#3b3b45",
-        roadLineColor: "#ffffff",
-        accent: "#2563eb",
-        success: "#059669",
-        danger: "#dc2626",
-        text: "#0f172a",
-        panel: "rgba(255,255,255,0.92)"
-      },
       levels: [
         {
           id: 1,
@@ -529,51 +1221,23 @@
           distance: 100,
           laneCount: 3,
           spawnPattern: [
-            { type: "diamond", lane: 0, at: 10 },
+            { type: "diamond", lane: 0, at: 12 },
             { type: "obstacle", lane: 1, at: 18, variant: "rock" },
-            { type: "diamond", lane: 2, at: 24 },
-            { type: "obstacle", lane: 0, at: 32, variant: "cone" },
-            { type: "diamond", lane: 1, at: 42 },
-            { type: "obstacle", lane: 2, at: 50, variant: "car" },
-            { type: "diamond", lane: 0, at: 60 },
-            { type: "obstacle", lane: 1, at: 68, variant: "rock" },
-            { type: "diamond", lane: 2, at: 78 },
-            { type: "obstacle", lane: 0, at: 88, variant: "cone" }
+            { type: "diamond", lane: 2, at: 25 },
+            { type: "obstacle", lane: 0, at: 33, variant: "cone" },
+            { type: "diamond", lane: 1, at: 43 },
+            { type: "obstacle", lane: 2, at: 51, variant: "car" },
+            { type: "diamond", lane: 0, at: 61 },
+            { type: "obstacle", lane: 1, at: 69, variant: "rock" },
+            { type: "diamond", lane: 2, at: 79 },
+            { type: "obstacle", lane: 0, at: 89, variant: "cone" }
           ],
           questions: [
-            {
-              id: "l1q1",
-              prompt: "3 + 2 = ?",
-              answerType: "choice",
-              correctAnswer: "5",
-              options: ["4", "5", "6"]
-            },
-            {
-              id: "l1q2",
-              prompt: "8 - 3 = ?",
-              answerType: "choice",
-              correctAnswer: "5",
-              options: ["5", "4", "6"]
-            },
-            {
-              id: "l1q3",
-              prompt: "6 + 1 = ?",
-              answerType: "input",
-              correctAnswer: "7"
-            },
-            {
-              id: "l1q4",
-              prompt: "Сколько будет 4 + 4?",
-              answerType: "choice",
-              correctAnswer: "8",
-              options: ["7", "8", "9"]
-            },
-            {
-              id: "l1q5",
-              prompt: "10 - 6 = ?",
-              answerType: "input",
-              correctAnswer: "4"
-            }
+            { id: "l1q1", prompt: "3 + 2 = ?", answerType: "choice", correctAnswer: "5", options: ["4", "5", "6"] },
+            { id: "l1q2", prompt: "8 - 3 = ?", answerType: "choice", correctAnswer: "5", options: ["5", "4", "6"] },
+            { id: "l1q3", prompt: "6 + 1 = ?", answerType: "input", correctAnswer: "7" },
+            { id: "l1q4", prompt: "Сколько будет 4 + 4?", answerType: "choice", correctAnswer: "8", options: ["7", "8", "9"] },
+            { id: "l1q5", prompt: "10 - 6 = ?", answerType: "input", correctAnswer: "4" }
           ]
         },
         {
@@ -582,84 +1246,52 @@
           distance: 120,
           laneCount: 3,
           spawnPattern: [
-            { type: "obstacle", lane: 1, at: 10, variant: "car" },
-            { type: "diamond", lane: 2, at: 16 },
-            { type: "obstacle", lane: 0, at: 22, variant: "rock" },
-            { type: "diamond", lane: 1, at: 28 },
-            { type: "obstacle", lane: 2, at: 36, variant: "cone" },
-            { type: "diamond", lane: 0, at: 46 },
-            { type: "obstacle", lane: 1, at: 58, variant: "rock" },
-            { type: "diamond", lane: 2, at: 67 },
-            { type: "obstacle", lane: 0, at: 80, variant: "car" },
-            { type: "diamond", lane: 1, at: 92 }
+            { type: "obstacle", lane: 1, at: 12, variant: "car" },
+            { type: "diamond", lane: 2, at: 18 },
+            { type: "obstacle", lane: 0, at: 25, variant: "rock" },
+            { type: "diamond", lane: 1, at: 33 },
+            { type: "obstacle", lane: 2, at: 41, variant: "cone" },
+            { type: "diamond", lane: 0, at: 50 },
+            { type: "obstacle", lane: 1, at: 61, variant: "rock" },
+            { type: "diamond", lane: 2, at: 70 },
+            { type: "obstacle", lane: 0, at: 83, variant: "car" },
+            { type: "diamond", lane: 1, at: 95 }
           ],
           questions: [
-            {
-              id: "l2q1",
-              prompt: "12 - 5 = ?",
-              answerType: "choice",
-              correctAnswer: "7",
-              options: ["6", "7", "8"]
-            },
-            {
-              id: "l2q2",
-              prompt: "9 + 6 = ?",
-              answerType: "input",
-              correctAnswer: "15"
-            },
-            {
-              id: "l2q3",
-              prompt: "14 - 4 = ?",
-              answerType: "choice",
-              correctAnswer: "10",
-              options: ["9", "10", "11"]
-            },
-            {
-              id: "l2q4",
-              prompt: "5 × 2 = ?",
-              answerType: "choice",
-              correctAnswer: "10",
-              options: ["8", "10", "12"]
-            },
-            {
-              id: "l2q5",
-              prompt: "18 - 9 = ?",
-              answerType: "input",
-              correctAnswer: "9"
-            }
+            { id: "l2q1", prompt: "12 - 5 = ?", answerType: "choice", correctAnswer: "7", options: ["6", "7", "8"] },
+            { id: "l2q2", prompt: "9 + 6 = ?", answerType: "input", correctAnswer: "15" },
+            { id: "l2q3", prompt: "14 - 4 = ?", answerType: "choice", correctAnswer: "10", options: ["9", "10", "11"] },
+            { id: "l2q4", prompt: "5 × 2 = ?", answerType: "choice", correctAnswer: "10", options: ["8", "10", "12"] },
+            { id: "l2q5", prompt: "18 - 9 = ?", answerType: "input", correctAnswer: "9" }
           ]
         }
       ]
     };
 
     const GAME = {
-      width: 920,
-      height: 520,
-      roadTop: 96,
-      roadBottom: 464,
-      roadRight: 860,
-      roadLeft: 110,
-      carX: 170,
-      collisionXThreshold: 48,
-      tickMs: 40
+      tickMs: 40,
+      lanesX: [0.37, 0.5, 0.63],
+      startY: 12,
+      endY: 74,
+      playerBottom: 84,
+      collisionYThreshold: 9
     };
 
     const state = {
       settings: JSON.parse(JSON.stringify(GAME_CONFIG.teacherSettings)),
       currentLevelIndex: 0,
-      gameStatus: "ready", // ready | running | pausedForQuiz | finished
+      gameStatus: "ready",
       playerLane: 1,
       diamonds: 0,
       timeLeft: GAME_CONFIG.teacherSettings.totalTimeSec,
       distancePassed: 0,
       runtimeObjects: [],
-      stripesOffset: 0,
       quizState: null,
-      quizInput: "",
       finishStats: null,
       nextQuestionIndex: 0,
       timerAcc: 0,
-      gameLoop: null
+      gameLoop: null,
+      roadOffset: 0
     };
 
     const ui = {
@@ -670,8 +1302,6 @@
       timeValue: document.getElementById("timeValue"),
       progressText: document.getElementById("progressText"),
       progressBar: document.getElementById("progressBar"),
-      player: document.getElementById("player"),
-      road: document.getElementById("road"),
       objectsLayer: document.getElementById("objectsLayer"),
       overlayLayer: document.getElementById("overlayLayer"),
       btnUp: document.getElementById("btnUp"),
@@ -681,7 +1311,11 @@
       speedRange: document.getElementById("speedRange"),
       timeRange: document.getElementById("timeRange"),
       speedLabel: document.getElementById("speedLabel"),
-      timeLabel: document.getElementById("timeLabel")
+      timeLabel: document.getElementById("timeLabel"),
+      playerCar: document.getElementById("playerCar"),
+      miniDot: document.getElementById("miniDot"),
+      steeringWheel: document.getElementById("steeringWheel"),
+      roadCenterLine: document.getElementById("roadCenterLine")
     };
 
     function clamp(value, min, max) {
@@ -696,81 +1330,34 @@
       return GAME_CONFIG.levels[state.currentLevelIndex];
     }
 
-    function laneToY(lane, laneCount) {
-      const top = 140;
-      const bottom = 400;
-      if (laneCount <= 1) return 270;
-      const step = (bottom - top) / (laneCount - 1);
-      return top + lane * step;
-    }
-
     function normalizeAnswer(value) {
       return String(value ?? "").trim().toLowerCase().replace(/\s+/g, " ");
-    }
-
-    function getObstacleLabel(variant) {
-      if (variant === "rock") return "🪨";
-      if (variant === "cone") return "🚧";
-      if (variant === "car") return "🚙";
-      return "⛔";
     }
 
     function buildLevelRuntime(level) {
       return level.spawnPattern.map(item => ({
         id: uid(),
         ...item,
-        x: GAME.roadRight + item.at * 9,
+        progress: 0,
         active: true
       }));
     }
 
-    function drawRoad() {
-      const level = currentLevel();
-      ui.road.innerHTML = "";
-
-      for (let i = 1; i < level.laneCount; i++) {
-        const divider = document.createElement("div");
-        divider.className = "lane-divider";
-        divider.style.top = `${(i / level.laneCount) * 100}%`;
-        ui.road.appendChild(divider);
-      }
-
-      for (let i = 0; i < 12; i++) {
-        const stripe = document.createElement("div");
-        stripe.className = "stripe";
-        stripe.dataset.baseX = String(i * 80);
-        ui.road.appendChild(stripe);
-      }
+    function laneX(lane) {
+      return GAME.lanesX[lane] || GAME.lanesX[1];
     }
 
-    function updateStripes() {
-      const stripes = ui.road.querySelectorAll(".stripe");
-      stripes.forEach((stripe) => {
-        const baseX = Number(stripe.dataset.baseX);
-        stripe.style.left = `${baseX - state.stripesOffset}px`;
-      });
+    function progressToScreen(progress) {
+      const y = GAME.startY + (GAME.endY - GAME.startY) * progress;
+      const scale = 0.35 + progress * 1.4;
+      return { y, scale };
     }
 
-    function renderObjects() {
-      const level = currentLevel();
-      ui.objectsLayer.innerHTML = "";
-
-      state.runtimeObjects
-        .filter(obj => obj.active && obj.x > GAME.roadLeft - 100)
-        .forEach(obj => {
-          const el = document.createElement("div");
-          el.className = "object" + (obj.type === "diamond" ? " diamond" : "");
-          el.style.left = `${obj.x}px`;
-          el.style.top = `${laneToY(obj.lane, level.laneCount) - 22}px`;
-          el.textContent = obj.type === "diamond" ? "💎" : getObstacleLabel(obj.variant);
-          ui.objectsLayer.appendChild(el);
-        });
-    }
-
-    function renderPlayer() {
-      const level = currentLevel();
-      const y = laneToY(state.playerLane, level.laneCount) - 24;
-      ui.player.style.top = `${y}px`;
+    function getObstacleClass(variant) {
+      if (variant === "cone") return "obstacle-cone";
+      if (variant === "rock") return "obstacle-rock";
+      if (variant === "car") return "obstacle-car";
+      return "obstacle-rock";
     }
 
     function renderHUD() {
@@ -779,146 +1366,173 @@
 
       ui.gameTitle.textContent = GAME_CONFIG.meta.title;
       ui.levelBadge.textContent = level.name;
-      ui.levelFlag.textContent = `🏁 ${level.name}`;
+      ui.levelFlag.textContent = "🏁 " + level.name;
       ui.diamondsValue.textContent = state.diamonds;
       ui.timeValue.textContent = state.timeLeft;
-      ui.progressText.textContent = `${Math.round(progress)}%`;
-      ui.progressBar.style.width = `${progress}%`;
+      ui.progressText.textContent = Math.round(progress) + "%";
+      ui.progressBar.style.width = progress + "%";
       ui.speedLabel.textContent = state.settings.speed;
       ui.timeLabel.textContent = state.settings.totalTimeSec;
       ui.speedRange.value = state.settings.speed;
       ui.timeRange.value = state.settings.totalTimeSec;
+
+      const mapX = 18 + progress * 0.45;
+      const mapY = 70 - progress * 0.55;
+      ui.miniDot.style.left = mapX + "%";
+      ui.miniDot.style.top = mapY + "%";
     }
 
-    function showStartOverlay() {
-      ui.overlayLayer.innerHTML = `
-        <div class="overlay">
-          <div class="modal">
-            <div class="modal-icon">🏁</div>
-            <h2>Готов к старту?</h2>
-            <p>Собирай алмазы, отвечай на вопросы и объезжай препятствия.</p>
-            <button class="btn-primary" id="overlayStartBtn" style="width:100%; margin-top: 10px;">
-              ▶ ${GAME_CONFIG.meta.startButtonText}
-            </button>
-          </div>
-        </div>
-      `;
-      document.getElementById("overlayStartBtn").addEventListener("click", startGame);
+    function updatePlayerVisual() {
+      const lane = state.playerLane;
+      const xShift = [-120, 0, 120][lane] || 0;
+      const tilt = [-8, 0, 8][lane] || 0;
+      ui.playerCar.style.transform = "translateX(calc(-50% + " + xShift + "px))";
+      ui.steeringWheel.style.transform = "rotate(" + (tilt * 3) + "deg)";
     }
 
-    function showFinishOverlay() {
-      const stats = state.finishStats;
-      const nextLevelAvailable = stats.nextLevelAvailable;
+    function renderObjects() {
+      ui.objectsLayer.innerHTML = "";
 
-      ui.overlayLayer.innerHTML = `
-        <div class="overlay">
-          <div class="modal">
-            <div class="modal-icon">🏎️</div>
-            <h2>${stats.success ? GAME_CONFIG.meta.finishMessage : "Время вышло!"}</h2>
-            <p>Уровень: ${stats.levelName}</p>
-            <div class="finish-box">💎 Собрано алмазов: ${stats.diamonds}</div>
-            <div class="finish-actions">
-              <button class="btn-outline" id="restartBtn">${GAME_CONFIG.meta.restartButtonText}</button>
-              ${nextLevelAvailable ? `<button class="btn-primary" id="nextLevelBtn">Следующий уровень</button>` : ""}
-            </div>
-          </div>
-        </div>
-      `;
+      state.runtimeObjects
+        .filter(obj => obj.active)
+        .forEach(obj => {
+          const pos = progressToScreen(obj.progress);
+          if (pos.y > 82) return;
 
-      document.getElementById("restartBtn").addEventListener("click", () => {
-        resetGame(state.currentLevelIndex);
-      });
+          const el = document.createElement("div");
+          el.className = "game-object";
+          el.style.left = (laneX(obj.lane) * 100) + "%";
+          el.style.top = pos.y + "%";
+          el.style.width = (48 * pos.scale) + "px";
+          el.style.height = (48 * pos.scale) + "px";
+          el.style.transform = "translate(-50%, -50%) scale(" + pos.scale + ")";
 
-      if (nextLevelAvailable) {
-        document.getElementById("nextLevelBtn").addEventListener("click", () => {
-          resetGame(state.currentLevelIndex + 1);
+          if (obj.type === "diamond") {
+            const diamond = document.createElement("div");
+            diamond.className = "diamond-shape";
+            el.appendChild(diamond);
+          } else {
+            const obstacle = document.createElement("div");
+            obstacle.className = getObstacleClass(obj.variant);
+            el.appendChild(obstacle);
+          }
+
+          ui.objectsLayer.appendChild(el);
         });
-      }
-    }
-
-    function showQuizOverlay() {
-      const q = state.quizState.question;
-      let content = `
-        <div class="overlay">
-          <div class="modal">
-            <h2>Задание за алмаз</h2>
-            <div class="question-box">${q.prompt}</div>
-      `;
-
-      if (q.answerType === "choice") {
-        content += `<div class="answers choice">`;
-        q.options.forEach(option => {
-          content += `<button class="btn-secondary quiz-choice" data-answer="${option}">${option}</button>`;
-        });
-        content += `</div>`;
-      } else {
-        content += `
-          <div class="answer-input-row">
-            <input id="quizInput" type="text" placeholder="Введи ответ" />
-            <button class="btn-primary" id="quizSubmitBtn">Ответить</button>
-          </div>
-        `;
-      }
-
-      if (state.quizState.feedback) {
-        content += `
-          <div class="feedback ${state.quizState.feedback.type}">
-            ${state.quizState.feedback.message}
-          </div>
-        `;
-      }
-
-      content += `
-            <p class="small-note" style="margin-top: 12px;">
-              Попытка: ${state.quizState.attemptsUsed + 1}
-              ${state.quizState.maxAttempts > 0 ? " / " + state.quizState.maxAttempts : ""}
-            </p>
-          </div>
-        </div>
-      `;
-
-      ui.overlayLayer.innerHTML = content;
-
-      if (q.answerType === "choice") {
-        document.querySelectorAll(".quiz-choice").forEach(btn => {
-          btn.addEventListener("click", () => submitAnswer(btn.dataset.answer));
-        });
-      } else {
-        const input = document.getElementById("quizInput");
-        const submitBtn = document.getElementById("quizSubmitBtn");
-        input.focus();
-        submitBtn.addEventListener("click", () => submitAnswer(input.value));
-        input.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") submitAnswer(input.value);
-        });
-      }
     }
 
     function renderOverlay() {
       ui.overlayLayer.innerHTML = "";
 
       if (state.gameStatus === "ready") {
-        showStartOverlay();
-      } else if (state.gameStatus === "pausedForQuiz" && state.quizState) {
-        showQuizOverlay();
-      } else if (state.gameStatus === "finished" && state.finishStats) {
-        showFinishOverlay();
+        ui.overlayLayer.innerHTML = `
+          <div class="overlay">
+            <div class="modal">
+              <div class="modal-icon">🏁</div>
+              <h2>Готов к старту?</h2>
+              <p>Собирай алмазы, отвечай на вопросы и объезжай препятствия.</p>
+              <button class="btn-primary" id="overlayStartBtn" style="width:100%; margin-top: 12px;">
+                ▶ ${GAME_CONFIG.meta.startButtonText}
+              </button>
+            </div>
+          </div>
+        `;
+        document.getElementById("overlayStartBtn").addEventListener("click", startGame);
+      }
+
+      if (state.gameStatus === "pausedForQuiz" && state.quizState) {
+        const q = state.quizState.question;
+        let content = `
+          <div class="overlay">
+            <div class="modal">
+              <h2>Задание за алмаз</h2>
+              <div class="question-box">${q.prompt}</div>
+        `;
+
+        if (q.answerType === "choice") {
+          content += `<div class="answers choice">`;
+          q.options.forEach(option => {
+            content += `<button class="btn-secondary quiz-choice" data-answer="${option}">${option}</button>`;
+          });
+          content += `</div>`;
+        } else {
+          content += `
+            <div class="answer-input-row">
+              <input id="quizInput" type="text" placeholder="Введи ответ" />
+              <button class="btn-primary" id="quizSubmitBtn">Ответить</button>
+            </div>
+          `;
+        }
+
+        if (state.quizState.feedback) {
+          content += `
+            <div class="feedback ${state.quizState.feedback.type}">
+              ${state.quizState.feedback.message}
+            </div>
+          `;
+        }
+
+        content += `
+              <p class="tiny" style="margin-top: 12px;">
+                Попытка: ${state.quizState.attemptsUsed + 1}
+                ${state.quizState.maxAttempts > 0 ? " / " + state.quizState.maxAttempts : ""}
+              </p>
+            </div>
+          </div>
+        `;
+
+        ui.overlayLayer.innerHTML = content;
+
+        if (q.answerType === "choice") {
+          document.querySelectorAll(".quiz-choice").forEach(btn => {
+            btn.addEventListener("click", () => submitAnswer(btn.dataset.answer));
+          });
+        } else {
+          const input = document.getElementById("quizInput");
+          const submitBtn = document.getElementById("quizSubmitBtn");
+          input.focus();
+          submitBtn.addEventListener("click", () => submitAnswer(input.value));
+          input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") submitAnswer(input.value);
+          });
+        }
+      }
+
+      if (state.gameStatus === "finished" && state.finishStats) {
+        const stats = state.finishStats;
+        ui.overlayLayer.innerHTML = `
+          <div class="overlay">
+            <div class="modal">
+              <div class="modal-icon">🏎️</div>
+              <h2>${stats.success ? GAME_CONFIG.meta.finishMessage : "Время вышло!"}</h2>
+              <p>Уровень: ${stats.levelName}</p>
+              <div class="finish-box">💎 Собрано алмазов: ${stats.diamonds}</div>
+              <div class="finish-actions">
+                <button class="btn-outline" id="restartBtn">${GAME_CONFIG.meta.restartButtonText}</button>
+                ${stats.nextLevelAvailable ? `<button class="btn-primary" id="nextLevelBtn">Следующий уровень</button>` : ""}
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.getElementById("restartBtn").addEventListener("click", () => {
+          resetGame(state.currentLevelIndex);
+        });
+
+        const nextLevelBtn = document.getElementById("nextLevelBtn");
+        if (nextLevelBtn) {
+          nextLevelBtn.addEventListener("click", () => {
+            resetGame(state.currentLevelIndex + 1);
+          });
+        }
       }
     }
 
     function render() {
       renderHUD();
-      renderPlayer();
       renderObjects();
-      updateStripes();
       renderOverlay();
-    }
-
-    function setupLevel(targetLevelIndex) {
-      state.currentLevelIndex = targetLevelIndex;
-      state.playerLane = 1;
-      state.runtimeObjects = buildLevelRuntime(currentLevel());
-      drawRoad();
+      updatePlayerVisual();
     }
 
     function clearLoop() {
@@ -928,18 +1542,24 @@
       }
     }
 
-    function resetGame(targetLevelIndex = state.currentLevelIndex) {
+    function setupLevel(index) {
+      state.currentLevelIndex = index;
+      state.playerLane = 1;
+      state.runtimeObjects = buildLevelRuntime(currentLevel());
+    }
+
+    function resetGame(index = state.currentLevelIndex) {
       clearLoop();
-      setupLevel(targetLevelIndex);
+      setupLevel(index);
       state.gameStatus = "ready";
       state.diamonds = 0;
       state.timeLeft = state.settings.totalTimeSec;
       state.distancePassed = 0;
-      state.stripesOffset = 0;
       state.quizState = null;
       state.finishStats = null;
       state.nextQuestionIndex = 0;
       state.timerAcc = 0;
+      state.roadOffset = 0;
       render();
     }
 
@@ -950,74 +1570,86 @@
       state.diamonds = 0;
       state.timeLeft = state.settings.totalTimeSec;
       state.distancePassed = 0;
-      state.stripesOffset = 0;
       state.quizState = null;
       state.finishStats = null;
       state.nextQuestionIndex = 0;
       state.timerAcc = 0;
+      state.roadOffset = 0;
       render();
 
-      state.gameLoop = setInterval(() => {
-        if (state.gameStatus !== "running") return;
+      state.gameLoop = setInterval(gameTick, GAME.tickMs);
+    }
 
-        const level = currentLevel();
+    function gameTick() {
+      if (state.gameStatus !== "running") return;
 
-        state.stripesOffset = (state.stripesOffset + state.settings.speed * 1.8) % 80;
-        state.distancePassed += state.settings.speed * 0.18;
-        if (state.distancePassed > level.distance) {
-          state.distancePassed = level.distance;
-        }
+      const level = currentLevel();
 
-        state.timerAcc += GAME.tickMs;
-        if (state.timerAcc >= 1000) {
-          state.timerAcc = 0;
-          state.timeLeft = Math.max(0, state.timeLeft - 1);
-        }
+      state.distancePassed += state.settings.speed * 0.18;
+      if (state.distancePassed > level.distance) {
+        state.distancePassed = level.distance;
+      }
 
-        state.runtimeObjects = state.runtimeObjects.map(obj => {
-          if (!obj.active) return obj;
-          return { ...obj, x: obj.x - state.settings.speed * 2.2 };
-        });
+      state.timerAcc += GAME.tickMs;
+      if (state.timerAcc >= 1000) {
+        state.timerAcc = 0;
+        state.timeLeft = Math.max(0, state.timeLeft - 1);
+      }
 
-        checkCollisions();
-        checkFinish();
-        render();
-      }, GAME.tickMs);
+      state.roadOffset += state.settings.speed * 4;
+      ui.roadCenterLine.style.background = `
+        repeating-linear-gradient(
+          180deg,
+          rgba(255, 236, 169, 0.95) ${state.roadOffset % 76}px,
+          rgba(255, 236, 169, 0.95) ${(state.roadOffset % 76) + 34}px,
+          rgba(255, 236, 169, 0) ${(state.roadOffset % 76) + 34}px,
+          rgba(255, 236, 169, 0) ${(state.roadOffset % 76) + 76}px
+        )
+      `;
+
+      state.runtimeObjects = state.runtimeObjects.map(obj => {
+        if (!obj.active) return obj;
+        return {
+          ...obj,
+          progress: obj.progress + 0.008 + state.settings.speed * 0.0018
+        };
+      });
+
+      checkCollisions();
+      checkFinish();
+      render();
     }
 
     function moveUp() {
-      const level = currentLevel();
-      state.playerLane = clamp(state.playerLane - 1, 0, level.laneCount - 1);
-      renderPlayer();
+      state.playerLane = clamp(state.playerLane - 1, 0, currentLevel().laneCount - 1);
+      updatePlayerVisual();
     }
 
     function moveDown() {
-      const level = currentLevel();
-      state.playerLane = clamp(state.playerLane + 1, 0, level.laneCount - 1);
-      renderPlayer();
+      state.playerLane = clamp(state.playerLane + 1, 0, currentLevel().laneCount - 1);
+      updatePlayerVisual();
     }
 
     function checkCollisions() {
       if (state.gameStatus !== "running") return;
 
-      const level = currentLevel();
-      const playerY = laneToY(state.playerLane, level.laneCount);
-
       const collided = state.runtimeObjects.find(obj =>
         obj.active &&
-        Math.abs(obj.x - GAME.carX) < GAME.collisionXThreshold &&
-        Math.abs(laneToY(obj.lane, level.laneCount) - playerY) < 20
+        obj.lane === state.playerLane &&
+        Math.abs(obj.progress - 1) < 0.11
       );
 
       if (!collided) return;
 
+      collided.active = false;
+
       if (collided.type === "obstacle") {
-        collided.active = false;
         state.diamonds = Math.max(0, state.diamonds - state.settings.loseDiamondsOnCrash);
+        return;
       }
 
       if (collided.type === "diamond") {
-        collided.active = false;
+        const level = currentLevel();
         const question = level.questions[state.nextQuestionIndex % level.questions.length];
         state.nextQuestionIndex += 1;
         state.gameStatus = "pausedForQuiz";
@@ -1038,14 +1670,13 @@
         state.quizState = null;
         state.gameStatus = "running";
         render();
-      }, 700);
+      }, 800);
     }
 
     function submitAnswer(value) {
       if (!state.quizState || !state.quizState.question) return;
 
-      const q = state.quizState.question;
-      const isCorrect = normalizeAnswer(value) === normalizeAnswer(q.correctAnswer);
+      const isCorrect = normalizeAnswer(value) === normalizeAnswer(state.quizState.question.correctAnswer);
 
       if (isCorrect) {
         state.diamonds += state.settings.gainDiamondsOnCorrect;
@@ -1053,12 +1684,12 @@
         return;
       }
 
-      const nextAttemptsUsed = state.quizState.attemptsUsed + 1;
+      const nextAttempts = state.quizState.attemptsUsed + 1;
       const maxAttempts = state.quizState.maxAttempts;
-      const canRetry = maxAttempts === 0 || nextAttemptsUsed < maxAttempts;
+      const canRetry = maxAttempts === 0 || nextAttempts < maxAttempts;
 
       if (canRetry) {
-        state.quizState.attemptsUsed = nextAttemptsUsed;
+        state.quizState.attemptsUsed = nextAttempts;
         state.quizState.feedback = {
           type: "warning",
           message: "Пока неверно. Попробуй ещё раз."
@@ -1112,24 +1743,11 @@
     document.addEventListener("keydown", (e) => {
       if (!state.settings.useKeyboard) return;
 
-      if (["ArrowUp", "w", "W", "ц", "Ц"].includes(e.key)) {
-        moveUp();
-      }
-
-      if (["ArrowDown", "s", "S", "ы", "Ы"].includes(e.key)) {
-        moveDown();
-      }
+      if (["ArrowUp", "w", "W", "ц", "Ц"].includes(e.key)) moveUp();
+      if (["ArrowDown", "s", "S", "ы", "Ы"].includes(e.key)) moveDown();
     });
 
     function init() {
-      document.documentElement.style.setProperty("--bg-top", GAME_CONFIG.appearance.backgroundTop);
-      document.documentElement.style.setProperty("--bg-bottom", GAME_CONFIG.appearance.backgroundBottom);
-      document.documentElement.style.setProperty("--road", GAME_CONFIG.appearance.roadColor);
-      document.documentElement.style.setProperty("--road-line", GAME_CONFIG.appearance.roadLineColor);
-      document.documentElement.style.setProperty("--panel", GAME_CONFIG.appearance.panel);
-      document.documentElement.style.setProperty("--text", GAME_CONFIG.appearance.text);
-      document.documentElement.style.setProperty("--accent", GAME_CONFIG.appearance.accent);
-
       setupLevel(0);
       resetGame(0);
     }
