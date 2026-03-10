@@ -3,23 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Гонка — образовательная игра</title>
+  <title>Гонка — городской стиль</title>
   <style>
     :root{
-      --sky1:#72d8f5;
-      --sky2:#b7eef9;
+      --bg1:#89b6e6;
+      --bg2:#f0b3a5;
+      --hud:#2e3542cc;
+      --hudText:#f7fbff;
+      --road1:#2e3137;
+      --road2:#1f2227;
+      --line:#ffd84a;
+      --wall:#d8dbe1;
+      --wallStripe:#d98b3a;
+      --city1:#8a8697;
+      --city2:#5c6070;
+      --coin1:#ffd84a;
+      --coin2:#f59e0b;
+      --danger1:#ff7a59;
+      --danger2:#b91c1c;
+      --cyan:#7be7ff;
+      --white:rgba(255,255,255,.95);
+      --shadow:0 18px 40px rgba(0,0,0,.28);
       --panel:#dfe4e8;
-      --panel2:#d5dbe0;
-      --text:#162a45;
-      --blue:#25a7ff;
-      --blue2:#245dff;
-      --gold:#efc56b;
-      --gold2:#cb9336;
-      --roadLine:#ffe7a0;
-      --grass:#72d325;
-      --grass2:#58bc1a;
-      --danger:#ef4444;
-      --shadow:0 16px 34px rgba(0,0,0,.18);
+      --panel2:#d2d8dd;
+      --text:#15253d;
     }
 
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -27,26 +34,26 @@
     body{
       font-family:Arial,Helvetica,sans-serif;
       color:var(--text);
-      background:linear-gradient(180deg,var(--sky1),var(--sky2));
+      background:linear-gradient(180deg,#8dd4ef,#cde8f3);
       min-height:100vh;
     }
 
     .app{
-      max-width:1460px;
+      max-width:1480px;
       margin:0 auto;
       padding:18px;
       display:grid;
-      grid-template-columns:390px 1fr;
+      grid-template-columns:360px 1fr;
       gap:18px;
       align-items:start;
     }
 
     .panel{
       background:linear-gradient(180deg,var(--panel),var(--panel2));
-      border-radius:32px;
+      border-radius:30px;
       padding:22px;
-      box-shadow:var(--shadow);
-      border:1px solid rgba(255,255,255,.6);
+      box-shadow:0 14px 34px rgba(0,0,0,.12);
+      border:1px solid rgba(255,255,255,.72);
     }
 
     .title-row{
@@ -54,21 +61,20 @@
       justify-content:space-between;
       align-items:center;
       gap:12px;
-      margin-bottom:24px;
+      margin-bottom:22px;
     }
 
     h1,h2,h3,p{margin-top:0}
-    h1{font-size:44px;margin-bottom:0}
-    h3{font-size:24px;margin-bottom:16px}
+    h1{font-size:42px;margin-bottom:0}
+    h3{font-size:22px;margin-bottom:14px}
 
     .badge{
-      padding:14px 22px;
+      padding:12px 18px;
       border-radius:999px;
-      font-size:18px;
+      background:linear-gradient(180deg,#dfe9f8,#c9d8ec);
       font-weight:700;
-      background:linear-gradient(180deg,#dfe9f8,#c7d7ec);
+      font-size:18px;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
-      white-space:nowrap;
     }
 
     .stats{
@@ -80,34 +86,36 @@
 
     .stat{
       border-radius:24px;
-      padding:18px 18px 20px;
+      padding:16px;
     }
-    .stat.blue{background:linear-gradient(180deg,#bfd9ea,#aecde1)}
-    .stat.yellow{background:linear-gradient(180deg,#eddca8,#f0cf73)}
+    .stat.blue{background:linear-gradient(180deg,#bfd9ea,#aacbdf)}
+    .stat.yellow{background:linear-gradient(180deg,#efdeac,#efcc6d)}
+
     .stat-label{
-      font-size:18px;
-      color:rgba(22,42,69,.65);
-      margin-bottom:18px;
+      font-size:16px;
+      color:rgba(21,37,61,.65);
+      margin-bottom:14px;
     }
+
     .stat-value{
-      font-size:58px;
+      font-size:52px;
       font-weight:800;
       line-height:1;
     }
 
-    .progress-wrap{margin-bottom:22px}
+    .progress-wrap{margin-bottom:20px}
     .progress-top{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      font-size:18px;
+      font-size:17px;
       margin-bottom:10px;
-      color:rgba(22,42,69,.72);
+      color:rgba(21,37,61,.72);
     }
     .progress{
-      height:20px;
-      background:#c8d2dd;
+      height:18px;
       border-radius:999px;
+      background:#c4d0dc;
       overflow:hidden;
       box-shadow:inset 0 3px 6px rgba(0,0,0,.08);
     }
@@ -115,285 +123,373 @@
       width:0%;
       height:100%;
       border-radius:999px;
-      background:linear-gradient(90deg,#1aaae8,#2b57f6);
+      background:linear-gradient(90deg,#14b5f7,#2b57f6);
       transition:width .15s linear;
     }
 
     .box{
+      border-radius:26px;
+      padding:18px;
+      margin-bottom:16px;
       background:rgba(255,255,255,.08);
-      border-radius:28px;
-      padding:20px;
-      margin-bottom:18px;
       border:1px solid rgba(0,0,0,.06);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
     }
 
-    .controls{
+    .controls,.actions{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:12px;
-      margin-bottom:14px;
     }
+
+    .setting-item{margin-bottom:16px}
+    .setting-item label{
+      display:block;
+      font-size:17px;
+      margin-bottom:8px;
+      color:rgba(21,37,61,.76);
+    }
+    input[type="range"]{width:100%}
 
     button{
       border:none;
-      border-radius:20px;
-      padding:18px 20px;
-      font-size:22px;
+      border-radius:18px;
+      padding:16px 18px;
+      font-size:20px;
       font-weight:800;
       cursor:pointer;
-      box-shadow:0 10px 18px rgba(0,0,0,.12);
       transition:transform .08s ease, opacity .2s ease;
+      box-shadow:0 10px 18px rgba(0,0,0,.12);
     }
     button:hover{opacity:.96}
     button:active{transform:scale(.98)}
 
     .btn-primary{
-      color:#fff;
-      background:linear-gradient(180deg,#39c7ff,#2b57f6);
+      color:white;
+      background:linear-gradient(180deg,#36c8ff,#2959f5);
     }
     .btn-secondary{
       color:var(--text);
-      background:linear-gradient(180deg,#e9edf0,#d7dde4);
+      background:linear-gradient(180deg,#eef1f4,#d8dfe6);
     }
     .btn-outline{
       color:var(--text);
-      background:linear-gradient(180deg,#ededed,#dbdbdb);
+      background:linear-gradient(180deg,#eeeeee,#dddddd);
     }
-
-    .setting-item{margin-bottom:18px}
-    .setting-item label{
-      display:block;
-      font-size:18px;
-      margin-bottom:10px;
-      color:rgba(22,42,69,.75);
-    }
-    input[type="range"]{width:100%}
 
     .note{
-      font-size:17px;
+      font-size:16px;
       line-height:1.45;
-      color:rgba(22,42,69,.7);
+      color:rgba(21,37,61,.72);
       margin:0;
     }
 
     .game-wrap{
       position:relative;
-      min-height:820px;
+      min-height:860px;
       border-radius:34px;
       overflow:hidden;
-      box-shadow:0 20px 42px rgba(0,0,0,.22);
+      box-shadow:var(--shadow);
       border:2px solid rgba(255,255,255,.45);
-      background:linear-gradient(180deg,#68c8e5 0%, #90dced 60%, #aadae6 100%);
+      background:linear-gradient(180deg,#739ad0 0%, #b8c9e7 48%, #dce7f1 100%);
+    }
+
+    .scene{
+      position:absolute;
+      inset:0;
+      overflow:hidden;
     }
 
     .sky{
       position:absolute;
       inset:0;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255,187,156,.45), transparent 22%),
+        radial-gradient(circle at 62% 20%, rgba(255,213,186,.32), transparent 20%),
+        radial-gradient(circle at 80% 16%, rgba(255,170,140,.25), transparent 18%),
+        linear-gradient(180deg, #6998cf 0%, #88acdb 22%, #9fc0e7 42%, #bfd2e8 60%, #dbe5f0 100%);
       z-index:0;
-      background:linear-gradient(180deg,#69c6e7 0%, #8fdbec 65%, #9ddfe8 100%);
     }
 
     .cloud{
       position:absolute;
-      background:#ececec;
+      background:rgba(255,255,255,.2);
+      filter:blur(6px);
       border-radius:999px;
       z-index:1;
-      opacity:.95;
     }
-    .cloud:before,.cloud:after{
-      content:"";
-      position:absolute;
-      background:inherit;
-      border-radius:inherit;
-    }
-    .cloud:before{width:55%;height:100%;left:10%;top:-38%}
-    .cloud:after{width:40%;height:85%;right:10%;top:-20%}
 
-    .horizon{
+    .city{
       position:absolute;
-      left:0; right:0;
-      top:49%;
-      height:3px;
-      background:rgba(255,255,255,.18);
+      left:0;right:0;
+      bottom:53%;
+      height:20%;
       z-index:2;
-    }
-
-    .hill{
-      position:absolute;
-      bottom:46%;
-      background:linear-gradient(180deg,var(--grass),var(--grass2));
-      border-radius:50% 50% 0 0;
-      z-index:2;
-    }
-
-    .ground{
-      position:absolute;
-      left:0; right:0; bottom:0;
-      height:46%;
-      background:#abd4e0;
-      z-index:2;
-    }
-
-    .tree{
-      position:absolute;
-      bottom:33%;
-      width:44px;
-      height:100px;
-      z-index:3;
-    }
-    .tree .crown{
-      position:absolute;
-      top:0;
-      left:50%;
-      transform:translateX(-50%);
-      width:70px;
-      height:56px;
-      background:linear-gradient(180deg,#6bcc20,#54b518);
-      border-radius:50%;
-      box-shadow:inset 0 -6px 0 rgba(0,0,0,.08);
-    }
-    .tree .trunk{
-      position:absolute;
-      bottom:0;
-      left:50%;
-      transform:translateX(-50%);
-      width:12px;
-      height:42px;
-      background:#8b5a1f;
-      border-radius:8px;
-    }
-
-    .road-area{
-      position:absolute;
-      inset:0;
-      z-index:4;
       pointer-events:none;
     }
 
-    .road-perspective{
+    .building{
       position:absolute;
-      left:50%;
-      top:13%;
-      width:55%;
-      height:76%;
-      transform:translateX(-50%);
-      clip-path:polygon(46.5% 0%, 53.5% 0%, 94% 100%, 6% 100%);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.08)),
-        linear-gradient(180deg, var(--gold), var(--gold2));
-      box-shadow:0 0 40px rgba(219,159,58,.18);
+      bottom:0;
+      background:linear-gradient(180deg,var(--city1),var(--city2));
+      box-shadow:inset 0 0 0 2px rgba(255,255,255,.08);
     }
 
-    .center-line{
+    .building .windows{
       position:absolute;
-      left:50%;
-      top:13%;
-      width:7%;
-      height:76%;
-      transform:translateX(-50%);
-      clip-path:polygon(46.5% 0%, 53.5% 0%, 94% 100%, 6% 100%);
-      background:
-        repeating-linear-gradient(
-          180deg,
-          rgba(255,232,166,.95) 0px,
-          rgba(255,232,166,.95) 44px,
-          rgba(255,232,166,0) 44px,
-          rgba(255,232,166,0) 98px
-        );
-      opacity:.95;
-    }
-
-    .guard{
-      position:absolute;
-      top:21%;
-      width:13%;
-      height:79%;
-      z-index:5;
+      inset:10px 8px;
       background:
         repeating-linear-gradient(
           90deg,
-          #ededed 0px,#ededed 30px,
-          #e12222 30px,#e12222 60px
+          rgba(234,239,255,.72) 0px,
+          rgba(234,239,255,.72) 10px,
+          transparent 10px,
+          transparent 20px
+        ),
+        repeating-linear-gradient(
+          180deg,
+          rgba(234,239,255,.72) 0px,
+          rgba(234,239,255,.72) 8px,
+          transparent 8px,
+          transparent 20px
         );
-    }
-    .guard.left{
-      left:12.8%;
-      clip-path:polygon(38% 0, 62% 0, 100% 100%, 0 100%);
-    }
-    .guard.right{
-      right:12.8%;
-      clip-path:polygon(38% 0, 62% 0, 100% 100%, 0 100%);
+      opacity:.78;
     }
 
-    .glow-pad{
+    .road-world{
       position:absolute;
-      border-radius:10px;
-      border:4px solid rgba(84,199,255,.9);
-      background:rgba(144,212,235,.15);
-      box-shadow:0 0 14px rgba(84,199,255,.45), inset 0 0 10px rgba(255,255,255,.2);
+      inset:0;
+      z-index:3;
+    }
+
+    .road{
+      position:absolute;
+      left:50%;
+      top:30%;
+      width:84%;
+      height:74%;
+      transform:translateX(-50%);
+      clip-path:polygon(38% 0%, 62% 0%, 100% 100%, 0% 100%);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.08)),
+        linear-gradient(180deg, var(--road1), var(--road2));
+      box-shadow:0 -4px 18px rgba(255,255,255,.08), inset 0 0 50px rgba(0,0,0,.18);
+    }
+
+    .lane-center{
+      position:absolute;
+      left:50%;
+      top:30%;
+      width:8%;
+      height:74%;
+      transform:translateX(-50%);
+      clip-path:polygon(38% 0%, 62% 0%, 100% 100%, 0% 100%);
+      opacity:.95;
+      background:
+        repeating-linear-gradient(
+          180deg,
+          rgba(255,216,74,.92) 0px,
+          rgba(255,216,74,.92) 48px,
+          rgba(255,216,74,0) 48px,
+          rgba(255,216,74,0) 104px
+        );
+    }
+
+    .lane-left, .lane-right{
+      position:absolute;
+      top:30%;
+      height:74%;
+      width:1.2%;
+      background:linear-gradient(180deg,#f0d039,#c4990d);
+      opacity:.9;
+    }
+    .lane-left{
+      left:28%;
+      transform:skewX(-16deg);
+    }
+    .lane-right{
+      right:28%;
+      transform:skewX(16deg);
+    }
+
+    .wall-left, .wall-right{
+      position:absolute;
+      top:25%;
+      width:26%;
+      height:68%;
+      z-index:4;
+      background:
+        repeating-linear-gradient(
+          180deg,
+          rgba(255,255,255,.22) 0px,
+          rgba(255,255,255,.22) 2px,
+          transparent 2px,
+          transparent 22px
+        ),
+        linear-gradient(180deg, #edf1f5, #b7bec7);
+      box-shadow:inset 0 0 0 2px rgba(0,0,0,.04);
+    }
+    .wall-left{
+      left:-2%;
+      clip-path:polygon(0 8%, 94% 0, 100% 100%, 0 100%);
+    }
+    .wall-right{
+      right:-2%;
+      clip-path:polygon(6% 0, 100% 8%, 100% 100%, 0 100%);
+    }
+
+    .wall-stripes-left, .wall-stripes-right{
+      position:absolute;
+      top:52%;
+      width:100%;
+      height:16%;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          transparent 0px,
+          transparent 22px,
+          rgba(217,139,58,.95) 22px,
+          rgba(217,139,58,.95) 54px
+        );
+      transform:skewY(-12deg);
+      opacity:.8;
+    }
+
+    .tunnel{
+      position:absolute;
+      left:50%;
+      top:30%;
+      width:28%;
+      height:16%;
+      transform:translateX(-50%);
       z-index:5;
     }
 
-    .top-left-preview{
+    .tunnel-face{
       position:absolute;
-      left:22px;
-      top:22px;
-      width:130px;
-      height:130px;
-      border-radius:24px;
-      padding:10px;
-      background:rgba(245,245,245,.92);
-      z-index:12;
-      box-shadow:0 10px 22px rgba(0,0,0,.14);
-    }
-    .preview-scene{
-      position:relative;
-      width:100%;
-      height:100%;
-      border-radius:18px;
-      overflow:hidden;
-      background:linear-gradient(180deg,#8bdcf0 0%, #d4f0f2 40%, #8bdf68 100%);
-    }
-    .preview-road{
-      position:absolute;
-      left:50%;
-      bottom:0;
-      transform:translateX(-50%);
-      width:52%;
-      height:100%;
-      clip-path:polygon(35% 0, 65% 0, 100% 100%, 0 100%);
-      background:linear-gradient(180deg,#efb54f,#c98f2f);
-    }
-    .preview-car{
-      position:absolute;
-      left:50%;
-      bottom:10px;
-      transform:translateX(-50%);
-      width:34px;
-      height:48px;
-      border-radius:14px;
-      background:linear-gradient(180deg,#17a4ff,#2850ff);
-      box-shadow:0 0 10px rgba(38,88,255,.45);
+      inset:0;
+      background:linear-gradient(180deg,#6d7079,#3a3d44);
+      clip-path:polygon(8% 0, 92% 0, 100% 100%, 0 100%);
+      box-shadow:0 12px 20px rgba(0,0,0,.2);
     }
 
-    .level-pill{
+    .tunnel-hole{
       position:absolute;
-      right:20px;
-      top:22px;
+      left:10%;
+      right:10%;
+      top:18%;
+      bottom:0;
+      background:linear-gradient(180deg,#101316,#191d22);
+      clip-path:polygon(8% 0, 92% 0, 100% 100%, 0 100%);
+      overflow:hidden;
+    }
+
+    .tunnel-lights{
+      position:absolute;
+      inset:0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(79,255,186,.9) 0px,
+          rgba(79,255,186,.9) 10px,
+          transparent 10px,
+          transparent 48px
+        );
+      opacity:.55;
+      transform:perspective(300px) rotateX(20deg);
+    }
+
+    .sign{
+      position:absolute;
+      top:-8%;
+      width:22%;
+      height:38%;
+      background:linear-gradient(180deg,#2d7b32,#1f5d25);
+      border:3px solid rgba(255,255,255,.7);
+      color:white;
+      font-size:14px;
+      font-weight:700;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:6px;
+      text-align:center;
+      padding:6px;
+      z-index:6;
+    }
+    .sign.left{left:24%}
+    .sign.right{right:24%}
+
+    .hud-top{
+      position:absolute;
+      left:0;right:0;top:0;
       z-index:12;
-      padding:16px 22px;
-      border-radius:999px;
-      background:rgba(245,245,245,.92);
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      padding:18px 18px 0;
+      pointer-events:none;
+    }
+
+    .hud-pause{
+      width:58px;
+      height:58px;
+      border-radius:0 0 18px 0;
+      background:var(--hud);
+      color:var(--hudText);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:28px;
+      font-weight:900;
+      pointer-events:auto;
+    }
+
+    .hud-right{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      pointer-events:auto;
+    }
+
+    .hud-box{
+      background:var(--hud);
+      color:var(--hudText);
+      border-radius:0 0 0 18px;
+      padding:12px 18px;
+      min-width:150px;
+      text-align:right;
+      font-weight:800;
+      font-size:22px;
+      letter-spacing:1px;
+    }
+
+    .hud-coins{
+      margin-top:10px;
+      background:linear-gradient(180deg,rgba(27,30,36,.76),rgba(17,20,25,.76));
+      color:#ffca28;
+      border-radius:16px;
+      padding:10px 14px;
+      display:flex;
+      align-items:center;
+      gap:10px;
       font-size:18px;
       font-weight:800;
-      box-shadow:0 10px 22px rgba(0,0,0,.14);
+      justify-content:flex-end;
+    }
+
+    .coin-mini{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:radial-gradient(circle at 35% 30%, #fff2a8, var(--coin1) 45%, var(--coin2) 100%);
+      box-shadow:0 0 10px rgba(255,200,0,.45);
     }
 
     .object-layer{
       position:absolute;
       inset:0;
-      z-index:8;
+      z-index:9;
       pointer-events:none;
     }
 
@@ -401,288 +497,248 @@
       position:absolute;
       transform:translate(-50%,-50%);
       pointer-events:none;
-      filter:drop-shadow(0 12px 12px rgba(0,0,0,.22));
+      filter:drop-shadow(0 12px 14px rgba(0,0,0,.3));
     }
 
-    .diamond{
+    .coin{
       position:relative;
       width:100%;
       height:100%;
-      clip-path:polygon(50% 0%, 88% 26%, 72% 100%, 28% 100%, 12% 26%);
-      background:linear-gradient(180deg,#dffcff,#7ce0ff 50%, #1aa5ff 100%);
-      border:3px solid rgba(255,255,255,.85);
-      box-shadow:0 0 18px rgba(84,220,255,.7);
-      animation:diamondPulse .8s infinite ease-in-out;
+      border-radius:50%;
+      background:radial-gradient(circle at 35% 30%, #fff5ba, var(--coin1) 42%, var(--coin2) 100%);
+      border:3px solid rgba(255,214,90,.9);
+      box-shadow:0 0 18px rgba(255,196,0,.45);
+      animation:coinSpin .9s infinite ease-in-out;
     }
-    .diamond:before{
-      content:"";
+    .coin::before{
+      content:"★";
       position:absolute;
-      inset:12% 20% 40% 20%;
-      background:rgba(255,255,255,.35);
-      clip-path:polygon(50% 0%, 100% 40%, 50% 100%, 0% 40%);
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#d97706;
+      font-size:55%;
+      font-weight:900;
+      text-shadow:0 1px 0 rgba(255,255,255,.7);
     }
 
-    @keyframes diamondPulse{
-      0%{transform:scale(1)}
-      50%{transform:scale(1.08)}
-      100%{transform:scale(1)}
+    @keyframes coinSpin{
+      0%{transform:scaleX(1)}
+      50%{transform:scaleX(.7)}
+      100%{transform:scaleX(1)}
     }
 
-    .obstacle-rock,.obstacle-cone,.obstacle-car{
+    .obstacle-cone,.obstacle-barrel,.obstacle-car{
       width:100%;
       height:100%;
       position:relative;
     }
-    .obstacle-rock:before{
-      content:"";
-      position:absolute;
-      inset:10%;
-      background:linear-gradient(180deg,#9ca3af,#4b5563);
-      clip-path:polygon(24% 20%, 55% 6%, 84% 20%, 94% 54%, 74% 90%, 31% 95%, 10% 62%);
-      border-radius:14px;
-    }
-    .obstacle-cone:before{
+
+    .obstacle-cone::before{
       content:"";
       position:absolute;
       left:50%;
-      bottom:12%;
+      bottom:8%;
       transform:translateX(-50%);
-      width:56%;
-      height:70%;
-      background:linear-gradient(180deg,#ffb54a,#ff6a00);
-      clip-path:polygon(50% 0%,100% 100%,0% 100%);
+      width:58%;
+      height:74%;
+      background:linear-gradient(180deg,#ffb354,#ff6a00);
+      clip-path:polygon(50% 0%, 100% 100%, 0% 100%);
       border-radius:10px;
     }
-    .obstacle-cone:after{
+    .obstacle-cone::after{
       content:"";
       position:absolute;
       left:50%;
-      bottom:4%;
+      bottom:0;
       transform:translateX(-50%);
-      width:84%;
-      height:16%;
-      background:linear-gradient(180deg,#fff,#e5e7eb);
+      width:90%;
+      height:18%;
       border-radius:999px;
+      background:linear-gradient(180deg,#fff,#d7dbe1);
     }
-    .obstacle-car:before{
+
+    .obstacle-barrel::before{
       content:"";
       position:absolute;
-      inset:10%;
-      background:linear-gradient(180deg,#ff4f4f,#9f1717);
-      clip-path:polygon(50% 0%,84% 18%,94% 48%,86% 84%,50% 100%,14% 84%,6% 48%,16% 18%);
+      left:50%;
+      top:5%;
+      transform:translateX(-50%);
+      width:68%;
+      height:90%;
       border-radius:12px;
+      background:
+        repeating-linear-gradient(
+          180deg,
+          #ff9b39 0px,
+          #ff9b39 12px,
+          #d2460f 12px,
+          #d2460f 22px
+        );
+      box-shadow:inset 0 0 0 2px rgba(255,255,255,.15);
     }
-    .obstacle-car:after{
+
+    .obstacle-car::before{
       content:"";
       position:absolute;
-      left:28%;
-      right:28%;
+      inset:8%;
+      border-radius:14px;
+      clip-path:polygon(50% 0%,84% 18%,94% 48%,86% 84%,50% 100%,14% 84%,6% 48%,16% 18%);
+      background:linear-gradient(180deg,#f94d60,#78171a);
+    }
+    .obstacle-car::after{
+      content:"";
+      position:absolute;
+      left:30%;
+      right:30%;
       top:22%;
       height:18%;
       border-radius:10px;
-      background:linear-gradient(180deg,rgba(0,0,0,.95),rgba(40,40,70,.75));
+      background:linear-gradient(180deg,#0d1117,#293241);
     }
 
     .player-car{
       position:absolute;
       left:50%;
-      bottom:112px;
-      width:250px;
-      height:220px;
+      bottom:52px;
+      width:340px;
+      height:270px;
       transform:translateX(-50%);
       z-index:10;
-      transition:transform .16s ease;
-      filter:drop-shadow(0 18px 20px rgba(0,0,0,.28));
+      transition:transform .14s ease;
+      filter:drop-shadow(0 18px 24px rgba(0,0,0,.36));
       pointer-events:none;
     }
-    .car-body{
+
+    .car-rear{
       position:absolute;
       inset:0;
-      clip-path:polygon(50% 4%,74% 18%,84% 39%,88% 66%,77% 86%,50% 98%,23% 86%,12% 66%,16% 39%,26% 18%);
-      background:linear-gradient(180deg,#2fb7ff 0%, #2f5fff 50%, #25008f 100%);
-      box-shadow:inset 0 8px 14px rgba(255,255,255,.2), inset 0 -12px 20px rgba(0,0,0,.25);
-      border:4px solid rgba(255,255,255,.22);
+      clip-path:polygon(50% 8%, 84% 22%, 94% 58%, 82% 88%, 50% 100%, 18% 88%, 6% 58%, 16% 22%);
+      background:
+        linear-gradient(180deg,#ff83ad 0%, #d83777 22%, #3c3872 52%, #10121a 100%);
+      border:4px solid rgba(255,255,255,.16);
+      box-shadow:inset 0 8px 12px rgba(255,255,255,.12), inset 0 -16px 24px rgba(0,0,0,.35);
       border-radius:24px;
     }
-    .car-window{
+
+    .car-glass{
       position:absolute;
-      left:29%;
+      left:28%;
       top:18%;
-      width:42%;
-      height:30%;
-      border-radius:18px 18px 10px 10px;
-      background:linear-gradient(180deg,rgba(0,0,0,.96),rgba(18,45,90,.8));
-      border:3px solid rgba(255,255,255,.12);
-      box-shadow:inset 0 2px 6px rgba(255,255,255,.12);
+      width:44%;
+      height:22%;
+      background:linear-gradient(180deg,#26354b,#12171f);
+      border-radius:10px 10px 18px 18px;
+      box-shadow:inset 0 0 0 2px rgba(255,255,255,.08);
     }
-    .car-window:before{
+
+    .car-glass::before{
       content:"";
       position:absolute;
-      inset:0;
-      background:linear-gradient(90deg,transparent 45%, rgba(255,255,255,.16) 45%, rgba(255,255,255,.16) 55%, transparent 55%);
-    }
-    .car-tail{
-      position:absolute;
-      left:50%;
-      bottom:16%;
-      transform:translateX(-50%);
-      width:56%;
-      height:18%;
-      border-radius:16px;
-      background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.66));
-    }
-    .neon-left,.neon-right{
-      position:absolute;
-      bottom:8%;
-      width:22px;
-      height:80px;
-      border-radius:14px;
-      background:linear-gradient(180deg,rgba(243,53,255,.95),rgba(122,0,255,.46));
-      box-shadow:0 0 16px rgba(227,58,255,.85);
-    }
-    .neon-left{left:16%}
-    .neon-right{right:16%}
-    .thruster-left,.thruster-right{
-      position:absolute;
-      bottom:3%;
-      width:12px;
-      height:52px;
-      border-radius:999px;
-      background:linear-gradient(180deg,#8b00ff,rgba(0,255,255,.2));
-      box-shadow:0 0 14px rgba(0,224,255,.7);
-    }
-    .thruster-left{left:33%}
-    .thruster-right{right:33%}
-
-    .bottom-controls{
-      position:absolute;
-      left:24px;
-      right:24px;
-      bottom:18px;
-      z-index:15;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-end;
-      pointer-events:none;
-    }
-
-    .wheel-box,.map-box,.drive-controls{
-      pointer-events:auto;
-    }
-
-    .wheel-box{
-      width:150px;
-      height:150px;
-      border-radius:50%;
-      background:rgba(245,245,245,.92);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow:0 10px 22px rgba(0,0,0,.14);
-    }
-
-    .steering{
-      position:relative;
-      width:100px;
-      height:100px;
-      border:9px solid #9b7645;
-      border-radius:50%;
-      background:radial-gradient(circle,#d1d6dc 0%,#b9c2cc 40%,transparent 42%);
-      transition:transform .12s ease;
-    }
-    .steering:before,.steering:after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      background:#9b7645;
-      border-radius:999px;
-    }
-    .steering:before{width:12px;height:94px}
-    .steering:after{width:94px;height:12px}
-    .wheel-center{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:28px;
-      height:28px;
-      transform:translate(-50%,-50%);
-      background:#c3cad2;
-      border-radius:50%;
-    }
-
-    .drive-controls{
-      display:flex;
-      gap:14px;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .drive-btn{
-      width:120px;
-      height:78px;
-      border-radius:18px;
-      font-size:28px;
-      font-weight:800;
-      box-shadow:0 12px 22px rgba(0,0,0,.18);
-      background:linear-gradient(180deg,#f0f0f0,#d9e0e8);
-      color:#1b2e4a;
-    }
-
-    .map-box{
-      width:150px;
-      height:112px;
-      border-radius:24px;
-      padding:10px;
-      background:rgba(245,245,245,.92);
-      box-shadow:0 10px 22px rgba(0,0,0,.14);
-    }
-
-    .mini-map{
-      position:relative;
-      width:100%;
+      left:46%;
+      top:0;
+      width:8%;
       height:100%;
-      border-radius:16px;
-      overflow:hidden;
-      background:linear-gradient(180deg,#cceea6,#9cd56a);
-      border:3px solid rgba(0,0,0,.08);
+      background:rgba(255,255,255,.12);
     }
-    .mini-route{
+
+    .car-wing{
       position:absolute;
       left:16%;
-      top:12%;
-      width:68%;
-      height:74%;
-      border:6px solid #6b7280;
-      border-radius:18px;
-    }
-    .mini-route:before,.mini-route:after{
-      content:"";
-      position:absolute;
-      background:#6b7280;
+      right:16%;
+      top:18%;
+      height:12px;
+      background:#15191f;
       border-radius:999px;
     }
-    .mini-route:before{
-      width:50%;
-      height:6px;
-      left:-2px;
-      top:28%;
-    }
-    .mini-route:after{
-      width:6px;
-      height:44%;
-      right:16%;
-      bottom:-2px;
-    }
-    .mini-dot{
+
+    .car-wing::before,.car-wing::after{
+      content:"";
       position:absolute;
-      width:12px;
-      height:12px;
+      top:2px;
+      width:16px;
+      height:24px;
+      background:#ea4a2b;
+    }
+    .car-wing::before{left:-6px;transform:skewY(20deg)}
+    .car-wing::after{right:-6px;transform:skewY(-20deg)}
+
+    .tail-left,.tail-right{
+      position:absolute;
+      bottom:28%;
+      width:24%;
+      height:10%;
+      background:linear-gradient(180deg,#ff4738,#9c1712);
+      border-radius:0 30px 18px 18px;
+      box-shadow:0 0 16px rgba(255,50,30,.45);
+    }
+    .tail-left{left:8%}
+    .tail-right{right:8%;transform:scaleX(-1)}
+
+    .rear-panel{
+      position:absolute;
+      left:27%;
+      right:27%;
+      bottom:18%;
+      height:18%;
+      background:linear-gradient(180deg,#06080b,#11151b);
+      border-radius:10px 10px 18px 18px;
+      box-shadow:inset 0 0 0 2px rgba(255,255,255,.04);
+    }
+
+    .diffuser{
+      position:absolute;
+      left:24%;
+      right:24%;
+      bottom:8%;
+      height:10%;
+      background:linear-gradient(180deg,#0d1014,#1b1f26);
+      clip-path:polygon(0 0,100% 0,94% 100%,6% 100%);
+    }
+
+    .player-shadow{
+      position:absolute;
+      left:50%;
+      bottom:34px;
+      width:250px;
+      height:42px;
+      transform:translateX(-50%);
       border-radius:50%;
-      background:#ffd400;
-      box-shadow:0 0 8px rgba(255,212,0,.7);
-      transition:left .2s linear, top .2s linear;
+      background:radial-gradient(circle, rgba(0,0,0,.45), rgba(0,0,0,0));
+      z-index:9;
+      pointer-events:none;
+    }
+
+    .side-control{
+      position:absolute;
+      top:50%;
+      width:110px;
+      height:110px;
+      transform:translateY(-50%);
+      z-index:14;
+      pointer-events:auto;
+      border:none;
+      box-shadow:none;
+      background:transparent;
+    }
+
+    .side-control.left{left:18px}
+    .side-control.right{right:18px}
+
+    .side-control .arrow{
+      position:absolute;
+      inset:0;
+      background:rgba(123,231,255,.25);
+      border:3px solid rgba(123,231,255,.55);
+      box-shadow:0 0 18px rgba(123,231,255,.2);
+      backdrop-filter:blur(2px);
+    }
+    .side-control.left .arrow{
+      clip-path:polygon(76% 10%, 18% 50%, 76% 90%, 58% 56%, 92% 56%, 92% 44%, 58% 44%);
+    }
+    .side-control.right .arrow{
+      clip-path:polygon(24% 10%, 82% 50%, 24% 90%, 42% 56%, 8% 56%, 8% 44%, 42% 44%);
     }
 
     .overlay{
@@ -695,6 +751,7 @@
       background:rgba(9,19,34,.34);
       padding:20px;
     }
+
     .modal{
       width:100%;
       max-width:560px;
@@ -704,14 +761,17 @@
       padding:28px;
       text-align:center;
     }
+
     .modal h2{
       margin:0 0 10px;
       font-size:32px;
     }
+
     .modal-icon{
       font-size:62px;
       margin-bottom:8px;
     }
+
     .question-box{
       background:linear-gradient(180deg,#f8fcff,#edf6fb);
       border-radius:20px;
@@ -720,16 +780,19 @@
       font-weight:900;
       margin:18px 0;
     }
+
     .answers.choice{
       display:grid;
       grid-template-columns:repeat(3,1fr);
       gap:10px;
     }
+
     .answer-input-row{
       display:flex;
       gap:10px;
       margin-top:10px;
     }
+
     .answer-input-row input{
       flex:1;
       padding:14px 16px;
@@ -738,20 +801,24 @@
       border:2px solid #cbd5e1;
       outline:none;
     }
+
     .feedback{
       margin-top:16px;
       border-radius:16px;
       padding:12px 14px;
       font-weight:800;
     }
+
     .feedback.success{
       background:#d1fae5;
       color:#065f46;
     }
+
     .feedback.warning{
       background:#fef3c7;
       color:#92400e;
     }
+
     .finish-box{
       margin:18px auto 0;
       max-width:340px;
@@ -761,6 +828,7 @@
       font-size:24px;
       font-weight:900;
     }
+
     .finish-actions{
       display:flex;
       gap:10px;
@@ -768,6 +836,7 @@
       flex-wrap:wrap;
       margin-top:18px;
     }
+
     .tiny{
       font-size:14px;
       color:rgba(16,35,58,.72);
@@ -775,17 +844,21 @@
 
     @media (max-width:1200px){
       .app{grid-template-columns:1fr}
-      .game-wrap{min-height:760px}
+      .game-wrap{min-height:780px}
+    }
+
+    @media (max-width:900px){
+      .player-car{width:260px;height:210px}
+      .side-control{width:86px;height:86px}
+      .hud-box{font-size:18px}
     }
 
     @media (max-width:760px){
-      .stats,.controls,.answers.choice{grid-template-columns:1fr}
+      .stats,.controls,.actions,.answers.choice{grid-template-columns:1fr}
       .answer-input-row{flex-direction:column}
-      .drive-btn{width:92px;height:68px;font-size:24px}
-      .wheel-box{width:120px;height:120px}
-      .map-box{width:120px;height:96px}
-      .player-car{width:190px;height:170px}
-      .top-left-preview{width:100px;height:100px}
+      .player-car{width:220px;height:180px}
+      .side-control{width:72px;height:72px}
+      .hud-pause{width:48px;height:48px;font-size:22px}
     }
   </style>
 </head>
@@ -821,10 +894,10 @@
       <div class="box">
         <h3>Управление</h3>
         <div class="controls">
-          <button class="btn-secondary" id="btnUp">⬆ Вверх</button>
-          <button class="btn-secondary" id="btnDown">⬇ Вниз</button>
+          <button class="btn-secondary" id="btnLeft">⬅ Влево</button>
+          <button class="btn-secondary" id="btnRight">➡ Вправо</button>
         </div>
-        <p class="note">Кнопки есть и здесь, и внизу под дорогой.</p>
+        <p class="note">Стрелки есть и на самой трассе — как в референсе.</p>
       </div>
 
       <div class="box">
@@ -840,7 +913,7 @@
           <input type="range" id="timeRange" min="20" max="90" step="5" value="45" />
         </div>
 
-        <div class="controls">
+        <div class="actions">
           <button class="btn-primary" id="btnStart">▶ Старт</button>
           <button class="btn-outline" id="btnReset">↻ Сброс</button>
         </div>
@@ -848,87 +921,84 @@
 
       <div class="box">
         <p class="note">
-          Здесь уже реализованы: хаотичные алмазы, хаотичные препятствия, потеря алмазов при столкновении, нижние кнопки управления и дорога в линию горизонта.
+          Визуал сделан по мотивам твоей картинки: городской хайвей, тоннель, большая машина сзади, верхний HUD и боковые стрелки.
         </p>
       </div>
     </aside>
 
     <main class="game-wrap">
-      <div class="sky"></div>
+      <div class="scene">
+        <div class="sky"></div>
+        <div class="cloud" style="left:4%;top:8%;width:220px;height:54px;"></div>
+        <div class="cloud" style="right:10%;top:11%;width:260px;height:60px;"></div>
 
-      <div class="cloud" style="width:132px;height:42px;left:160px;top:48px;"></div>
-      <div class="cloud" style="width:160px;height:48px;right:120px;top:62px;"></div>
-
-      <div class="horizon"></div>
-
-      <div class="hill" style="left:-4%;width:46%;height:220px;"></div>
-      <div class="hill" style="left:26%;width:30%;height:170px;"></div>
-      <div class="hill" style="right:8%;width:36%;height:270px;"></div>
-
-      <div class="ground"></div>
-
-      <div class="tree" style="left:10%;"><div class="crown"></div><div class="trunk"></div></div>
-      <div class="tree" style="left:18%;bottom:31%;"><div class="crown"></div><div class="trunk"></div></div>
-      <div class="tree" style="right:12%;bottom:32%;"><div class="crown"></div><div class="trunk"></div></div>
-      <div class="tree" style="right:4%;bottom:33%;"><div class="crown"></div><div class="trunk"></div></div>
-
-      <div class="road-area">
-        <div class="road-perspective"></div>
-        <div class="center-line" id="centerLine"></div>
-        <div class="guard left"></div>
-        <div class="guard right"></div>
-
-        <div class="glow-pad" style="left:30%;top:48%;width:82px;height:28px;"></div>
-        <div class="glow-pad" style="left:26%;top:63%;width:82px;height:34px;"></div>
-        <div class="glow-pad" style="left:23%;top:76%;width:98px;height:38px;"></div>
-
-        <div class="glow-pad" style="right:30%;top:48%;width:82px;height:28px;"></div>
-        <div class="glow-pad" style="right:26%;top:63%;width:82px;height:34px;"></div>
-        <div class="glow-pad" style="right:23%;top:76%;width:98px;height:38px;"></div>
-      </div>
-
-      <div class="top-left-preview">
-        <div class="preview-scene">
-          <div class="preview-road"></div>
-          <div class="preview-car"></div>
+        <div class="city">
+          <div class="building" style="left:11%;width:8%;height:44%;"><div class="windows"></div></div>
+          <div class="building" style="left:22%;width:4%;height:56%;"><div class="windows"></div></div>
+          <div class="building" style="left:28%;width:5%;height:34%;"><div class="windows"></div></div>
+          <div class="building" style="left:61%;width:6%;height:40%;"><div class="windows"></div></div>
+          <div class="building" style="left:70%;width:18%;height:72%;"><div class="windows"></div></div>
         </div>
-      </div>
 
-      <div class="level-pill" id="levelFlag">🏁 Уровень 1</div>
+        <div class="road-world">
+          <div class="road"></div>
+          <div class="lane-center" id="laneCenter"></div>
+          <div class="lane-left"></div>
+          <div class="lane-right"></div>
 
-      <div class="object-layer" id="objectsLayer"></div>
+          <div class="wall-left">
+            <div class="wall-stripes-left"></div>
+          </div>
+          <div class="wall-right">
+            <div class="wall-stripes-right"></div>
+          </div>
 
-      <div class="player-car" id="playerCar">
-        <div class="car-body"></div>
-        <div class="car-window"></div>
-        <div class="car-tail"></div>
-        <div class="neon-left"></div>
-        <div class="neon-right"></div>
-        <div class="thruster-left"></div>
-        <div class="thruster-right"></div>
-      </div>
-
-      <div class="bottom-controls">
-        <div class="wheel-box">
-          <div class="steering" id="steeringWheel">
-            <div class="wheel-center"></div>
+          <div class="tunnel">
+            <div class="tunnel-face"></div>
+            <div class="tunnel-hole">
+              <div class="tunnel-lights"></div>
+            </div>
+            <div class="sign left">Route A</div>
+            <div class="sign right">Tunnel</div>
           </div>
         </div>
 
-        <div class="drive-controls">
-          <button class="drive-btn" id="bottomUp">⬆</button>
-          <button class="drive-btn" id="bottomDown">⬇</button>
-        </div>
-
-        <div class="map-box">
-          <div class="mini-map">
-            <div class="mini-route"></div>
-            <div class="mini-dot" id="miniDot" style="left:18%;top:70%;"></div>
+        <div class="hud-top">
+          <div class="hud-pause">❚❚</div>
+          <div class="hud-right">
+            <div>
+              <div class="hud-box">x1&nbsp;&nbsp;&nbsp;0000754</div>
+              <div class="hud-coins">
+                <span id="diamondsMini">0</span>
+                <div class="coin-mini"></div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div id="overlayLayer"></div>
+        <div class="object-layer" id="objectsLayer"></div>
+
+        <div class="player-shadow"></div>
+        <div class="player-car" id="playerCar">
+          <div class="car-rear"></div>
+          <div class="car-glass"></div>
+          <div class="car-wing"></div>
+          <div class="tail-left"></div>
+          <div class="tail-right"></div>
+          <div class="rear-panel"></div>
+          <div class="diffuser"></div>
+        </div>
+
+        <button class="side-control left" id="sideLeft" aria-label="Влево">
+          <div class="arrow"></div>
+        </button>
+
+        <button class="side-control right" id="sideRight" aria-label="Вправо">
+          <div class="arrow"></div>
+        </button>
+
+        <div id="overlayLayer"></div>
+      </div>
     </main>
   </div>
 
@@ -947,7 +1017,7 @@
         loseDiamondsOnCrash: 1,
         gainDiamondsOnCorrect: 1,
         useKeyboard: true,
-        objectCount: 16,
+        objectCount: 18,
         diamondRatio: 0.55
       },
       levels: [
@@ -982,9 +1052,9 @@
 
     const GAME = {
       tickMs: 40,
-      lanePositions: [0.405, 0.5, 0.595],
-      startY: 19,
-      endY: 73,
+      lanePositions: [0.38, 0.5, 0.62],
+      startY: 24,
+      endY: 76,
       dashOffset: 0
     };
 
@@ -1007,17 +1077,17 @@
     const ui = {
       gameTitle: document.getElementById("gameTitle"),
       levelBadge: document.getElementById("levelBadge"),
-      levelFlag: document.getElementById("levelFlag"),
       diamondsValue: document.getElementById("diamondsValue"),
+      diamondsMini: document.getElementById("diamondsMini"),
       timeValue: document.getElementById("timeValue"),
       progressText: document.getElementById("progressText"),
       progressBar: document.getElementById("progressBar"),
       objectsLayer: document.getElementById("objectsLayer"),
       overlayLayer: document.getElementById("overlayLayer"),
-      btnUp: document.getElementById("btnUp"),
-      btnDown: document.getElementById("btnDown"),
-      bottomUp: document.getElementById("bottomUp"),
-      bottomDown: document.getElementById("bottomDown"),
+      btnLeft: document.getElementById("btnLeft"),
+      btnRight: document.getElementById("btnRight"),
+      sideLeft: document.getElementById("sideLeft"),
+      sideRight: document.getElementById("sideRight"),
       btnStart: document.getElementById("btnStart"),
       btnReset: document.getElementById("btnReset"),
       speedRange: document.getElementById("speedRange"),
@@ -1025,9 +1095,7 @@
       speedLabel: document.getElementById("speedLabel"),
       timeLabel: document.getElementById("timeLabel"),
       playerCar: document.getElementById("playerCar"),
-      miniDot: document.getElementById("miniDot"),
-      steeringWheel: document.getElementById("steeringWheel"),
-      centerLine: document.getElementById("centerLine")
+      laneCenter: document.getElementById("laneCenter")
     };
 
     function clamp(value, min, max) {
@@ -1052,38 +1120,38 @@
 
     function progressToScreen(progress) {
       const y = GAME.startY + (GAME.endY - GAME.startY) * progress;
-      const scale = 0.34 + progress * 1.28;
+      const scale = 0.26 + progress * 1.38;
       return { y, scale };
     }
 
     function createRandomObject(i, level) {
       const isDiamond = Math.random() < state.settings.diamondRatio;
-      const variants = ["rock", "cone", "car"];
+      const variants = ["cone", "barrel", "car"];
       return {
         id: uid() + "_" + i,
         type: isDiamond ? "diamond" : "obstacle",
         variant: isDiamond ? null : variants[Math.floor(Math.random() * variants.length)],
         lane: Math.floor(Math.random() * level.laneCount),
-        progress: -(i * 0.22 + Math.random() * 0.25 + 0.35),
+        progress: -(i * 0.24 + Math.random() * 0.28 + 0.42),
         active: true
       };
     }
 
     function buildRandomRuntime(level) {
-      const objects = [];
+      const arr = [];
       for (let i = 0; i < state.settings.objectCount; i++) {
-        objects.push(createRandomObject(i, level));
+        arr.push(createRandomObject(i, level));
       }
-      return objects;
+      return arr;
     }
 
     function respawnObject(obj, level) {
       const isDiamond = Math.random() < state.settings.diamondRatio;
-      const variants = ["rock", "cone", "car"];
+      const variants = ["cone", "barrel", "car"];
       obj.type = isDiamond ? "diamond" : "obstacle";
       obj.variant = isDiamond ? null : variants[Math.floor(Math.random() * variants.length)];
       obj.lane = Math.floor(Math.random() * level.laneCount);
-      obj.progress = -(0.5 + Math.random() * 1.5);
+      obj.progress = -(0.6 + Math.random() * 1.6);
       obj.active = true;
     }
 
@@ -1093,47 +1161,39 @@
 
       ui.gameTitle.textContent = GAME_CONFIG.meta.title;
       ui.levelBadge.textContent = level.name;
-      ui.levelFlag.textContent = "🏁 " + level.name;
       ui.diamondsValue.textContent = state.diamonds;
+      ui.diamondsMini.textContent = state.diamonds;
       ui.timeValue.textContent = state.timeLeft;
       ui.progressText.textContent = Math.round(progress) + "%";
       ui.progressBar.style.width = progress + "%";
-      ui.speedLabel.textContent = state.settings.speed;
-      ui.timeLabel.textContent = state.settings.totalTimeSec;
-
-      const mapX = 18 + progress * 0.45;
-      const mapY = 70 - progress * 0.55;
-      ui.miniDot.style.left = mapX + "%";
-      ui.miniDot.style.top = mapY + "%";
     }
 
     function updatePlayerVisual() {
-      const xShift = [-120, 0, 120][state.playerLane] || 0;
-      const tilt = [-10, 0, 10][state.playerLane] || 0;
-      ui.playerCar.style.transform = "translateX(calc(-50% + " + xShift + "px))";
-      ui.steeringWheel.style.transform = "rotate(" + (tilt * 3) + "deg)";
+      const xShift = [-160, 0, 160][state.playerLane] || 0;
+      const tilt = [-8, 0, 8][state.playerLane] || 0;
+      ui.playerCar.style.transform = "translateX(calc(-50% + " + xShift + "px)) rotate(" + tilt + "deg)";
     }
 
     function createObjectElement(obj) {
       const pos = progressToScreen(obj.progress);
-      if (pos.y < 10 || pos.y > 82) return null;
+      if (pos.y < 12 || pos.y > 84) return null;
 
       const el = document.createElement("div");
       el.className = "game-object";
       el.style.left = (laneX(obj.lane) * 100) + "%";
       el.style.top = pos.y + "%";
-      el.style.width = (50 * pos.scale) + "px";
-      el.style.height = (50 * pos.scale) + "px";
+      el.style.width = (52 * pos.scale) + "px";
+      el.style.height = (52 * pos.scale) + "px";
 
       const inner = document.createElement("div");
       if (obj.type === "diamond") {
-        inner.className = "diamond";
+        inner.className = "coin";
       } else if (obj.variant === "cone") {
         inner.className = "obstacle-cone";
       } else if (obj.variant === "car") {
         inner.className = "obstacle-car";
       } else {
-        inner.className = "obstacle-rock";
+        inner.className = "obstacle-barrel";
       }
 
       el.appendChild(inner);
@@ -1158,7 +1218,7 @@
             <div class="modal">
               <div class="modal-icon">🏁</div>
               <h2>Готов к старту?</h2>
-              <p>Собирай алмазы, решай задания и избегай препятствий.</p>
+              <p>Собирай монеты-алмазы, отвечай на вопросы и избегай препятствий.</p>
               <button class="btn-primary" id="overlayStartBtn" style="width:100%;margin-top:12px;">
                 ▶ ${GAME_CONFIG.meta.startButtonText}
               </button>
@@ -1317,20 +1377,20 @@
       }
 
       GAME.dashOffset += state.settings.speed * 5;
-      const offset = GAME.dashOffset % 98;
-      ui.centerLine.style.background = `
+      const offset = GAME.dashOffset % 104;
+      ui.laneCenter.style.background = `
         repeating-linear-gradient(
           180deg,
-          rgba(255,232,166,.95) ${offset}px,
-          rgba(255,232,166,.95) ${offset + 44}px,
-          rgba(255,232,166,0) ${offset + 44}px,
-          rgba(255,232,166,0) ${offset + 98}px
+          rgba(255,216,74,.92) ${offset}px,
+          rgba(255,216,74,.92) ${offset + 48}px,
+          rgba(255,216,74,0) ${offset + 48}px,
+          rgba(255,216,74,0) ${offset + 104}px
         )
       `;
 
       for (const obj of state.runtimeObjects) {
         if (!obj.active) continue;
-        obj.progress += 0.008 + state.settings.speed * 0.0019;
+        obj.progress += 0.008 + state.settings.speed * 0.00195;
         if (obj.progress > 1.15) {
           respawnObject(obj, level);
         }
@@ -1341,12 +1401,12 @@
       render();
     }
 
-    function moveUp() {
+    function moveLeft() {
       state.playerLane = clamp(state.playerLane - 1, 0, currentLevel().laneCount - 1);
       updatePlayerVisual();
     }
 
-    function moveDown() {
+    function moveRight() {
       state.playerLane = clamp(state.playerLane + 1, 0, currentLevel().laneCount - 1);
       updatePlayerVisual();
     }
@@ -1446,10 +1506,10 @@
       render();
     }
 
-    ui.btnUp.addEventListener("click", moveUp);
-    ui.btnDown.addEventListener("click", moveDown);
-    ui.bottomUp.addEventListener("click", moveUp);
-    ui.bottomDown.addEventListener("click", moveDown);
+    ui.btnLeft.addEventListener("click", moveLeft);
+    ui.btnRight.addEventListener("click", moveRight);
+    ui.sideLeft.addEventListener("click", moveLeft);
+    ui.sideRight.addEventListener("click", moveRight);
     ui.btnStart.addEventListener("click", startGame);
     ui.btnReset.addEventListener("click", () => resetGame(state.currentLevelIndex));
 
@@ -1467,8 +1527,8 @@
 
     document.addEventListener("keydown", (e) => {
       if (!state.settings.useKeyboard) return;
-      if (["ArrowUp", "w", "W", "ц", "Ц"].includes(e.key)) moveUp();
-      if (["ArrowDown", "s", "S", "ы", "Ы"].includes(e.key)) moveDown();
+      if (["ArrowLeft", "a", "A", "ф", "Ф"].includes(e.key)) moveLeft();
+      if (["ArrowRight", "d", "D", "в", "В"].includes(e.key)) moveRight();
     });
 
     function init() {
