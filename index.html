@@ -601,7 +601,7 @@
     .player-car{
       position:absolute;
       left:50%;
-      bottom:52px;
+      bottom:80px;
       width:340px;
       height:270px;
       transform:translateX(-50%);
@@ -700,7 +700,7 @@
     .player-shadow{
       position:absolute;
       left:50%;
-      bottom:34px;
+      bottom:56px;
       width:250px;
       height:42px;
       transform:translateX(-50%);
@@ -710,23 +710,31 @@
       pointer-events:none;
     }
 
-    .side-control{
+    .bottom-drive-controls{
       position:absolute;
-      top:50%;
-      width:110px;
-      height:110px;
-      transform:translateY(-50%);
+      left:50%;
+      bottom:20px;
+      transform:translateX(-50%);
       z-index:14;
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:center;
       pointer-events:auto;
-      border:none;
-      box-shadow:none;
-      background:transparent;
     }
 
-    .side-control.left{left:18px}
-    .side-control.right{right:18px}
+    .bottom-drive-btn{
+      position:relative;
+      width:110px;
+      height:110px;
+      border:none;
+      border-radius:24px;
+      background:transparent;
+      box-shadow:none;
+      padding:0;
+    }
 
-    .side-control .arrow{
+    .bottom-drive-btn .arrow{
       position:absolute;
       inset:0;
       background:rgba(123,231,255,.25);
@@ -734,10 +742,12 @@
       box-shadow:0 0 18px rgba(123,231,255,.2);
       backdrop-filter:blur(2px);
     }
-    .side-control.left .arrow{
+
+    .bottom-drive-btn.left .arrow{
       clip-path:polygon(76% 10%, 18% 50%, 76% 90%, 58% 56%, 92% 56%, 92% 44%, 58% 44%);
     }
-    .side-control.right .arrow{
+
+    .bottom-drive-btn.right .arrow{
       clip-path:polygon(24% 10%, 82% 50%, 24% 90%, 42% 56%, 8% 56%, 8% 44%, 42% 44%);
     }
 
@@ -849,7 +859,7 @@
 
     @media (max-width:900px){
       .player-car{width:260px;height:210px}
-      .side-control{width:86px;height:86px}
+      .bottom-drive-btn{width:86px;height:86px}
       .hud-box{font-size:18px}
     }
 
@@ -857,7 +867,7 @@
       .stats,.controls,.actions,.answers.choice{grid-template-columns:1fr}
       .answer-input-row{flex-direction:column}
       .player-car{width:220px;height:180px}
-      .side-control{width:72px;height:72px}
+      .bottom-drive-btn{width:72px;height:72px}
       .hud-pause{width:48px;height:48px;font-size:22px}
     }
   </style>
@@ -877,7 +887,7 @@
         </div>
         <div class="stat yellow">
           <div class="stat-label">⏱ Время</div>
-          <div class="stat-value" id="timeValue">45</div>
+          <div class="stat-value" id="timeValue">180</div>
         </div>
       </div>
 
@@ -897,7 +907,7 @@
           <button class="btn-secondary" id="btnLeft">⬅ Влево</button>
           <button class="btn-secondary" id="btnRight">➡ Вправо</button>
         </div>
-        <p class="note">Стрелки есть и на самой трассе — как в референсе.</p>
+        <p class="note">Основные кнопки управления также находятся внизу по центру трассы.</p>
       </div>
 
       <div class="box">
@@ -909,8 +919,8 @@
         </div>
 
         <div class="setting-item">
-          <label for="timeRange">Время: <span id="timeLabel">45</span> сек</label>
-          <input type="range" id="timeRange" min="20" max="90" step="5" value="45" />
+          <label for="timeRange">Время: <span id="timeLabel">180</span> сек</label>
+          <input type="range" id="timeRange" min="60" max="300" step="30" value="180" />
         </div>
 
         <div class="actions">
@@ -921,7 +931,7 @@
 
       <div class="box">
         <p class="note">
-          Визуал сделан по мотивам твоей картинки: городской хайвей, тоннель, большая машина сзади, верхний HUD и боковые стрелки.
+          Теперь объекты появляются реже и по одному, чтобы их можно было заметить и объехать. Время уровня по умолчанию — 3 минуты.
         </p>
       </div>
     </aside>
@@ -989,13 +999,14 @@
           <div class="diffuser"></div>
         </div>
 
-        <button class="side-control left" id="sideLeft" aria-label="Влево">
-          <div class="arrow"></div>
-        </button>
-
-        <button class="side-control right" id="sideRight" aria-label="Вправо">
-          <div class="arrow"></div>
-        </button>
+        <div class="bottom-drive-controls">
+          <button class="bottom-drive-btn left" id="sideLeft" aria-label="Влево">
+            <div class="arrow"></div>
+          </button>
+          <button class="bottom-drive-btn right" id="sideRight" aria-label="Вправо">
+            <div class="arrow"></div>
+          </button>
+        </div>
 
         <div id="overlayLayer"></div>
       </div>
@@ -1012,12 +1023,12 @@
       },
       teacherSettings: {
         speed: 6,
-        totalTimeSec: 45,
+        totalTimeSec: 180,
         attemptsPerQuestion: 1,
         loseDiamondsOnCrash: 1,
         gainDiamondsOnCorrect: 1,
         useKeyboard: true,
-        objectCount: 18,
+        objectCount: 8,
         diamondRatio: 0.55
       },
       levels: [
@@ -1140,7 +1151,10 @@
     function buildRandomRuntime(level) {
       const arr = [];
       for (let i = 0; i < state.settings.objectCount; i++) {
-        arr.push(createRandomObject(i, level));
+        arr.push({
+          ...createRandomObject(i, level),
+          progress: -(i * 0.55 + Math.random() * 0.18 + 0.8)
+        });
       }
       return arr;
     }
@@ -1151,7 +1165,7 @@
       obj.type = isDiamond ? "diamond" : "obstacle";
       obj.variant = isDiamond ? null : variants[Math.floor(Math.random() * variants.length)];
       obj.lane = Math.floor(Math.random() * level.laneCount);
-      obj.progress = -(0.6 + Math.random() * 1.6);
+      obj.progress = -(2.2 + Math.random() * 1.6);
       obj.active = true;
     }
 
@@ -1166,6 +1180,8 @@
       ui.timeValue.textContent = state.timeLeft;
       ui.progressText.textContent = Math.round(progress) + "%";
       ui.progressBar.style.width = progress + "%";
+      ui.speedLabel.textContent = state.settings.speed;
+      ui.timeLabel.textContent = state.settings.totalTimeSec;
     }
 
     function updatePlayerVisual() {
@@ -1390,7 +1406,7 @@
 
       for (const obj of state.runtimeObjects) {
         if (!obj.active) continue;
-        obj.progress += 0.008 + state.settings.speed * 0.00195;
+        obj.progress += 0.005 + state.settings.speed * 0.0012;
         if (obj.progress > 1.15) {
           respawnObject(obj, level);
         }
