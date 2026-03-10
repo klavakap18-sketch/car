@@ -3,1557 +3,1443 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Гонка — городской стиль</title>
+  <title>Тамагочи — рабочая версия</title>
   <style>
-    :root{
-      --bg1:#89b6e6;
-      --bg2:#f0b3a5;
-      --hud:#2e3542cc;
-      --hudText:#f7fbff;
-      --road1:#2e3137;
-      --road2:#1f2227;
-      --line:#ffd84a;
-      --wall:#d8dbe1;
-      --wallStripe:#d98b3a;
-      --city1:#8a8697;
-      --city2:#5c6070;
-      --coin1:#ffd84a;
-      --coin2:#f59e0b;
-      --danger1:#ff7a59;
-      --danger2:#b91c1c;
-      --cyan:#7be7ff;
-      --white:rgba(255,255,255,.95);
-      --shadow:0 18px 40px rgba(0,0,0,.28);
-      --panel:#dfe4e8;
-      --panel2:#d2d8dd;
-      --text:#15253d;
-    }
-
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;padding:0}
-    body{
-      font-family:Arial,Helvetica,sans-serif;
-      color:var(--text);
-      background:linear-gradient(180deg,#8dd4ef,#cde8f3);
-      min-height:100vh;
-    }
-
-    .app{
-      max-width:1480px;
-      margin:0 auto;
-      padding:18px;
-      display:grid;
-      grid-template-columns:360px 1fr;
-      gap:18px;
-      align-items:start;
-    }
-
-    .panel{
-      background:linear-gradient(180deg,var(--panel),var(--panel2));
-      border-radius:30px;
-      padding:22px;
-      box-shadow:0 14px 34px rgba(0,0,0,.12);
-      border:1px solid rgba(255,255,255,.72);
-    }
-
-    .title-row{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-bottom:22px;
-    }
-
-    h1,h2,h3,p{margin-top:0}
-    h1{font-size:42px;margin-bottom:0}
-    h3{font-size:22px;margin-bottom:14px}
-
-    .badge{
-      padding:12px 18px;
-      border-radius:999px;
-      background:linear-gradient(180deg,#dfe9f8,#c9d8ec);
-      font-weight:700;
-      font-size:18px;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-      margin-bottom:18px;
-    }
-
-    .stat{
-      border-radius:24px;
-      padding:16px;
-    }
-    .stat.blue{background:linear-gradient(180deg,#bfd9ea,#aacbdf)}
-    .stat.yellow{background:linear-gradient(180deg,#efdeac,#efcc6d)}
-
-    .stat-label{
-      font-size:16px;
-      color:rgba(21,37,61,.65);
-      margin-bottom:14px;
-    }
-
-    .stat-value{
-      font-size:52px;
-      font-weight:800;
-      line-height:1;
-    }
-
-    .progress-wrap{margin-bottom:20px}
-    .progress-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      font-size:17px;
-      margin-bottom:10px;
-      color:rgba(21,37,61,.72);
-    }
-    .progress{
-      height:18px;
-      border-radius:999px;
-      background:#c4d0dc;
-      overflow:hidden;
-      box-shadow:inset 0 3px 6px rgba(0,0,0,.08);
-    }
-    .progress-bar{
-      width:0%;
-      height:100%;
-      border-radius:999px;
-      background:linear-gradient(90deg,#14b5f7,#2b57f6);
-      transition:width .15s linear;
-    }
-
-    .box{
-      border-radius:26px;
-      padding:18px;
-      margin-bottom:16px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(0,0,0,.06);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
-    }
-
-    .controls,.actions{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-
-    .setting-item{margin-bottom:16px}
-    .setting-item label{
-      display:block;
-      font-size:17px;
-      margin-bottom:8px;
-      color:rgba(21,37,61,.76);
-    }
-    input[type="range"]{width:100%}
-
-    button{
-      border:none;
-      border-radius:18px;
-      padding:16px 18px;
-      font-size:20px;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .08s ease, opacity .2s ease;
-      box-shadow:0 10px 18px rgba(0,0,0,.12);
-    }
-    button:hover{opacity:.96}
-    button:active{transform:scale(.98)}
-
-    .btn-primary{
-      color:white;
-      background:linear-gradient(180deg,#36c8ff,#2959f5);
-    }
-    .btn-secondary{
-      color:var(--text);
-      background:linear-gradient(180deg,#eef1f4,#d8dfe6);
-    }
-    .btn-outline{
-      color:var(--text);
-      background:linear-gradient(180deg,#eeeeee,#dddddd);
-    }
-
-    .note{
-      font-size:16px;
-      line-height:1.45;
-      color:rgba(21,37,61,.72);
-      margin:0;
-    }
-
-    .game-wrap{
-      position:relative;
-      min-height:860px;
-      border-radius:34px;
-      overflow:hidden;
-      box-shadow:var(--shadow);
-      border:2px solid rgba(255,255,255,.45);
-      background:linear-gradient(180deg,#739ad0 0%, #b8c9e7 48%, #dce7f1 100%);
-    }
-
-    .scene{
-      position:absolute;
-      inset:0;
-      overflow:hidden;
-    }
-
-    .sky{
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 20% 15%, rgba(255,187,156,.45), transparent 22%),
-        radial-gradient(circle at 62% 20%, rgba(255,213,186,.32), transparent 20%),
-        radial-gradient(circle at 80% 16%, rgba(255,170,140,.25), transparent 18%),
-        linear-gradient(180deg, #6998cf 0%, #88acdb 22%, #9fc0e7 42%, #bfd2e8 60%, #dbe5f0 100%);
-      z-index:0;
-    }
-
-    .cloud{
-      position:absolute;
-      background:rgba(255,255,255,.2);
-      filter:blur(6px);
-      border-radius:999px;
-      z-index:1;
-    }
-
-    .city{
-      position:absolute;
-      left:0;right:0;
-      bottom:53%;
-      height:20%;
-      z-index:2;
-      pointer-events:none;
-    }
-
-    .building{
-      position:absolute;
-      bottom:0;
-      background:linear-gradient(180deg,var(--city1),var(--city2));
-      box-shadow:inset 0 0 0 2px rgba(255,255,255,.08);
-    }
-
-    .building .windows{
-      position:absolute;
-      inset:10px 8px;
-      background:
-        repeating-linear-gradient(
-          90deg,
-          rgba(234,239,255,.72) 0px,
-          rgba(234,239,255,.72) 10px,
-          transparent 10px,
-          transparent 20px
-        ),
-        repeating-linear-gradient(
-          180deg,
-          rgba(234,239,255,.72) 0px,
-          rgba(234,239,255,.72) 8px,
-          transparent 8px,
-          transparent 20px
-        );
-      opacity:.78;
-    }
-
-    .road-world{
-      position:absolute;
-      inset:0;
-      z-index:3;
-    }
-
-    .road{
-      position:absolute;
-      left:50%;
-      top:30%;
-      width:84%;
-      height:74%;
-      transform:translateX(-50%);
-      clip-path:polygon(38% 0%, 62% 0%, 100% 100%, 0% 100%);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.08)),
-        linear-gradient(180deg, var(--road1), var(--road2));
-      box-shadow:0 -4px 18px rgba(255,255,255,.08), inset 0 0 50px rgba(0,0,0,.18);
-    }
-
-    .lane-center{
-      position:absolute;
-      left:50%;
-      top:30%;
-      width:8%;
-      height:74%;
-      transform:translateX(-50%);
-      clip-path:polygon(38% 0%, 62% 0%, 100% 100%, 0% 100%);
-      opacity:.95;
-      background:
-        repeating-linear-gradient(
-          180deg,
-          rgba(255,216,74,.92) 0px,
-          rgba(255,216,74,.92) 48px,
-          rgba(255,216,74,0) 48px,
-          rgba(255,216,74,0) 104px
-        );
-    }
-
-    .lane-left, .lane-right{
-      position:absolute;
-      top:30%;
-      height:74%;
-      width:1.2%;
-      background:linear-gradient(180deg,#f0d039,#c4990d);
-      opacity:.9;
-    }
-    .lane-left{
-      left:28%;
-      transform:skewX(-16deg);
-    }
-    .lane-right{
-      right:28%;
-      transform:skewX(16deg);
-    }
-
-    .wall-left, .wall-right{
-      position:absolute;
-      top:25%;
-      width:26%;
-      height:68%;
-      z-index:4;
-      background:
-        repeating-linear-gradient(
-          180deg,
-          rgba(255,255,255,.22) 0px,
-          rgba(255,255,255,.22) 2px,
-          transparent 2px,
-          transparent 22px
-        ),
-        linear-gradient(180deg, #edf1f5, #b7bec7);
-      box-shadow:inset 0 0 0 2px rgba(0,0,0,.04);
-    }
-    .wall-left{
-      left:-2%;
-      clip-path:polygon(0 8%, 94% 0, 100% 100%, 0 100%);
-    }
-    .wall-right{
-      right:-2%;
-      clip-path:polygon(6% 0, 100% 8%, 100% 100%, 0 100%);
-    }
-
-    .wall-stripes-left, .wall-stripes-right{
-      position:absolute;
-      top:52%;
-      width:100%;
-      height:16%;
-      background:
-        repeating-linear-gradient(
-          90deg,
-          transparent 0px,
-          transparent 22px,
-          rgba(217,139,58,.95) 22px,
-          rgba(217,139,58,.95) 54px
-        );
-      transform:skewY(-12deg);
-      opacity:.8;
-    }
-
-    .tunnel{
-      position:absolute;
-      left:50%;
-      top:30%;
-      width:28%;
-      height:16%;
-      transform:translateX(-50%);
-      z-index:5;
-    }
-
-    .tunnel-face{
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg,#6d7079,#3a3d44);
-      clip-path:polygon(8% 0, 92% 0, 100% 100%, 0 100%);
-      box-shadow:0 12px 20px rgba(0,0,0,.2);
-    }
-
-    .tunnel-hole{
-      position:absolute;
-      left:10%;
-      right:10%;
-      top:18%;
-      bottom:0;
-      background:linear-gradient(180deg,#101316,#191d22);
-      clip-path:polygon(8% 0, 92% 0, 100% 100%, 0 100%);
-      overflow:hidden;
-    }
-
-    .tunnel-lights{
-      position:absolute;
-      inset:0;
-      background:
-        repeating-linear-gradient(
-          90deg,
-          rgba(79,255,186,.9) 0px,
-          rgba(79,255,186,.9) 10px,
-          transparent 10px,
-          transparent 48px
-        );
-      opacity:.55;
-      transform:perspective(300px) rotateX(20deg);
-    }
-
-    .sign{
-      position:absolute;
-      top:-8%;
-      width:22%;
-      height:38%;
-      background:linear-gradient(180deg,#2d7b32,#1f5d25);
-      border:3px solid rgba(255,255,255,.7);
-      color:white;
-      font-size:14px;
-      font-weight:700;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:6px;
-      text-align:center;
-      padding:6px;
-      z-index:6;
-    }
-    .sign.left{left:24%}
-    .sign.right{right:24%}
-
-    .hud-top{
-      position:absolute;
-      left:0;right:0;top:0;
-      z-index:12;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      padding:18px 18px 0;
-      pointer-events:none;
-    }
-
-    .hud-pause{
-      width:58px;
-      height:58px;
-      border-radius:0 0 18px 0;
-      background:var(--hud);
-      color:var(--hudText);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:28px;
-      font-weight:900;
-      pointer-events:auto;
-    }
-
-    .hud-right{
-      display:flex;
-      gap:14px;
-      align-items:flex-start;
-      pointer-events:auto;
-    }
-
-    .hud-box{
-      background:var(--hud);
-      color:var(--hudText);
-      border-radius:0 0 0 18px;
-      padding:12px 18px;
-      min-width:150px;
-      text-align:right;
-      font-weight:800;
-      font-size:22px;
-      letter-spacing:1px;
-    }
-
-    .hud-coins{
-      margin-top:10px;
-      background:linear-gradient(180deg,rgba(27,30,36,.76),rgba(17,20,25,.76));
-      color:#ffca28;
-      border-radius:16px;
-      padding:10px 14px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-size:18px;
-      font-weight:800;
-      justify-content:flex-end;
-    }
-
-    .coin-mini{
-      width:28px;
-      height:28px;
-      border-radius:50%;
-      background:radial-gradient(circle at 35% 30%, #fff2a8, var(--coin1) 45%, var(--coin2) 100%);
-      box-shadow:0 0 10px rgba(255,200,0,.45);
-    }
-
-    .object-layer{
-      position:absolute;
-      inset:0;
-      z-index:9;
-      pointer-events:none;
-    }
-
-    .game-object{
-      position:absolute;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-      filter:drop-shadow(0 12px 14px rgba(0,0,0,.3));
-    }
-
-    .coin{
-      position:relative;
-      width:100%;
-      height:100%;
-      border-radius:50%;
-      background:radial-gradient(circle at 35% 30%, #fff5ba, var(--coin1) 42%, var(--coin2) 100%);
-      border:3px solid rgba(255,214,90,.9);
-      box-shadow:0 0 18px rgba(255,196,0,.45);
-      animation:coinSpin .9s infinite ease-in-out;
-    }
-    .coin::before{
-      content:"★";
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#d97706;
-      font-size:55%;
-      font-weight:900;
-      text-shadow:0 1px 0 rgba(255,255,255,.7);
-    }
-
-    @keyframes coinSpin{
-      0%{transform:scaleX(1)}
-      50%{transform:scaleX(.7)}
-      100%{transform:scaleX(1)}
-    }
-
-    .obstacle-cone,.obstacle-barrel,.obstacle-car{
-      width:100%;
-      height:100%;
-      position:relative;
-    }
-
-    .obstacle-cone::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      bottom:8%;
-      transform:translateX(-50%);
-      width:58%;
-      height:74%;
-      background:linear-gradient(180deg,#ffb354,#ff6a00);
-      clip-path:polygon(50% 0%, 100% 100%, 0% 100%);
-      border-radius:10px;
-    }
-    .obstacle-cone::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      bottom:0;
-      transform:translateX(-50%);
-      width:90%;
-      height:18%;
-      border-radius:999px;
-      background:linear-gradient(180deg,#fff,#d7dbe1);
-    }
-
-    .obstacle-barrel::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:5%;
-      transform:translateX(-50%);
-      width:68%;
-      height:90%;
-      border-radius:12px;
-      background:
-        repeating-linear-gradient(
-          180deg,
-          #ff9b39 0px,
-          #ff9b39 12px,
-          #d2460f 12px,
-          #d2460f 22px
-        );
-      box-shadow:inset 0 0 0 2px rgba(255,255,255,.15);
-    }
-
-    .obstacle-car::before{
-      content:"";
-      position:absolute;
-      inset:8%;
-      border-radius:14px;
-      clip-path:polygon(50% 0%,84% 18%,94% 48%,86% 84%,50% 100%,14% 84%,6% 48%,16% 18%);
-      background:linear-gradient(180deg,#f94d60,#78171a);
-    }
-    .obstacle-car::after{
-      content:"";
-      position:absolute;
-      left:30%;
-      right:30%;
-      top:22%;
-      height:18%;
-      border-radius:10px;
-      background:linear-gradient(180deg,#0d1117,#293241);
-    }
-
-    .player-car{
-      position:absolute;
-      left:50%;
-      bottom:80px;
-      width:340px;
-      height:270px;
-      transform:translateX(-50%);
-      z-index:10;
-      transition:transform .14s ease;
-      filter:drop-shadow(0 18px 24px rgba(0,0,0,.36));
-      pointer-events:none;
-    }
-
-    .car-rear{
-      position:absolute;
-      inset:0;
-      clip-path:polygon(50% 8%, 84% 22%, 94% 58%, 82% 88%, 50% 100%, 18% 88%, 6% 58%, 16% 22%);
-      background:
-        linear-gradient(180deg,#ff83ad 0%, #d83777 22%, #3c3872 52%, #10121a 100%);
-      border:4px solid rgba(255,255,255,.16);
-      box-shadow:inset 0 8px 12px rgba(255,255,255,.12), inset 0 -16px 24px rgba(0,0,0,.35);
-      border-radius:24px;
-    }
-
-    .car-glass{
-      position:absolute;
-      left:28%;
-      top:18%;
-      width:44%;
-      height:22%;
-      background:linear-gradient(180deg,#26354b,#12171f);
-      border-radius:10px 10px 18px 18px;
-      box-shadow:inset 0 0 0 2px rgba(255,255,255,.08);
-    }
-
-    .car-glass::before{
-      content:"";
-      position:absolute;
-      left:46%;
-      top:0;
-      width:8%;
-      height:100%;
-      background:rgba(255,255,255,.12);
-    }
-
-    .car-wing{
-      position:absolute;
-      left:16%;
-      right:16%;
-      top:18%;
-      height:12px;
-      background:#15191f;
-      border-radius:999px;
-    }
-
-    .car-wing::before,.car-wing::after{
-      content:"";
-      position:absolute;
-      top:2px;
-      width:16px;
-      height:24px;
-      background:#ea4a2b;
-    }
-    .car-wing::before{left:-6px;transform:skewY(20deg)}
-    .car-wing::after{right:-6px;transform:skewY(-20deg)}
-
-    .tail-left,.tail-right{
-      position:absolute;
-      bottom:28%;
-      width:24%;
-      height:10%;
-      background:linear-gradient(180deg,#ff4738,#9c1712);
-      border-radius:0 30px 18px 18px;
-      box-shadow:0 0 16px rgba(255,50,30,.45);
-    }
-    .tail-left{left:8%}
-    .tail-right{right:8%;transform:scaleX(-1)}
-
-    .rear-panel{
-      position:absolute;
-      left:27%;
-      right:27%;
-      bottom:18%;
-      height:18%;
-      background:linear-gradient(180deg,#06080b,#11151b);
-      border-radius:10px 10px 18px 18px;
-      box-shadow:inset 0 0 0 2px rgba(255,255,255,.04);
-    }
-
-    .diffuser{
-      position:absolute;
-      left:24%;
-      right:24%;
-      bottom:8%;
-      height:10%;
-      background:linear-gradient(180deg,#0d1014,#1b1f26);
-      clip-path:polygon(0 0,100% 0,94% 100%,6% 100%);
-    }
-
-    .player-shadow{
-      position:absolute;
-      left:50%;
-      bottom:56px;
-      width:250px;
-      height:42px;
-      transform:translateX(-50%);
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(0,0,0,.45), rgba(0,0,0,0));
-      z-index:9;
-      pointer-events:none;
-    }
-
-    .bottom-drive-controls{
-      position:absolute;
-      left:50%;
-      bottom:20px;
-      transform:translateX(-50%);
-      z-index:14;
-      display:flex;
-      gap:18px;
-      align-items:center;
-      justify-content:center;
-      pointer-events:auto;
-    }
-
-    .bottom-drive-btn{
-      position:relative;
-      width:110px;
-      height:110px;
-      border:none;
-      border-radius:24px;
-      background:transparent;
-      box-shadow:none;
-      padding:0;
-    }
-
-    .bottom-drive-btn .arrow{
-      position:absolute;
-      inset:0;
-      background:rgba(123,231,255,.25);
-      border:3px solid rgba(123,231,255,.55);
-      box-shadow:0 0 18px rgba(123,231,255,.2);
-      backdrop-filter:blur(2px);
-    }
-
-    .bottom-drive-btn.left .arrow{
-      clip-path:polygon(76% 10%, 18% 50%, 76% 90%, 58% 56%, 92% 56%, 92% 44%, 58% 44%);
-    }
-
-    .bottom-drive-btn.right .arrow{
-      clip-path:polygon(24% 10%, 82% 50%, 24% 90%, 42% 56%, 8% 56%, 8% 44%, 42% 44%);
-    }
-
-    .overlay{
-      position:absolute;
-      inset:0;
-      z-index:30;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(9,19,34,.34);
-      padding:20px;
-    }
-
-    .modal{
-      width:100%;
-      max-width:560px;
-      background:rgba(255,255,255,.97);
-      border-radius:28px;
-      box-shadow:0 24px 50px rgba(0,0,0,.26);
-      padding:28px;
-      text-align:center;
-    }
-
-    .modal h2{
-      margin:0 0 10px;
-      font-size:32px;
-    }
-
-    .modal-icon{
-      font-size:62px;
-      margin-bottom:8px;
-    }
-
-    .question-box{
-      background:linear-gradient(180deg,#f8fcff,#edf6fb);
-      border-radius:20px;
-      padding:18px;
-      font-size:30px;
-      font-weight:900;
-      margin:18px 0;
-    }
-
-    .answers.choice{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-    }
-
-    .answer-input-row{
-      display:flex;
-      gap:10px;
-      margin-top:10px;
-    }
-
-    .answer-input-row input{
-      flex:1;
-      padding:14px 16px;
-      font-size:18px;
-      border-radius:16px;
-      border:2px solid #cbd5e1;
-      outline:none;
-    }
-
-    .feedback{
-      margin-top:16px;
-      border-radius:16px;
-      padding:12px 14px;
-      font-weight:800;
-    }
-
-    .feedback.success{
-      background:#d1fae5;
-      color:#065f46;
-    }
-
-    .feedback.warning{
-      background:#fef3c7;
-      color:#92400e;
-    }
-
-    .finish-box{
-      margin:18px auto 0;
-      max-width:340px;
-      background:linear-gradient(180deg,#dff4ff,#b7e7ff);
-      border-radius:20px;
-      padding:18px;
-      font-size:24px;
-      font-weight:900;
-    }
-
-    .finish-actions{
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      flex-wrap:wrap;
-      margin-top:18px;
-    }
-
-    .tiny{
-      font-size:14px;
-      color:rgba(16,35,58,.72);
-    }
-
-    @media (max-width:1200px){
-      .app{grid-template-columns:1fr}
-      .game-wrap{min-height:780px}
-    }
-
-    @media (max-width:900px){
-      .player-car{width:260px;height:210px}
-      .bottom-drive-btn{width:86px;height:86px}
-      .hud-box{font-size:18px}
-    }
-
-    @media (max-width:760px){
-      .stats,.controls,.actions,.answers.choice{grid-template-columns:1fr}
-      .answer-input-row{flex-direction:column}
-      .player-car{width:220px;height:180px}
-      .bottom-drive-btn{width:72px;height:72px}
-      .hud-pause{width:48px;height:48px;font-size:22px}
+    :root {
+      --bg: #fff8f0;
+      --panel: #ffffff;
+      --text: #2d2a32;
+      --muted: #6b7280;
+      --accent: #7c3aed;
+      --good: #16a34a;
+      --warn: #f59e0b;
+      --bad: #dc2626;
+      --bar-bg: #ece7f9;
+      --shadow: 0 12px 30px rgba(0,0,0,.08);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, #fffaf4 0%, #f6f1ff 100%);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .screen {
+      display: none;
+      gap: 20px;
+    }
+
+    .screen.active { display: grid; }
+
+    .card {
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .start-card {
+      max-width: 700px;
+      margin: 50px auto;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    input, select, button {
+      font: inherit;
+    }
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ddd6fe;
+      border-radius: 14px;
+      outline: none;
+      background: #fff;
+    }
+
+    button {
+      border: none;
+      border-radius: 16px;
+      padding: 12px 16px;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      transition: transform .15s ease, opacity .2s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    .secondary {
+      background: #ede9fe;
+      color: #4c1d95;
+    }
+
+    .danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .pet-stage {
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #f5f3ff, #fffaf4 65%);
+    }
+
+    .pet {
+      width: 180px;
+      height: 180px;
+      position: relative;
+      transition: transform .25s ease;
+      user-select: none;
+    }
+
+    .pet.bounce { animation: bounce .6s ease; }
+    .pet.sleeping { animation: sleepFloat 2.2s ease-in-out infinite; }
+    .pet.sad { transform: translateY(8px) scale(.98); }
+    .pet.sick { filter: grayscale(.2); }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-14px); }
+      70% { transform: translateY(-6px); }
+    }
+
+    @keyframes sleepFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    .pet-body {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--pet-color, #f59e0b);
+      position: relative;
+      box-shadow: inset 0 -10px 0 rgba(0,0,0,.08);
+    }
+
+    .ear {
+      width: 44px;
+      height: 44px;
+      background: var(--pet-color, #f59e0b);
+      position: absolute;
+      top: -8px;
+      border-radius: 16px 16px 8px 8px;
+    }
+
+    .ear.left { left: 18px; transform: rotate(-25deg); }
+    .ear.right { right: 18px; transform: rotate(25deg); }
+    .pet.rabbit .ear { height: 72px; width: 30px; top: -34px; border-radius: 16px; }
+    .pet.rabbit .ear.left { left: 34px; }
+    .pet.rabbit .ear.right { right: 34px; }
+    .pet.cat .ear { border-radius: 6px 22px 6px 22px; }
+
+    .eye {
+      width: 18px;
+      height: 22px;
+      background: #111827;
+      border-radius: 50%;
+      position: absolute;
+      top: 72px;
+    }
+
+    .eye.left { left: 52px; }
+    .eye.right { right: 52px; }
+    .eye.closed { height: 4px; top: 80px; border-radius: 999px; }
+
+    .mouth {
+      position: absolute;
+      left: 50%;
+      top: 102px;
+      transform: translateX(-50%);
+      width: 44px;
+      height: 22px;
+      border-bottom: 5px solid #111827;
+      border-radius: 0 0 30px 30px;
+    }
+
+    .mouth.sad {
+      border-bottom: none;
+      border-top: 5px solid #111827;
+      border-radius: 30px 30px 0 0;
+      top: 110px;
+    }
+
+    .mouth.flat {
+      width: 34px;
+      height: 0;
+      border: none;
+      border-top: 5px solid #111827;
+      border-radius: 999px;
+      top: 112px;
+    }
+
+    .cheek {
+      width: 18px;
+      height: 12px;
+      background: rgba(255,255,255,.35);
+      position: absolute;
+      top: 102px;
+      border-radius: 999px;
+    }
+
+    .cheek.left { left: 30px; }
+    .cheek.right { right: 30px; }
+
+    .level-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .stat-card {
+      background: #faf7ff;
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .stat-head {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .bar {
+      width: 100%;
+      height: 12px;
+      background: var(--bar-bg);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width .3s ease;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 560px) {
+      .actions { grid-template-columns: 1fr; }
+      .status-grid { grid-template-columns: 1fr; }
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-align: left;
+      background: #fff;
+      color: var(--text);
+      border: 1px solid #ede9fe;
+    }
+
+    .action-btn strong { display: block; }
+    .action-btn small { color: var(--muted); }
+
+    .task-box {
+      display: none;
+      gap: 14px;
+      margin-top: 16px;
+      padding: 16px;
+      background: #fcfbff;
+      border: 1px dashed #c4b5fd;
+      border-radius: 16px;
+    }
+
+    .task-box.active { display: grid; }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+    }
+
+    .choice {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid #ddd6fe;
+    }
+
+    .feedback {
+      min-height: 52px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #f8fafc;
+      color: #334155;
+    }
+
+    .feedback.good { background: #dcfce7; color: #166534; }
+    .feedback.bad { background: #fee2e2; color: #991b1b; }
+    .feedback.warn { background: #fef3c7; color: #92400e; }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .muted { color: var(--muted); }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      background: #f3f4f6;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+
+    .end-screen {
+      max-width: 760px;
+      margin: 40px auto;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <aside class="panel">
-      <div class="title-row">
-        <h1 id="gameTitle">Гонка</h1>
-        <div class="badge" id="levelBadge">Уровень 1</div>
-      </div>
+  <div class="wrap">
+    <section id="startScreen" class="screen active">
+      <div class="card start-card">
+        <h1>Тамагочи</h1>
+        <p>Рабочая версия игры с параметрами, которые потом можно вынести в редактор.</p>
 
-      <div class="stats">
-        <div class="stat blue">
-          <div class="stat-label">💎 Алмазы</div>
-          <div class="stat-value" id="diamondsValue">0</div>
-        </div>
-        <div class="stat yellow">
-          <div class="stat-label">⏱ Время</div>
-          <div class="stat-value" id="timeValue">180</div>
-        </div>
-      </div>
-
-      <div class="progress-wrap">
-        <div class="progress-top">
-          <span>Прогресс трассы</span>
-          <span id="progressText">0%</span>
-        </div>
-        <div class="progress">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-      </div>
-
-      <div class="box">
-        <h3>Управление</h3>
-        <div class="controls">
-          <button class="btn-secondary" id="btnLeft">⬅ Влево</button>
-          <button class="btn-secondary" id="btnRight">➡ Вправо</button>
-        </div>
-        <p class="note">Основные кнопки управления также находятся внизу по центру трассы.</p>
-      </div>
-
-      <div class="box">
-        <h3>Параметры прототипа</h3>
-
-        <div class="setting-item">
-          <label for="speedRange">Скорость: <span id="speedLabel">6</span></label>
-          <input type="range" id="speedRange" min="4" max="12" step="1" value="6" />
-        </div>
-
-        <div class="setting-item">
-          <label for="timeRange">Время: <span id="timeLabel">180</span> сек</label>
-          <input type="range" id="timeRange" min="60" max="300" step="30" value="180" />
-        </div>
-
-        <div class="actions">
-          <button class="btn-primary" id="btnStart">▶ Старт</button>
-          <button class="btn-outline" id="btnReset">↻ Сброс</button>
-        </div>
-      </div>
-
-      <div class="box">
-        <p class="note">
-          Теперь объекты появляются реже и по одному, чтобы их можно было заметить и объехать. Время уровня по умолчанию — 3 минуты.
-        </p>
-      </div>
-    </aside>
-
-    <main class="game-wrap">
-      <div class="scene">
-        <div class="sky"></div>
-        <div class="cloud" style="left:4%;top:8%;width:220px;height:54px;"></div>
-        <div class="cloud" style="right:10%;top:11%;width:260px;height:60px;"></div>
-
-        <div class="city">
-          <div class="building" style="left:11%;width:8%;height:44%;"><div class="windows"></div></div>
-          <div class="building" style="left:22%;width:4%;height:56%;"><div class="windows"></div></div>
-          <div class="building" style="left:28%;width:5%;height:34%;"><div class="windows"></div></div>
-          <div class="building" style="left:61%;width:6%;height:40%;"><div class="windows"></div></div>
-          <div class="building" style="left:70%;width:18%;height:72%;"><div class="windows"></div></div>
-        </div>
-
-        <div class="road-world">
-          <div class="road"></div>
-          <div class="lane-center" id="laneCenter"></div>
-          <div class="lane-left"></div>
-          <div class="lane-right"></div>
-
-          <div class="wall-left">
-            <div class="wall-stripes-left"></div>
+        <div class="row">
+          <div style="flex:1 1 240px;">
+            <label for="petName">Имя питомца</label>
+            <input id="petName" type="text" maxlength="20" placeholder="Например, Пушок" />
           </div>
-          <div class="wall-right">
-            <div class="wall-stripes-right"></div>
-          </div>
-
-          <div class="tunnel">
-            <div class="tunnel-face"></div>
-            <div class="tunnel-hole">
-              <div class="tunnel-lights"></div>
-            </div>
-            <div class="sign left">Route A</div>
-            <div class="sign right">Tunnel</div>
+          <div style="flex:1 1 220px;">
+            <label for="difficulty">Сложность</label>
+            <select id="difficulty">
+              <option value="easy">Лёгкая</option>
+              <option value="medium" selected>Средняя</option>
+              <option value="hard">Сложная</option>
+            </select>
           </div>
         </div>
 
-        <div class="hud-top">
-          <div class="hud-pause">❚❚</div>
-          <div class="hud-right">
+        <div class="row" style="margin-top: 14px;">
+          <div style="flex:1 1 220px;">
+            <label for="petType">Вид питомца</label>
+            <select id="petType">
+              <option value="dog">Собака</option>
+              <option value="cat">Кошка</option>
+              <option value="rabbit">Кролик</option>
+            </select>
+          </div>
+          <div style="flex:1 1 220px;">
+            <label for="speedMode">Скорость изменения параметров</label>
+            <select id="speedMode">
+              <option value="slow">Медленно</option>
+              <option value="normal" selected>Нормально</option>
+              <option value="fast">Быстро</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 18px; background:#faf7ff;">
+          <h3>Что уже заложено под будущий редактор</h3>
+          <p class="muted">Все ключевые настройки находятся в объекте <strong>GAME_CONFIG</strong> в коде: пределы, XP, урон/награды, сложность, наборы вопросов, таймер деградации, максимальный уровень, попытки и тексты сообщений.</p>
+        </div>
+
+        <div class="row" style="margin-top: 18px;">
+          <button id="startBtn">Начать игру</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="grid-2">
+        <div class="card">
+          <div class="topline">
             <div>
-              <div class="hud-box">x1&nbsp;&nbsp;&nbsp;0000754</div>
-              <div class="hud-coins">
-                <span id="diamondsMini">0</span>
-                <div class="coin-mini"></div>
+              <h2 id="gameTitle">Питомец</h2>
+              <div class="row">
+                <span class="pill" id="difficultyLabel"></span>
+                <span class="pill" id="petTypeLabel"></span>
+                <span class="pill" id="timeLabel">00:00</span>
+              </div>
+            </div>
+            <button class="secondary" id="restartBtn">Заново</button>
+          </div>
+
+          <div class="pet-stage card" style="margin-top: 18px; box-shadow:none;">
+            <div class="level-badge" id="levelBadge">Уровень 1</div>
+            <div id="pet" class="pet dog">
+              <div class="ear left"></div>
+              <div class="ear right"></div>
+              <div class="pet-body">
+                <div id="eyeLeft" class="eye left"></div>
+                <div id="eyeRight" class="eye right"></div>
+                <div id="mouth" class="mouth"></div>
+                <div class="cheek left"></div>
+                <div class="cheek right"></div>
               </div>
             </div>
           </div>
+
+          <div class="status-grid" style="margin-top: 18px;">
+            <div class="stat-card">
+              <div class="stat-head"><span>Голод</span><span id="hungerValue">50</span></div>
+              <div class="bar"><div id="hungerBar" class="bar-fill"></div></div>
+              <small class="muted">Чем меньше, тем лучше.</small>
+            </div>
+            <div class="stat-card">
+              <div class="stat-head"><span>Счастье</span><span id="happinessValue">80</span></div>
+              <div class="bar"><div id="happinessBar" class="bar-fill"></div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-head"><span>Энергия</span><span id="energyValue">80</span></div>
+              <div class="bar"><div id="energyBar" class="bar-fill"></div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-head"><span>Гигиена</span><span id="hygieneValue">80</span></div>
+              <div class="bar"><div id="hygieneBar" class="bar-fill"></div></div>
+            </div>
+            <div class="stat-card" style="grid-column: 1 / -1;">
+              <div class="stat-head"><span>Опыт</span><span><span id="xpValue">0</span>/<span id="xpMaxValue">100</span></span></div>
+              <div class="bar"><div id="xpBar" class="bar-fill"></div></div>
+            </div>
+          </div>
         </div>
 
-        <div class="object-layer" id="objectsLayer"></div>
+        <div class="card">
+          <h3>Действия</h3>
+          <div class="actions">
+            <button class="action-btn" data-action="feed">
+              <span><strong>Кормление</strong><small>Уменьшает голод, повышает счастье</small></span>
+              <span>🍎</span>
+            </button>
+            <button class="action-btn" data-action="walk">
+              <span><strong>Прогулка</strong><small>Повышает счастье, влияет на энергию</small></span>
+              <span>🌳</span>
+            </button>
+            <button class="action-btn" data-action="toilet">
+              <span><strong>Туалет</strong><small>Восстанавливает гигиену</small></span>
+              <span>🛁</span>
+            </button>
+            <button class="action-btn" data-action="sleep">
+              <span><strong>Сон</strong><small>Восстанавливает энергию</small></span>
+              <span>🌙</span>
+            </button>
+          </div>
 
-        <div class="player-shadow"></div>
-        <div class="player-car" id="playerCar">
-          <div class="car-rear"></div>
-          <div class="car-glass"></div>
-          <div class="car-wing"></div>
-          <div class="tail-left"></div>
-          <div class="tail-right"></div>
-          <div class="rear-panel"></div>
-          <div class="diffuser"></div>
+          <div id="feedback" class="feedback warn" style="margin-top:16px;">Выбери действие, чтобы помочь питомцу.</div>
+
+          <div id="taskBox" class="task-box">
+            <div>
+              <div class="muted">Задание для действия: <strong id="taskActionName"></strong></div>
+              <h3 id="taskQuestion" style="margin: 8px 0 0;"></h3>
+              <div class="muted">Попытка: <span id="attemptInfo"></span></div>
+            </div>
+
+            <div id="inputAnswerWrap">
+              <label for="taskAnswer">Твой ответ</label>
+              <input id="taskAnswer" type="text" placeholder="Введи ответ" />
+            </div>
+
+            <div id="choicesWrap" class="choices"></div>
+
+            <div class="row">
+              <button id="submitTaskBtn">Проверить</button>
+              <button class="secondary" id="cancelTaskBtn">Отмена</button>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:16px; background:#faf7ff; box-shadow:none;">
+            <h3>Статистика</h3>
+            <p class="muted" id="statsText">Решено заданий: 0 · Верных ответов: 0 · Ошибок: 0</p>
+          </div>
         </div>
-
-        <div class="bottom-drive-controls">
-          <button class="bottom-drive-btn left" id="sideLeft" aria-label="Влево">
-            <div class="arrow"></div>
-          </button>
-          <button class="bottom-drive-btn right" id="sideRight" aria-label="Вправо">
-            <div class="arrow"></div>
-          </button>
-        </div>
-
-        <div id="overlayLayer"></div>
       </div>
-    </main>
+    </section>
+
+    <section id="endScreen" class="screen">
+      <div class="card end-screen">
+        <h1 id="endTitle"></h1>
+        <p id="endReason"></p>
+        <div class="card" style="text-align:left; background:#faf7ff; box-shadow:none;">
+          <h3>Итоги</h3>
+          <p id="endStats"></p>
+        </div>
+        <button id="playAgainBtn">Играть снова</button>
+      </div>
+    </section>
   </div>
 
   <script>
     const GAME_CONFIG = {
       meta: {
-        title: "Гонка",
-        finishMessage: "Поздравляем! Ты финишировал!",
-        startButtonText: "Старт",
-        restartButtonText: "Играть снова"
+        title: 'Тамагочи',
+        maxLevel: 5,
+        defaultPetName: 'Пушок'
       },
-      teacherSettings: {
-        speed: 6,
-        totalTimeSec: 180,
-        attemptsPerQuestion: 1,
-        loseDiamondsOnCrash: 1,
-        gainDiamondsOnCorrect: 1,
-        useKeyboard: true,
-        objectCount: 8,
-        diamondRatio: 0.55
-      },
-      levels: [
-        {
-          id: 1,
-          name: "Уровень 1",
-          distance: 100,
-          laneCount: 3,
-          questions: [
-            { id: "l1q1", prompt: "3 + 2 = ?", answerType: "choice", correctAnswer: "5", options: ["4", "5", "6"] },
-            { id: "l1q2", prompt: "8 - 3 = ?", answerType: "choice", correctAnswer: "5", options: ["5", "4", "6"] },
-            { id: "l1q3", prompt: "6 + 1 = ?", answerType: "input", correctAnswer: "7" },
-            { id: "l1q4", prompt: "4 + 4 = ?", answerType: "choice", correctAnswer: "8", options: ["7", "8", "9"] },
-            { id: "l1q5", prompt: "10 - 6 = ?", answerType: "input", correctAnswer: "4" }
-          ]
-        },
-        {
-          id: 2,
-          name: "Уровень 2",
-          distance: 120,
-          laneCount: 3,
-          questions: [
-            { id: "l2q1", prompt: "12 - 5 = ?", answerType: "choice", correctAnswer: "7", options: ["6", "7", "8"] },
-            { id: "l2q2", prompt: "9 + 6 = ?", answerType: "input", correctAnswer: "15" },
-            { id: "l2q3", prompt: "14 - 4 = ?", answerType: "choice", correctAnswer: "10", options: ["9", "10", "11"] },
-            { id: "l2q4", prompt: "5 × 2 = ?", answerType: "choice", correctAnswer: "10", options: ["8", "10", "12"] },
-            { id: "l2q5", prompt: "18 - 9 = ?", answerType: "input", correctAnswer: "9" }
-          ]
+      ui: {
+        positiveMessages: [
+          'Отлично! Питомец доволен.',
+          'Верно! Это пошло на пользу.',
+          'Супер! Питомец радуется.'
+        ],
+        negativeMessages: [
+          'Увы, ответ неверный. Питомец расстроился.',
+          'Пока не получилось. Попробуй ещё в следующий раз.',
+          'Ошибка. Питомец немного загрустил.'
+        ],
+        statusWarnings: {
+          hunger: 'Твой питомец очень голоден!',
+          happiness: 'Питомец грустит и нуждается в заботе.',
+          energy: 'Питомец устал и хочет отдохнуть.',
+          hygiene: 'Питомцу срочно нужна гигиена.'
         }
+      },
+      limits: {
+        minStat: 0,
+        maxStat: 100,
+        criticalStat: 0,
+        warningStat: 25
+      },
+      progression: {
+        baseXpPerSuccess: 25,
+        xpForNextLevelBase: 100,
+        xpForNextLevelStep: 45
+      },
+      attempts: {
+        perTask: 2
+      },
+      time: {
+        tickMs: 5000,
+        sessionTimerMs: 1000,
+        speedMultiplier: {
+          slow: 0.7,
+          normal: 1,
+          fast: 1.4
+        },
+        passiveDecay: {
+          hunger: 5,
+          happiness: -3,
+          energy: -4,
+          hygiene: -4
+        },
+        penaltyIfNeglected: {
+          happiness: -5
+        }
+      },
+      difficulty: {
+        easy: {
+          label: 'Лёгкая',
+          numberRange: [1, 10],
+          operations: ['+', '-'],
+          allowTextQuestions: true,
+          choiceProbability: 0.75,
+          statMultiplier: 1,
+          xpMultiplier: 1
+        },
+        medium: {
+          label: 'Средняя',
+          numberRange: [2, 20],
+          operations: ['+', '-', '*'],
+          allowTextQuestions: true,
+          choiceProbability: 0.55,
+          statMultiplier: 1.1,
+          xpMultiplier: 1.15
+        },
+        hard: {
+          label: 'Сложная',
+          numberRange: [5, 50],
+          operations: ['+', '-', '*'],
+          allowTextQuestions: true,
+          choiceProbability: 0.35,
+          statMultiplier: 1.2,
+          xpMultiplier: 1.3
+        }
+      },
+      petSkins: {
+        dog: { label: 'Собака', color: '#f59e0b' },
+        cat: { label: 'Кошка', color: '#fb7185' },
+        rabbit: { label: 'Кролик', color: '#a78bfa' }
+      },
+      actions: {
+        feed: {
+          label: 'Кормление',
+          success: { hunger: -24, happiness: +12, energy: -4, hygiene: -2 },
+          fail: { happiness: -10, hunger: +5 },
+          xpBonus: 0
+        },
+        walk: {
+          label: 'Прогулка',
+          success: { hunger: +6, happiness: +18, energy: +8, hygiene: -8 },
+          fail: { happiness: -12, energy: -8 },
+          xpBonus: 5
+        },
+        toilet: {
+          label: 'Туалет',
+          success: { hygiene: +24, happiness: +8, energy: -3 },
+          fail: { hygiene: -8, happiness: -8 },
+          xpBonus: 0
+        },
+        sleep: {
+          label: 'Сон',
+          success: { energy: +28, hunger: +4, happiness: +6 },
+          fail: { energy: -6, happiness: -6 },
+          xpBonus: 0
+        }
+      },
+      textQuestions: [
+        { q: 'Сколько дней в неделе?', a: '7' },
+        { q: 'Сколько будет 10 - 4?', a: '6' },
+        { q: 'Продолжи ряд: 2, 4, 6, ...', a: '8' },
+        { q: 'Сколько углов у квадрата?', a: '4' },
+        { q: 'Сколько будет 3 + 5?', a: '8' },
+        { q: 'Какое число больше: 9 или 6?', a: '9' }
       ]
     };
 
-    const GAME = {
-      tickMs: 40,
-      lanePositions: [0.38, 0.5, 0.62],
-      startY: 24,
-      endY: 76,
-      dashOffset: 0
-    };
-
     const state = {
-      settings: JSON.parse(JSON.stringify(GAME_CONFIG.teacherSettings)),
-      currentLevelIndex: 0,
-      gameStatus: "ready",
-      playerLane: 1,
-      diamonds: 0,
-      timeLeft: GAME_CONFIG.teacherSettings.totalTimeSec,
-      distancePassed: 0,
-      runtimeObjects: [],
-      quizState: null,
-      finishStats: null,
-      nextQuestionIndex: 0,
-      timerAcc: 0,
-      gameLoop: null
+      started: false,
+      petName: '',
+      petType: 'dog',
+      difficulty: 'medium',
+      speedMode: 'normal',
+      level: 1,
+      xp: 0,
+      xpToNext: 100,
+      hunger: 50,
+      happiness: 80,
+      energy: 80,
+      hygiene: 80,
+      totalTasks: 0,
+      correctTasks: 0,
+      wrongTasks: 0,
+      startTime: null,
+      elapsedSec: 0,
+      activeTask: null,
+      attemptsLeft: 0,
+      gameOver: false,
+      endReason: ''
     };
 
-    const ui = {
-      gameTitle: document.getElementById("gameTitle"),
-      levelBadge: document.getElementById("levelBadge"),
-      diamondsValue: document.getElementById("diamondsValue"),
-      diamondsMini: document.getElementById("diamondsMini"),
-      timeValue: document.getElementById("timeValue"),
-      progressText: document.getElementById("progressText"),
-      progressBar: document.getElementById("progressBar"),
-      objectsLayer: document.getElementById("objectsLayer"),
-      overlayLayer: document.getElementById("overlayLayer"),
-      btnLeft: document.getElementById("btnLeft"),
-      btnRight: document.getElementById("btnRight"),
-      sideLeft: document.getElementById("sideLeft"),
-      sideRight: document.getElementById("sideRight"),
-      btnStart: document.getElementById("btnStart"),
-      btnReset: document.getElementById("btnReset"),
-      speedRange: document.getElementById("speedRange"),
-      timeRange: document.getElementById("timeRange"),
-      speedLabel: document.getElementById("speedLabel"),
-      timeLabel: document.getElementById("timeLabel"),
-      playerCar: document.getElementById("playerCar"),
-      laneCenter: document.getElementById("laneCenter")
+    const els = {
+      startScreen: document.getElementById('startScreen'),
+      gameScreen: document.getElementById('gameScreen'),
+      endScreen: document.getElementById('endScreen'),
+      petNameInput: document.getElementById('petName'),
+      difficultySelect: document.getElementById('difficulty'),
+      petTypeSelect: document.getElementById('petType'),
+      speedModeSelect: document.getElementById('speedMode'),
+      startBtn: document.getElementById('startBtn'),
+      restartBtn: document.getElementById('restartBtn'),
+      playAgainBtn: document.getElementById('playAgainBtn'),
+      gameTitle: document.getElementById('gameTitle'),
+      difficultyLabel: document.getElementById('difficultyLabel'),
+      petTypeLabel: document.getElementById('petTypeLabel'),
+      timeLabel: document.getElementById('timeLabel'),
+      levelBadge: document.getElementById('levelBadge'),
+      pet: document.getElementById('pet'),
+      eyeLeft: document.getElementById('eyeLeft'),
+      eyeRight: document.getElementById('eyeRight'),
+      mouth: document.getElementById('mouth'),
+      hungerValue: document.getElementById('hungerValue'),
+      happinessValue: document.getElementById('happinessValue'),
+      energyValue: document.getElementById('energyValue'),
+      hygieneValue: document.getElementById('hygieneValue'),
+      hungerBar: document.getElementById('hungerBar'),
+      happinessBar: document.getElementById('happinessBar'),
+      energyBar: document.getElementById('energyBar'),
+      hygieneBar: document.getElementById('hygieneBar'),
+      xpValue: document.getElementById('xpValue'),
+      xpMaxValue: document.getElementById('xpMaxValue'),
+      xpBar: document.getElementById('xpBar'),
+      feedback: document.getElementById('feedback'),
+      taskBox: document.getElementById('taskBox'),
+      taskActionName: document.getElementById('taskActionName'),
+      taskQuestion: document.getElementById('taskQuestion'),
+      taskAnswer: document.getElementById('taskAnswer'),
+      inputAnswerWrap: document.getElementById('inputAnswerWrap'),
+      choicesWrap: document.getElementById('choicesWrap'),
+      submitTaskBtn: document.getElementById('submitTaskBtn'),
+      cancelTaskBtn: document.getElementById('cancelTaskBtn'),
+      attemptInfo: document.getElementById('attemptInfo'),
+      statsText: document.getElementById('statsText'),
+      endTitle: document.getElementById('endTitle'),
+      endReason: document.getElementById('endReason'),
+      endStats: document.getElementById('endStats')
     };
 
-    function clamp(value, min, max) {
-      return Math.max(min, Math.min(max, value));
+    let decayInterval = null;
+    let timerInterval = null;
+
+    function clamp(value) {
+      return Math.max(GAME_CONFIG.limits.minStat, Math.min(GAME_CONFIG.limits.maxStat, value));
     }
 
-    function uid() {
-      return Math.random().toString(36).slice(2, 10);
+    function setScreen(name) {
+      [els.startScreen, els.gameScreen, els.endScreen].forEach(s => s.classList.remove('active'));
+      els[name].classList.add('active');
     }
 
-    function currentLevel() {
-      return GAME_CONFIG.levels[state.currentLevelIndex];
+    function formatTime(sec) {
+      const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+      const ss = String(sec % 60).padStart(2, '0');
+      return `${mm}:${ss}`;
     }
 
-    function normalizeAnswer(value) {
-      return String(value ?? "").trim().toLowerCase().replace(/\s+/g, " ");
+    function randomFrom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    function laneX(lane) {
-      return GAME.lanePositions[lane] ?? GAME.lanePositions[1];
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function progressToScreen(progress) {
-      const y = GAME.startY + (GAME.endY - GAME.startY) * progress;
-      const scale = 0.26 + progress * 1.38;
-      return { y, scale };
+    function currentDifficultyConfig() {
+      return GAME_CONFIG.difficulty[state.difficulty];
     }
 
-    function createRandomObject(i, level) {
-      const isDiamond = Math.random() < state.settings.diamondRatio;
-      const variants = ["cone", "barrel", "car"];
-      return {
-        id: uid() + "_" + i,
-        type: isDiamond ? "diamond" : "obstacle",
-        variant: isDiamond ? null : variants[Math.floor(Math.random() * variants.length)],
-        lane: Math.floor(Math.random() * level.laneCount),
-        progress: -(i * 0.24 + Math.random() * 0.28 + 0.42),
-        active: true
-      };
+    function currentSpeedMultiplier() {
+      return GAME_CONFIG.time.speedMultiplier[state.speedMode];
     }
 
-    function buildRandomRuntime(level) {
-      const arr = [];
-      for (let i = 0; i < state.settings.objectCount; i++) {
-        arr.push({
-          ...createRandomObject(i, level),
-          progress: -(i * 0.55 + Math.random() * 0.18 + 0.8)
-        });
-      }
-      return arr;
+    function getXpTarget(level) {
+      return GAME_CONFIG.progression.xpForNextLevelBase + (level - 1) * GAME_CONFIG.progression.xpForNextLevelStep;
     }
 
-    function respawnObject(obj, level) {
-      const isDiamond = Math.random() < state.settings.diamondRatio;
-      const variants = ["cone", "barrel", "car"];
-      obj.type = isDiamond ? "diamond" : "obstacle";
-      obj.variant = isDiamond ? null : variants[Math.floor(Math.random() * variants.length)];
-      obj.lane = Math.floor(Math.random() * level.laneCount);
-      obj.progress = -(2.2 + Math.random() * 1.6);
-      obj.active = true;
+    function updateFeedback(text, type = 'warn') {
+      els.feedback.textContent = text;
+      els.feedback.className = `feedback ${type}`;
     }
 
-    function renderHUD() {
-      const level = currentLevel();
-      const progress = clamp((state.distancePassed / level.distance) * 100, 0, 100);
-
-      ui.gameTitle.textContent = GAME_CONFIG.meta.title;
-      ui.levelBadge.textContent = level.name;
-      ui.diamondsValue.textContent = state.diamonds;
-      ui.diamondsMini.textContent = state.diamonds;
-      ui.timeValue.textContent = state.timeLeft;
-      ui.progressText.textContent = Math.round(progress) + "%";
-      ui.progressBar.style.width = progress + "%";
-      ui.speedLabel.textContent = state.settings.speed;
-      ui.timeLabel.textContent = state.settings.totalTimeSec;
+    function resetGame() {
+      state.started = false;
+      state.petName = '';
+      state.petType = 'dog';
+      state.difficulty = 'medium';
+      state.speedMode = 'normal';
+      state.level = 1;
+      state.xp = 0;
+      state.xpToNext = getXpTarget(1);
+      state.hunger = 50;
+      state.happiness = 80;
+      state.energy = 80;
+      state.hygiene = 80;
+      state.totalTasks = 0;
+      state.correctTasks = 0;
+      state.wrongTasks = 0;
+      state.startTime = null;
+      state.elapsedSec = 0;
+      state.activeTask = null;
+      state.attemptsLeft = 0;
+      state.gameOver = false;
+      state.endReason = '';
+      clearIntervals();
+      closeTask();
     }
 
-    function updatePlayerVisual() {
-      const xShift = [-160, 0, 160][state.playerLane] || 0;
-      const tilt = [-8, 0, 8][state.playerLane] || 0;
-      ui.playerCar.style.transform = "translateX(calc(-50% + " + xShift + "px)) rotate(" + tilt + "deg)";
-    }
-
-    function createObjectElement(obj) {
-      const pos = progressToScreen(obj.progress);
-      if (pos.y < 12 || pos.y > 84) return null;
-
-      const el = document.createElement("div");
-      el.className = "game-object";
-      el.style.left = (laneX(obj.lane) * 100) + "%";
-      el.style.top = pos.y + "%";
-      el.style.width = (52 * pos.scale) + "px";
-      el.style.height = (52 * pos.scale) + "px";
-
-      const inner = document.createElement("div");
-      if (obj.type === "diamond") {
-        inner.className = "coin";
-      } else if (obj.variant === "cone") {
-        inner.className = "obstacle-cone";
-      } else if (obj.variant === "car") {
-        inner.className = "obstacle-car";
-      } else {
-        inner.className = "obstacle-barrel";
-      }
-
-      el.appendChild(inner);
-      return el;
-    }
-
-    function renderObjects() {
-      ui.objectsLayer.innerHTML = "";
-      for (const obj of state.runtimeObjects) {
-        if (!obj.active) continue;
-        const el = createObjectElement(obj);
-        if (el) ui.objectsLayer.appendChild(el);
-      }
-    }
-
-    function renderOverlay() {
-      ui.overlayLayer.innerHTML = "";
-
-      if (state.gameStatus === "ready") {
-        ui.overlayLayer.innerHTML = `
-          <div class="overlay">
-            <div class="modal">
-              <div class="modal-icon">🏁</div>
-              <h2>Готов к старту?</h2>
-              <p>Собирай монеты-алмазы, отвечай на вопросы и избегай препятствий.</p>
-              <button class="btn-primary" id="overlayStartBtn" style="width:100%;margin-top:12px;">
-                ▶ ${GAME_CONFIG.meta.startButtonText}
-              </button>
-            </div>
-          </div>
-        `;
-        document.getElementById("overlayStartBtn").addEventListener("click", startGame);
-      }
-
-      if (state.gameStatus === "pausedForQuiz" && state.quizState) {
-        const q = state.quizState.question;
-        let content = `
-          <div class="overlay">
-            <div class="modal">
-              <h2>Задание за алмаз</h2>
-              <div class="question-box">${q.prompt}</div>
-        `;
-
-        if (q.answerType === "choice") {
-          content += `<div class="answers choice">`;
-          q.options.forEach(option => {
-            content += `<button class="btn-secondary quiz-choice" data-answer="${option}">${option}</button>`;
-          });
-          content += `</div>`;
-        } else {
-          content += `
-            <div class="answer-input-row">
-              <input id="quizInput" type="text" placeholder="Введи ответ" />
-              <button class="btn-primary" id="quizSubmitBtn">Ответить</button>
-            </div>
-          `;
-        }
-
-        if (state.quizState.feedback) {
-          content += `
-            <div class="feedback ${state.quizState.feedback.type}">
-              ${state.quizState.feedback.message}
-            </div>
-          `;
-        }
-
-        content += `
-              <p class="tiny" style="margin-top:12px;">
-                Попытка: ${state.quizState.attemptsUsed + 1}
-                ${state.quizState.maxAttempts > 0 ? " / " + state.quizState.maxAttempts : ""}
-              </p>
-            </div>
-          </div>
-        `;
-
-        ui.overlayLayer.innerHTML = content;
-
-        if (q.answerType === "choice") {
-          document.querySelectorAll(".quiz-choice").forEach(btn => {
-            btn.addEventListener("click", () => submitAnswer(btn.dataset.answer));
-          });
-        } else {
-          const input = document.getElementById("quizInput");
-          const submitBtn = document.getElementById("quizSubmitBtn");
-          input.focus();
-          submitBtn.addEventListener("click", () => submitAnswer(input.value));
-          input.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") submitAnswer(input.value);
-          });
-        }
-      }
-
-      if (state.gameStatus === "finished" && state.finishStats) {
-        const stats = state.finishStats;
-        ui.overlayLayer.innerHTML = `
-          <div class="overlay">
-            <div class="modal">
-              <div class="modal-icon">🏎️</div>
-              <h2>${stats.success ? GAME_CONFIG.meta.finishMessage : "Время вышло!"}</h2>
-              <p>Уровень: ${stats.levelName}</p>
-              <div class="finish-box">💎 Собрано алмазов: ${stats.diamonds}</div>
-              <div class="finish-actions">
-                <button class="btn-outline" id="restartBtn">${GAME_CONFIG.meta.restartButtonText}</button>
-                ${stats.nextLevelAvailable ? `<button class="btn-primary" id="nextLevelBtn">Следующий уровень</button>` : ""}
-              </div>
-            </div>
-          </div>
-        `;
-
-        document.getElementById("restartBtn").addEventListener("click", () => resetGame(state.currentLevelIndex));
-        const nextLevelBtn = document.getElementById("nextLevelBtn");
-        if (nextLevelBtn) {
-          nextLevelBtn.addEventListener("click", () => resetGame(state.currentLevelIndex + 1));
-        }
-      }
-    }
-
-    function render() {
-      renderHUD();
-      renderObjects();
-      renderOverlay();
-      updatePlayerVisual();
-    }
-
-    function clearLoop() {
-      if (state.gameLoop) {
-        clearInterval(state.gameLoop);
-        state.gameLoop = null;
-      }
-    }
-
-    function setupLevel(index) {
-      state.currentLevelIndex = index;
-      state.playerLane = 1;
-      state.runtimeObjects = buildRandomRuntime(currentLevel());
-    }
-
-    function resetGame(index = state.currentLevelIndex) {
-      clearLoop();
-      setupLevel(index);
-      state.gameStatus = "ready";
-      state.diamonds = 0;
-      state.timeLeft = state.settings.totalTimeSec;
-      state.distancePassed = 0;
-      state.quizState = null;
-      state.finishStats = null;
-      state.nextQuestionIndex = 0;
-      state.timerAcc = 0;
-      GAME.dashOffset = 0;
-      render();
+    function clearIntervals() {
+      if (decayInterval) clearInterval(decayInterval);
+      if (timerInterval) clearInterval(timerInterval);
     }
 
     function startGame() {
-      clearLoop();
-      setupLevel(state.currentLevelIndex);
-      state.gameStatus = "running";
-      state.diamonds = 0;
-      state.timeLeft = state.settings.totalTimeSec;
-      state.distancePassed = 0;
-      state.quizState = null;
-      state.finishStats = null;
-      state.nextQuestionIndex = 0;
-      state.timerAcc = 0;
-      GAME.dashOffset = 0;
-      render();
-      state.gameLoop = setInterval(gameTick, GAME.tickMs);
+      resetGame();
+      state.petName = (els.petNameInput.value || GAME_CONFIG.meta.defaultPetName).trim();
+      state.petType = els.petTypeSelect.value;
+      state.difficulty = els.difficultySelect.value;
+      state.speedMode = els.speedModeSelect.value;
+      state.started = true;
+      state.startTime = Date.now();
+      state.xpToNext = getXpTarget(state.level);
+
+      setScreen('gameScreen');
+      applyPetSkin();
+      updateUI();
+      updateFeedback('Игра началась. Выбери действие для питомца.', 'warn');
+
+      decayInterval = setInterval(applyPassiveDecay, GAME_CONFIG.time.tickMs);
+      timerInterval = setInterval(() => {
+        state.elapsedSec += 1;
+        els.timeLabel.textContent = formatTime(state.elapsedSec);
+      }, GAME_CONFIG.time.sessionTimerMs);
     }
 
-    function gameTick() {
-      if (state.gameStatus !== "running") return;
+    function applyPetSkin() {
+      const skin = GAME_CONFIG.petSkins[state.petType];
+      els.pet.className = `pet ${state.petType}`;
+      document.documentElement.style.setProperty('--pet-color', skin.color);
+    }
 
-      const level = currentLevel();
+    function updateBar(el, value, inverse = false) {
+      el.style.width = `${value}%`;
+      let color = '#16a34a';
+      const effective = inverse ? 100 - value : value;
+      if (effective < 30) color = '#dc2626';
+      else if (effective < 60) color = '#f59e0b';
+      el.style.background = color;
+    }
 
-      state.distancePassed += state.settings.speed * 0.18;
-      if (state.distancePassed > level.distance) state.distancePassed = level.distance;
+    function updateMoodVisual() {
+      const isSleeping = state.activeTask?.actionKey === 'sleep';
+      const lowMood = state.happiness <= GAME_CONFIG.limits.warningStat;
+      const sick = isCriticalState(false);
 
-      state.timerAcc += GAME.tickMs;
-      if (state.timerAcc >= 1000) {
-        state.timerAcc = 0;
-        state.timeLeft = Math.max(0, state.timeLeft - 1);
+      els.pet.classList.remove('sleeping', 'sad', 'sick');
+      els.eyeLeft.className = 'eye left';
+      els.eyeRight.className = 'eye right';
+      els.mouth.className = 'mouth';
+
+      if (isSleeping) {
+        els.pet.classList.add('sleeping');
+        els.eyeLeft.classList.add('closed');
+        els.eyeRight.classList.add('closed');
+        els.mouth.classList.add('flat');
+      } else if (sick) {
+        els.pet.classList.add('sick', 'sad');
+        els.mouth.classList.add('sad');
+      } else if (lowMood || state.energy <= GAME_CONFIG.limits.warningStat) {
+        els.pet.classList.add('sad');
+        els.mouth.classList.add('sad');
+      }
+    }
+
+    function updateUI() {
+      els.gameTitle.textContent = `${state.petName} — твой питомец`;
+      els.difficultyLabel.textContent = `Сложность: ${GAME_CONFIG.difficulty[state.difficulty].label}`;
+      els.petTypeLabel.textContent = `Вид: ${GAME_CONFIG.petSkins[state.petType].label}`;
+      els.levelBadge.textContent = `Уровень ${state.level}`;
+      els.timeLabel.textContent = formatTime(state.elapsedSec);
+
+      els.hungerValue.textContent = Math.round(state.hunger);
+      els.happinessValue.textContent = Math.round(state.happiness);
+      els.energyValue.textContent = Math.round(state.energy);
+      els.hygieneValue.textContent = Math.round(state.hygiene);
+      els.xpValue.textContent = Math.round(state.xp);
+      els.xpMaxValue.textContent = state.xpToNext;
+
+      updateBar(els.hungerBar, state.hunger, true);
+      updateBar(els.happinessBar, state.happiness);
+      updateBar(els.energyBar, state.energy);
+      updateBar(els.hygieneBar, state.hygiene);
+      els.xpBar.style.width = `${Math.min(100, (state.xp / state.xpToNext) * 100)}%`;
+      els.xpBar.style.background = '#7c3aed';
+
+      els.statsText.textContent = `Решено заданий: ${state.totalTasks} · Верных ответов: ${state.correctTasks} · Ошибок: ${state.wrongTasks}`;
+      updateMoodVisual();
+    }
+
+    function applyDeltaSet(delta) {
+      Object.entries(delta).forEach(([key, value]) => {
+        if (typeof state[key] === 'number') {
+          state[key] = clamp(state[key] + value);
+        }
+      });
+    }
+
+    function applyPassiveDecay() {
+      if (!state.started || state.gameOver) return;
+      const mult = currentSpeedMultiplier();
+      const decay = GAME_CONFIG.time.passiveDecay;
+
+      state.hunger = clamp(state.hunger + decay.hunger * mult);
+      state.happiness = clamp(state.happiness + decay.happiness * mult);
+      state.energy = clamp(state.energy + decay.energy * mult);
+      state.hygiene = clamp(state.hygiene + decay.hygiene * mult);
+
+      if (state.hunger >= 80 || state.hygiene <= 20 || state.energy <= 20) {
+        state.happiness = clamp(state.happiness + GAME_CONFIG.time.penaltyIfNeglected.happiness * mult);
       }
 
-      GAME.dashOffset += state.settings.speed * 5;
-      const offset = GAME.dashOffset % 104;
-      ui.laneCenter.style.background = `
-        repeating-linear-gradient(
-          180deg,
-          rgba(255,216,74,.92) ${offset}px,
-          rgba(255,216,74,.92) ${offset + 48}px,
-          rgba(255,216,74,0) ${offset + 48}px,
-          rgba(255,216,74,0) ${offset + 104}px
-        )
-      `;
+      checkWarnings();
+      updateUI();
+      checkGameState();
+    }
 
-      for (const obj of state.runtimeObjects) {
-        if (!obj.active) continue;
-        obj.progress += 0.005 + state.settings.speed * 0.0012;
-        if (obj.progress > 1.15) {
-          respawnObject(obj, level);
+    function checkWarnings() {
+      const warnings = GAME_CONFIG.ui.statusWarnings;
+      if (state.hunger >= 85) return updateFeedback(warnings.hunger, 'warn');
+      if (state.happiness <= 20) return updateFeedback(warnings.happiness, 'warn');
+      if (state.energy <= 20) return updateFeedback(warnings.energy, 'warn');
+      if (state.hygiene <= 20) return updateFeedback(warnings.hygiene, 'warn');
+    }
+
+    function isCriticalState(includeMaxHunger = true) {
+      const critical = GAME_CONFIG.limits.criticalStat;
+      return (
+        state.happiness <= critical ||
+        state.energy <= critical ||
+        state.hygiene <= critical ||
+        (includeMaxHunger && state.hunger >= GAME_CONFIG.limits.maxStat)
+      );
+    }
+
+    function checkGameState() {
+      if (state.gameOver) return;
+
+      if (state.happiness <= 0) {
+        return endGame('Поражение', 'Питомец совсем загрустил и убежал.');
+      }
+      if (state.energy <= 0) {
+        return endGame('Поражение', 'Питомец слишком устал и заболел.');
+      }
+      if (state.hygiene <= 0) {
+        return endGame('Поражение', 'Из-за плохой гигиены питомец заболел.');
+      }
+      if (state.hunger >= 100) {
+        return endGame('Поражение', 'Питомец слишком проголодался и ослаб.');
+      }
+      if (state.level >= GAME_CONFIG.meta.maxLevel && state.xp >= state.xpToNext) {
+        return endGame('Победа!', 'Ты вырастил питомца до максимального уровня.');
+      }
+    }
+
+    function gainXp(baseAmount) {
+      const diff = currentDifficultyConfig();
+      state.xp += Math.round(baseAmount * diff.xpMultiplier);
+
+      while (state.xp >= state.xpToNext && state.level < GAME_CONFIG.meta.maxLevel) {
+        state.xp -= state.xpToNext;
+        state.level += 1;
+        state.xpToNext = getXpTarget(state.level);
+        updateFeedback(`Уровень повышен! Теперь у питомца ${state.level} уровень.`, 'good');
+        animatePet();
+      }
+
+      if (state.level === GAME_CONFIG.meta.maxLevel && state.xp > state.xpToNext) {
+        state.xp = state.xpToNext;
+      }
+    }
+
+    function endGame(title, reason) {
+      state.gameOver = true;
+      state.endReason = reason;
+      clearIntervals();
+      closeTask();
+
+      els.endTitle.textContent = title;
+      els.endReason.textContent = reason;
+      els.endStats.textContent = `Имя питомца: ${state.petName}. Уровень: ${state.level}. Время игры: ${formatTime(state.elapsedSec)}. Всего очков опыта: ${state.correctTasks * GAME_CONFIG.progression.baseXpPerSuccess}. Решено заданий: ${state.totalTasks}. Верных ответов: ${state.correctTasks}. Ошибок: ${state.wrongTasks}.`;
+      setScreen('endScreen');
+    }
+
+    function animatePet() {
+      els.pet.classList.remove('bounce');
+      void els.pet.offsetWidth;
+      els.pet.classList.add('bounce');
+    }
+
+    function generateMathQuestion() {
+      const diff = currentDifficultyConfig();
+      const [min, max] = diff.numberRange;
+      const op = randomFrom(diff.operations);
+      let a = randInt(min, max);
+      let b = randInt(min, max);
+      let answer;
+      let q;
+
+      if (op === '+') {
+        answer = a + b;
+        q = `${a} + ${b} = ?`;
+      } else if (op === '-') {
+        if (b > a) [a, b] = [b, a];
+        answer = a - b;
+        q = `${a} - ${b} = ?`;
+      } else {
+        const levelBoost = Math.min(state.level + 1, 5);
+        a = randInt(min, Math.min(max, 4 + state.level * 4));
+        b = randInt(2, Math.min(10, levelBoost + 4));
+        answer = a * b;
+        q = `${a} × ${b} = ?`;
+      }
+
+      return {
+        type: Math.random() < diff.choiceProbability ? 'choice' : 'input',
+        question: q,
+        answer: String(answer),
+        choices: buildChoices(answer)
+      };
+    }
+
+    function generateTextQuestion() {
+      const item = randomFrom(GAME_CONFIG.textQuestions);
+      return {
+        type: Math.random() < currentDifficultyConfig().choiceProbability ? 'choice' : 'input',
+        question: item.q,
+        answer: String(item.a),
+        choices: buildChoices(item.a)
+      };
+    }
+
+    function buildChoices(correctAnswer) {
+      const set = new Set([String(correctAnswer)]);
+      const num = Number(correctAnswer);
+      while (set.size < 4) {
+        if (!Number.isNaN(num)) {
+          const variant = num + randInt(-6, 6);
+          if (variant >= 0) set.add(String(variant));
+        } else {
+          set.add(String(randInt(1, 20)));
         }
       }
-
-      checkCollisions();
-      checkFinish();
-      render();
+      return [...set].sort(() => Math.random() - 0.5);
     }
 
-    function moveLeft() {
-      state.playerLane = clamp(state.playerLane - 1, 0, currentLevel().laneCount - 1);
-      updatePlayerVisual();
-    }
-
-    function moveRight() {
-      state.playerLane = clamp(state.playerLane + 1, 0, currentLevel().laneCount - 1);
-      updatePlayerVisual();
-    }
-
-    function checkCollisions() {
-      if (state.gameStatus !== "running") return;
-
-      const collided = state.runtimeObjects.find(obj =>
-        obj.active &&
-        obj.lane === state.playerLane &&
-        obj.progress > 0.88 &&
-        obj.progress < 1.02
-      );
-
-      if (!collided) return;
-
-      collided.active = false;
-
-      if (collided.type === "obstacle") {
-        state.diamonds = Math.max(0, state.diamonds - state.settings.loseDiamondsOnCrash);
-        setTimeout(() => {
-          respawnObject(collided, currentLevel());
-        }, 300);
-        return;
-      }
-
-      const level = currentLevel();
-      const question = level.questions[state.nextQuestionIndex % level.questions.length];
-      state.nextQuestionIndex += 1;
-      state.gameStatus = "pausedForQuiz";
-      state.quizState = {
-        question,
-        attemptsUsed: 0,
-        maxAttempts: state.settings.attemptsPerQuestion,
-        feedback: null
+    function generateTask(actionKey) {
+      const useText = currentDifficultyConfig().allowTextQuestions && Math.random() < 0.35;
+      const base = useText ? generateTextQuestion() : generateMathQuestion();
+      return {
+        ...base,
+        actionKey
       };
     }
 
-    function continueAfterQuiz(feedback) {
-      state.quizState.feedback = feedback;
-      renderOverlay();
+    function renderTask(task) {
+      state.activeTask = task;
+      state.attemptsLeft = GAME_CONFIG.attempts.perTask;
+      els.taskBox.classList.add('active');
+      els.taskActionName.textContent = GAME_CONFIG.actions[task.actionKey].label;
+      els.taskQuestion.textContent = task.question;
+      els.taskAnswer.value = '';
+      els.choicesWrap.innerHTML = '';
+      updateAttemptInfo();
 
-      setTimeout(() => {
-        state.quizState = null;
-        state.gameStatus = "running";
-        render();
-      }, 800);
+      if (task.type === 'choice') {
+        els.inputAnswerWrap.style.display = 'none';
+        task.choices.forEach(choice => {
+          const btn = document.createElement('button');
+          btn.className = 'choice';
+          btn.type = 'button';
+          btn.textContent = choice;
+          btn.addEventListener('click', () => submitAnswer(choice));
+          els.choicesWrap.appendChild(btn);
+        });
+      } else {
+        els.inputAnswerWrap.style.display = 'block';
+      }
+      updateUI();
     }
 
-    function submitAnswer(value) {
-      if (!state.quizState || !state.quizState.question) return;
+    function updateAttemptInfo() {
+      const max = GAME_CONFIG.attempts.perTask;
+      els.attemptInfo.textContent = `${max - state.attemptsLeft + 1} из ${max}`;
+    }
 
-      const isCorrect = normalizeAnswer(value) === normalizeAnswer(state.quizState.question.correctAnswer);
+    function closeTask() {
+      state.activeTask = null;
+      state.attemptsLeft = 0;
+      els.taskBox.classList.remove('active');
+      els.choicesWrap.innerHTML = '';
+      els.taskAnswer.value = '';
+      updateMoodVisual();
+    }
 
-      if (isCorrect) {
-        state.diamonds += state.settings.gainDiamondsOnCorrect;
-        continueAfterQuiz({ type: "success", message: "+1 алмаз! Верно." });
+    function normalizeAnswer(value) {
+      return String(value).trim().replace(',', '.');
+    }
+
+    function submitAnswer(rawAnswer) {
+      if (!state.activeTask || state.gameOver) return;
+      const answer = normalizeAnswer(rawAnswer ?? els.taskAnswer.value);
+      const correct = normalizeAnswer(state.activeTask.answer);
+
+      if (!answer) {
+        updateFeedback('Сначала введи ответ.', 'warn');
         return;
       }
 
-      const nextAttempts = state.quizState.attemptsUsed + 1;
-      const maxAttempts = state.quizState.maxAttempts;
-      const canRetry = maxAttempts === 0 || nextAttempts < maxAttempts;
+      if (answer === correct) {
+        handleTaskSuccess();
+      } else {
+        handleTaskFail();
+      }
+    }
 
-      if (canRetry) {
-        state.quizState.attemptsUsed = nextAttempts;
-        state.quizState.feedback = {
-          type: "warning",
-          message: "Пока неверно. Попробуй ещё раз."
-        };
-        renderOverlay();
+    function handleTaskSuccess() {
+      const actionKey = state.activeTask.actionKey;
+      const action = GAME_CONFIG.actions[actionKey];
+      const mult = currentDifficultyConfig().statMultiplier;
+      const successDelta = {};
+
+      Object.entries(action.success).forEach(([key, value]) => {
+        successDelta[key] = Math.round(value * mult);
+      });
+
+      applyDeltaSet(successDelta);
+      gainXp(GAME_CONFIG.progression.baseXpPerSuccess + action.xpBonus);
+      state.totalTasks += 1;
+      state.correctTasks += 1;
+      animatePet();
+      updateFeedback(randomFrom(GAME_CONFIG.ui.positiveMessages), 'good');
+      closeTask();
+      updateUI();
+      checkGameState();
+    }
+
+    function handleTaskFail() {
+      state.attemptsLeft -= 1;
+
+      if (state.attemptsLeft > 0) {
+        updateAttemptInfo();
+        updateFeedback('Ответ неверный. Попробуй ещё раз.', 'bad');
         return;
       }
 
-      continueAfterQuiz({ type: "warning", message: "Неверно. Едем дальше." });
+      const actionKey = state.activeTask.actionKey;
+      const action = GAME_CONFIG.actions[actionKey];
+      const failDelta = {};
+      Object.entries(action.fail).forEach(([key, value]) => {
+        failDelta[key] = value;
+      });
+
+      applyDeltaSet(failDelta);
+      state.totalTasks += 1;
+      state.wrongTasks += 1;
+      updateFeedback(randomFrom(GAME_CONFIG.ui.negativeMessages), 'bad');
+      closeTask();
+      updateUI();
+      checkGameState();
     }
 
-    function checkFinish() {
-      if (state.gameStatus !== "running") return;
+    document.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (state.gameOver || state.activeTask) return;
+        const actionKey = btn.dataset.action;
+        const task = generateTask(actionKey);
+        renderTask(task);
+        updateFeedback(`Чтобы выполнить действие «${GAME_CONFIG.actions[actionKey].label}», реши задание.`, 'warn');
+      });
+    });
 
-      const level = currentLevel();
-      const noTime = state.timeLeft <= 0;
-      const finishedDistance = state.distancePassed >= level.distance;
+    els.submitTaskBtn.addEventListener('click', () => submitAnswer());
+    els.cancelTaskBtn.addEventListener('click', () => {
+      closeTask();
+      updateFeedback('Действие отменено.', 'warn');
+    });
+    els.taskAnswer.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitAnswer();
+    });
 
-      if (!noTime && !finishedDistance) return;
+    els.startBtn.addEventListener('click', startGame);
+    els.restartBtn.addEventListener('click', () => {
+      resetGame();
+      setScreen('startScreen');
+    });
+    els.playAgainBtn.addEventListener('click', () => {
+      resetGame();
+      setScreen('startScreen');
+    });
 
-      clearLoop();
+        // --- Дополнительные игровые улучшения ---
 
-      const isLastLevel = state.currentLevelIndex >= GAME_CONFIG.levels.length - 1;
-      state.gameStatus = "finished";
-      state.finishStats = {
-        diamonds: state.diamonds,
-        levelName: level.name,
-        success: finishedDistance,
-        nextLevelAvailable: finishedDistance && !isLastLevel
+    const SAVE_KEY = 'tamagotchi-save-v2';
+
+    GAME_CONFIG.scenes = {
+      feed: {
+        title: 'Кухня',
+        subtitle: 'Питомец за столом. Выбери, чем его кормить.',
+        emoji: '🍽️',
+        options: [
+          { id: 'apple', label: 'Яблоко', emoji: '🍎', bonus: { happiness: 2 } },
+          { id: 'porridge', label: 'Каша', emoji: '🥣', bonus: { hunger: -2 } },
+          { id: 'carrot', label: 'Морковка', emoji: '🥕', bonus: { hygiene: 1 } }
+        ]
+      },
+      walk: {
+        title: 'Улица',
+        subtitle: 'Питомец вышел гулять. Выбери формат прогулки.',
+        emoji: '🌳',
+        options: [
+          { id: 'park', label: 'Парк', emoji: '🌳', bonus: { happiness: 3 } },
+          { id: 'ball', label: 'С мячом', emoji: '⚽', bonus: { happiness: 4, energy: -1 } },
+          { id: 'run', label: 'Пробежка', emoji: '🏃', bonus: { energy: 2, hunger: 1 } }
+        ]
+      },
+      toilet: {
+        title: 'Ванная',
+        subtitle: 'Питомцу нужно привести себя в порядок.',
+        emoji: '🛁',
+        options: [
+          { id: 'wash', label: 'Умыться', emoji: '🚿', bonus: { hygiene: 3 } },
+          { id: 'brush', label: 'Почистить зубы', emoji: '🪥', bonus: { hygiene: 4 } },
+          { id: 'bath', label: 'Ванна', emoji: '🫧', bonus: { happiness: 2, hygiene: 5 } }
+        ]
+      },
+      sleep: {
+        title: 'Спальня',
+        subtitle: 'Подготовь питомца ко сну.',
+        emoji: '🌙',
+        options: [
+          { id: 'blanket', label: 'Под одеяло', emoji: '🛌', bonus: { energy: 3 } },
+          { id: 'lullaby', label: 'Колыбельная', emoji: '🎵', bonus: { happiness: 2 } },
+          { id: 'night', label: 'Ночной сон', emoji: '💤', bonus: { energy: 4 } }
+        ]
+      }
+    };
+
+    const moodLabel = document.createElement('div');
+    moodLabel.style.marginTop = '10px';
+    moodLabel.style.fontWeight = '600';
+    moodLabel.style.background = 'rgba(255,255,255,.88)';
+    moodLabel.style.padding = '8px 12px';
+    moodLabel.style.borderRadius = '999px';
+    moodLabel.style.boxShadow = 'var(--shadow)';
+    moodLabel.style.position = 'absolute';
+    moodLabel.style.left = '16px';
+    moodLabel.style.bottom = '16px';
+    document.querySelector('.pet-stage').appendChild(moodLabel);
+
+    const scenePanel = document.createElement('div');
+    scenePanel.className = 'card';
+    scenePanel.style.marginTop = '16px';
+    scenePanel.style.display = 'none';
+    scenePanel.innerHTML = `
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:start;flex-wrap:wrap;">
+        <div>
+          <div id="sceneEmoji" class="muted" style="font-size:28px;margin-bottom:6px;"></div>
+          <h3 id="sceneTitle" style="margin-bottom:6px;"></h3>
+          <p id="sceneSubtitle" class="muted" style="margin-bottom:0;"></p>
+        </div>
+        <button type="button" class="secondary" id="sceneCloseBtn">Закрыть</button>
+      </div>
+      <div id="sceneOptions" class="actions" style="margin-top:14px;"></div>
+    `;
+    document.querySelector('#gameScreen .card:last-child').appendChild(scenePanel);
+
+    const sceneEls = {
+      panel: scenePanel,
+      emoji: scenePanel.querySelector('#sceneEmoji'),
+      title: scenePanel.querySelector('#sceneTitle'),
+      subtitle: scenePanel.querySelector('#sceneSubtitle'),
+      options: scenePanel.querySelector('#sceneOptions'),
+      closeBtn: scenePanel.querySelector('#sceneCloseBtn')
+    };
+
+    const taskMeta = document.createElement('div');
+    taskMeta.className = 'muted';
+    taskMeta.style.fontWeight = '600';
+    taskMeta.style.marginBottom = '6px';
+    els.taskBox.prepend(taskMeta);
+
+    let taskTimerInterval = null;
+    let taskTimeLeft = 0;
+    const timerLabel = document.createElement('div');
+    timerLabel.style.fontWeight = '700';
+    timerLabel.style.marginBottom = '6px';
+    els.taskBox.prepend(timerLabel);
+
+    const saveBar = document.createElement('div');
+    saveBar.className = 'row';
+    saveBar.style.marginTop = '12px';
+    saveBar.innerHTML = `
+      <button type="button" class="secondary" id="saveGameBtn">Сохранить</button>
+      <button type="button" class="secondary" id="loadGameBtn">Загрузить</button>
+      <button type="button" class="secondary" id="clearSaveBtn">Сбросить сохранение</button>
+    `;
+    document.querySelector('.topline').appendChild(saveBar);
+
+    function updateMoodText() {
+      if (state.hunger > 70) moodLabel.textContent = `${state.petName} очень голоден 🍎`;
+      else if (state.energy < 30) moodLabel.textContent = `${state.petName} устал 😴`;
+      else if (state.happiness < 30) moodLabel.textContent = `${state.petName} грустит ☹️`;
+      else if (state.hygiene < 30) moodLabel.textContent = `${state.petName} хочет привести себя в порядок 🫧`;
+      else moodLabel.textContent = `${state.petName} чувствует себя отлично 😄`;
+    }
+
+    function startTaskTimer() {
+      taskTimeLeft = 10;
+      timerLabel.textContent = `⏱ ${taskTimeLeft} сек`;
+      if (taskTimerInterval) clearInterval(taskTimerInterval);
+      taskTimerInterval = setInterval(() => {
+        taskTimeLeft -= 1;
+        timerLabel.textContent = `⏱ ${taskTimeLeft} сек`;
+        if (taskTimeLeft <= 0) {
+          clearInterval(taskTimerInterval);
+          handleTaskFail('timeout');
+        }
+      }, 1000);
+    }
+
+    function stopTaskTimer() {
+      if (taskTimerInterval) clearInterval(taskTimerInterval);
+      taskTimerInterval = null;
+      timerLabel.textContent = '';
+    }
+
+    function randomEvent() {
+      if (state.gameOver || !state.started || state.activeTask) return;
+      const r = Math.random();
+      if (r < 0.18) {
+        state.happiness = clamp(state.happiness + 10);
+        updateFeedback('Питомец нашёл яблоко 🍎 +10 счастья', 'good');
+        animatePet();
+      } else if (r < 0.32) {
+        state.hygiene = clamp(state.hygiene - 15);
+        updateFeedback('Питомец испачкался в луже 💧 -15 гигиены', 'warn');
+      }
+      updateUI();
+      checkGameState();
+    }
+
+    setInterval(randomEvent, 45000);
+
+    function updateEvolution() {
+      const colors = { 1: '#f59e0b', 2: '#fbbf24', 3: '#34d399', 4: '#60a5fa', 5: '#f472b6' };
+      document.documentElement.style.setProperty('--pet-color', colors[state.level] || GAME_CONFIG.petSkins[state.petType].color);
+      els.pet.style.transform = `scale(${1 + (state.level - 1) * 0.06})`;
+      let accessory = document.getElementById('petAccessory');
+      if (!accessory) {
+        accessory = document.createElement('div');
+        accessory.id = 'petAccessory';
+        accessory.style.position = 'absolute';
+        accessory.style.top = '14px';
+        accessory.style.left = '50%';
+        accessory.style.transform = 'translateX(-50%)';
+        accessory.style.fontSize = '28px';
+        els.pet.appendChild(accessory);
+      }
+      accessory.textContent = state.level >= 5 ? '👑' : state.level === 4 ? '🎀' : state.level === 3 ? '⭐' : state.level === 2 ? '🧢' : '';
+    }
+
+    function saveGame() {
+      const payload = {
+        state: JSON.parse(JSON.stringify(state)),
+        config: getSerializableConfig()
       };
-      render();
+      localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
+      updateFeedback('Игра сохранена.', 'good');
     }
 
-    ui.btnLeft.addEventListener("click", moveLeft);
-    ui.btnRight.addEventListener("click", moveRight);
-    ui.sideLeft.addEventListener("click", moveLeft);
-    ui.sideRight.addEventListener("click", moveRight);
-    ui.btnStart.addEventListener("click", startGame);
-    ui.btnReset.addEventListener("click", () => resetGame(state.currentLevelIndex));
-
-    ui.speedRange.addEventListener("input", (e) => {
-      state.settings.speed = Number(e.target.value);
-      ui.speedLabel.textContent = state.settings.speed;
-    });
-
-    ui.timeRange.addEventListener("input", (e) => {
-      state.settings.totalTimeSec = Number(e.target.value);
-      ui.timeLabel.textContent = state.settings.totalTimeSec;
-      if (state.gameStatus === "ready") state.timeLeft = state.settings.totalTimeSec;
-      renderHUD();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (!state.settings.useKeyboard) return;
-      if (["ArrowLeft", "a", "A", "ф", "Ф"].includes(e.key)) moveLeft();
-      if (["ArrowRight", "d", "D", "в", "В"].includes(e.key)) moveRight();
-    });
-
-    function init() {
-      setupLevel(0);
-      resetGame(0);
-      updatePlayerVisual();
+    function loadGame() {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) {
+        updateFeedback('Сохранение не найдено.', 'warn');
+        return;
+      }
+      const payload = JSON.parse(raw);
+      applyConfigPatch(GAME_CONFIG, payload.config || {});
+      Object.assign(state, payload.state || {});
+      state.activeTask = null;
+      state.gameOver = false;
+      applyPetSkin();
+      updateEvolution();
+      updateUI();
+      setScreen('gameScreen');
+      updateFeedback('Сохранение загружено.', 'good');
+      clearIntervals();
+      decayInterval = setInterval(applyPassiveDecay, GAME_CONFIG.time.tickMs);
+      timerInterval = setInterval(() => {
+        state.elapsedSec += 1;
+        els.timeLabel.textContent = formatTime(state.elapsedSec);
+      }, GAME_CONFIG.time.sessionTimerMs);
     }
 
-    init();
+    function cl
+
+    function getSerializableConfig() {
+      return JSON.parse(JSON.stringify(GAME_CONFIG));
+    }
+
+    function exportConfigJson() {
+      return JSON.stringify(getSerializableConfig(), null, 2);
+    }
+
+    function applyConfigPatch(target, patch) {
+      Object.keys(patch).forEach((key) => {
+        const value = patch[key];
+        if (value && typeof value === 'object' && !Array.isArray(value) && target[key] && typeof target[key] === 'object' && !Array.isArray(target[key])) {
+          applyConfigPatch(target[key], value);
+        } else {
+          target[key] = value;
+        }
+      });
+    }
+
+    function importConfigJson(jsonText) {
+      const parsed = JSON.parse(jsonText);
+      applyConfigPatch(GAME_CONFIG, parsed);
+      els.petNameInput.value = GAME_CONFIG.meta.defaultPetName;
+      updateFeedback('Конфигурация обновлена.', 'good');
+    }
+
+    function getGameState() {
+      return JSON.parse(JSON.stringify(state));
+    }
+
+    function setGameParam(path, value) {
+      const parts = path.split('.');
+      let obj = GAME_CONFIG;
+      for (let i = 0; i < parts.length - 1; i += 1) {
+        if (!obj[parts[i]]) obj[parts[i]] = {};
+        obj = obj[parts[i]];
+      }
+      obj[parts[parts.length - 1]] = value;
+    }
+
+    window.TamagotchiGameAPI = {
+      startGame,
+      resetGame,
+      getGameState,
+      getSerializableConfig,
+      exportConfigJson,
+      importConfigJson,
+      setGameParam
+    };
+
+    els.petNameInput.value = GAME_CONFIG.meta.defaultPetName;
   </script>
 </body>
 </html>
